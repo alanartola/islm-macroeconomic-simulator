@@ -36,6 +36,8 @@ export type AdvAction =
   | { type: 'compare'; on: boolean }
   | { type: 'preset'; id: AdvPresetId }
   | { type: 'restore' }
+  /** Load a complete saved configuration (scenario lab / shared link). */
+  | { type: 'hydrate'; baseline: AdvParams; shocked: AdvParams; lm: LMSpec; regime: AdvRegime; target0: number; target1: number }
   /** Edit E₀ directly (used by the policy lab), carrying unperturbed values to E₁. */
   | { type: 'setBase'; key: keyof AdvParams; value: number };
 
@@ -57,6 +59,18 @@ const round = (x: number, d = 2) => Math.round(x * 10 ** d) / 10 ** d;
 
 export function advReducer(s: AdvState, a: AdvAction): AdvState {
   switch (a.type) {
+    case 'hydrate':
+      return {
+        ...s,
+        baseline: { ...a.baseline },
+        shocked: { ...a.shocked },
+        lm: a.lm,
+        regime: a.regime,
+        target0: a.target0,
+        target1: a.target1,
+        compareTangent: false,
+        preset: null,
+      };
     case 'lm':
       return { ...s, lm: a.lm, preset: null, compareTangent: a.lm === 'nonlinear' ? s.compareTangent : false };
     case 'regime': {

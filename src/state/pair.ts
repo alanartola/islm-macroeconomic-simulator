@@ -43,8 +43,12 @@ export function pairReducer<P extends Record<string, number>>(s: PairState<P>, a
   }
 }
 
-export function usePair<P extends Record<string, number>>(defaults: P) {
-  const [state, dispatch] = useReducer(pairReducer<P>, { baseline: { ...defaults }, shocked: { ...defaults }, editing: 'shocked' } as PairState<P>);
+export function usePair<P extends Record<string, number>>(defaults: P, initial?: { baseline: P; shocked: P }) {
+  const [state, dispatch] = useReducer(pairReducer<P>, {
+    baseline: { ...(initial?.baseline ?? defaults) },
+    shocked: { ...(initial?.shocked ?? defaults) },
+    editing: 'shocked',
+  } as PairState<P>);
   const set = useCallback((key: keyof P, value: number) => dispatch({ type: 'set', key, value }), []);
   return { state, dispatch, set };
 }

@@ -5,6 +5,7 @@ import { polEn, polEs } from './policy';
 import { openEn, openEs } from './open';
 import { adasEn, adasEs } from './adas';
 import { ismpEn, ismpEs } from './ismp';
+import { labEn, labEs } from './lab';
 
 /** Per-module dictionaries; each module file defines Spanish (primary) and English with identical keys. */
 export const MODULE_PAIRS: { name: string; es: Record<string, string>; en: Record<string, string> }[] = [
@@ -15,6 +16,7 @@ export const MODULE_PAIRS: { name: string; es: Record<string, string>; en: Recor
   { name: 'open', es: openEs, en: openEn },
   { name: 'adas', es: adasEs, en: adasEn },
   { name: 'ismp', es: ismpEs, en: ismpEn },
+  { name: 'lab', es: labEs, en: labEn },
 ];
 
 export const MODULE_DICTS = {

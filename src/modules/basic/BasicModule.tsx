@@ -10,6 +10,7 @@ import type { SavedOverlay } from '../../components/charts/ISLMChart';
 import type { Action, SimState } from '../../state/store';
 import type { Simulation } from '../../state/simulation';
 import { BASIC_TABS, type BasicTab } from './tabs';
+import { SaveToLab } from '../../components/ui/SaveToLab';
 
 const ModelView = lazy(() => import('../../components/ModelView'));
 
@@ -34,6 +35,16 @@ export function BasicModule({ state, dispatch, sim, savedSims, overlays, initial
       {sidebarOpen && <div className="scrim mobile-only" onClick={onCloseSidebar} />}
       <Sidebar state={state} dispatch={dispatch} sim={sim} open={sidebarOpen} onClose={onCloseSidebar} />
       <main className="main">
+        <div className="module-intro">
+          <div>
+            <h2>{t('mod.basic')}</h2>
+            <p>{t('mod.basic.desc')}</p>
+          </div>
+          <SaveToLab
+            config={sim.ok ? { model: 'basic', baseline: state.baseline, shocked: state.shocked, regime: state.regime, target0: state.target0, target1: state.target1 } : null}
+            defaultName={t('mod.basic')}
+          />
+        </div>
         <nav className="tabs" role="tablist">
           {BASIC_TABS.map((k) => (
             <button key={k} role="tab" aria-selected={tab === k} onClick={() => setTab(k)}>

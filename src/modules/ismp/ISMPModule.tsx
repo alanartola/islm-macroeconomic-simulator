@@ -18,6 +18,8 @@ import {
 import { useI18n } from '../../i18n';
 import { buildISMPInsights } from '../../interpretation/ismpInsights';
 import { usePair } from '../../state/pair';
+import { SaveToLab } from '../../components/ui/SaveToLab';
+import type { LabConfig } from '../../lab/scenario';
 import { ChartCard } from '../../components/ui/ChartCard';
 import { CompareTable, Explanation, IssueList, type Row } from '../../components/ui/Explanation';
 import { Kpi, ModuleLayout } from '../../components/ui/ModuleLayout';
@@ -170,10 +172,10 @@ function SensitivityCharts({ s1 }: { s1: ISMPSolved }) {
 }
 
 /** Module G — IS-MP, Phillips curve and Taylor rule. */
-export function ISMPModule({ sidebarOpen, onCloseSidebar }: { sidebarOpen: boolean; onCloseSidebar: () => void }) {
+export function ISMPModule({ sidebarOpen, onCloseSidebar, initial }: { sidebarOpen: boolean; onCloseSidebar: () => void; initial?: Extract<LabConfig, { model: 'ismp' }> }) {
   const { t, f } = useI18n();
-  const { state, dispatch, set } = usePair<P>(ISMP_DEFAULTS as P);
-  const [regime, setRegime] = useState<MPRegime>('rule');
+  const { state, dispatch, set } = usePair<P>(ISMP_DEFAULTS as P, initial as { baseline: P; shocked: P } | undefined);
+  const [regime, setRegime] = useState<MPRegime>(initial?.regime ?? 'rule');
   const [preset, setPreset] = useState<ISMPPresetId | null>(null);
   const r0 = useMemo(() => solveISMP({ params: state.baseline, regime }), [state.baseline, regime]);
   const r1 = useMemo(() => solveISMP({ params: state.shocked, regime }), [state.shocked, regime]);
@@ -287,8 +289,11 @@ export function ISMPModule({ sidebarOpen, onCloseSidebar }: { sidebarOpen: boole
   return (
     <ModuleLayout open={sidebarOpen} onClose={onCloseSidebar} sidebar={sidebar}>
       <div className="module-intro">
-        <h2>{t('mod.ismp')}</h2>
-        <p>{t('mod.ismp.desc')}</p>
+        <div>
+          <h2>{t('mod.ismp')}</h2>
+          <p>{t('mod.ismp.desc')}</p>
+        </div>
+        <SaveToLab config={r0.ok && r1.ok ? { model: 'ismp', baseline: state.baseline, shocked: state.shocked, regime } : null} defaultName={t('mod.ismp')} />
       </div>
       <IssueList groups={groups} prefix="ismp.issue." />
       {body}

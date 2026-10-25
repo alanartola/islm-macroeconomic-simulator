@@ -893,6 +893,13 @@ table.data tr.emph td {
   top: 99px;
   height: calc(100vh - 99px);
 }
+.module-intro {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  flex-wrap: wrap;
+}
 .module-intro h2 {
   margin: 0;
   font-size: 17px;
@@ -1256,4 +1263,320 @@ table.matrix td.matrix-cell .muted {
   * {
     transition: none !important;
   }
+}
+
+/* ── Utilities shared by the lab and home screens ───────────────────────── */
+[hidden] {
+  display: none !important;
+}
+.muted {
+  color: var(--text-muted);
+}
+.small {
+  font-size: 12px;
+}
+.pos {
+  color: var(--up);
+}
+.neg {
+  color: var(--down);
+}
+.swatch {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  vertical-align: middle;
+}
+.text-input {
+  width: 100%;
+  min-width: 140px;
+  padding: 4px 7px;
+  border-radius: 5px;
+  border: 1px solid var(--border-strong);
+  background: var(--surface-1);
+  color: var(--text-primary);
+  font: inherit;
+  font-size: 12.5px;
+}
+.btn.danger {
+  color: var(--down);
+}
+.save-to-lab {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* ── Module H: scenario lab ─────────────────────────────────────────────── */
+.lab-main {
+  max-width: 1280px;
+  width: 100%;
+  margin: 0 auto;
+}
+table.data.lab-table td,
+table.data.lab-table th {
+  vertical-align: middle;
+  text-align: left;
+}
+table.data.lab-table td:nth-child(2) {
+  min-width: 180px;
+}
+.lab-check {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+}
+.lab-actions {
+  white-space: nowrap;
+}
+.lab-actions .btn + .btn {
+  margin-left: 4px;
+}
+.lab-toolbar {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.lab-toolbar .spacer {
+  flex: 1;
+}
+.lab-controls {
+  display: flex;
+  gap: 8px 14px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.lab-controls .select,
+.inline-field .select {
+  max-width: 280px;
+}
+table.data.lab-cmp th {
+  text-align: right;
+  vertical-align: bottom;
+}
+table.data.lab-cmp th:first-child,
+table.data.lab-cmp tbody th {
+  text-align: left;
+  min-width: 170px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  white-space: normal;
+}
+table.data.lab-cmp tr.single th {
+  color: var(--text-muted);
+}
+table.data.compact tr.changed td {
+  font-weight: 600;
+  background: var(--accent-soft);
+}
+.lab-report {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.report-head h2 {
+  margin: 0 0 4px;
+}
+.report-section {
+  margin-bottom: 14px;
+}
+.report-section h4 {
+  margin: 0 0 6px;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+.report-section ul {
+  margin: 0;
+  padding-left: 18px;
+}
+.report-level h5 {
+  margin: 10px 0 4px;
+  font-size: 13px;
+}
+.report-h {
+  margin: 8px 0 0;
+}
+pre.equations {
+  margin: 0;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  white-space: pre-wrap;
+  line-height: 1.6;
+}
+
+/* ── Home screen ────────────────────────────────────────────────────────── */
+.home {
+  max-width: 1080px;
+  width: 100%;
+  margin: 0 auto;
+  gap: 28px;
+  padding-top: 32px;
+}
+.home-hero h2 {
+  margin: 0 0 10px;
+  font-size: 28px;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+.home-hero p {
+  margin: 0 0 18px;
+  max-width: 68ch;
+  color: var(--text-secondary);
+  font-size: 15px;
+  line-height: 1.6;
+}
+.home-h {
+  margin: 0 0 12px;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+}
+.home-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 10px;
+}
+.home-card {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  text-align: left;
+  padding: 14px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface-1);
+  color: var(--text-primary);
+  font: inherit;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.home-card:hover {
+  border-color: var(--accent);
+  background: var(--surface-2);
+}
+.home-card:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+.home-card .mod-letter {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: var(--accent-soft);
+  font-size: 13px;
+}
+.home-card-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.home-card-text span {
+  color: var(--text-secondary);
+  font-size: 13px;
+  line-height: 1.45;
+}
+.home-how ol {
+  margin: 0 0 10px;
+  padding-left: 20px;
+  line-height: 1.7;
+}
+@media (max-width: 640px) {
+  .home {
+    padding-top: 18px;
+  }
+  .home-hero h2 {
+    font-size: 22px;
+  }
+}
+
+/* ── Print (lab report → PDF from the browser dialog) ───────────────────── */
+@media print {
+  /* Paper is always printed with the light palette, whatever theme is on screen. */
+  :root:not([data-theme='light']),
+  :root[data-theme='light'] {
+    color-scheme: light;
+    --page: #f4f4f1;
+    --surface-1: #fcfcfb;
+    --surface-2: #f0efec;
+    --surface-3: #e7e6e1;
+    --text-primary: #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted: #6f6d68;
+    --grid: #e1e0d9;
+    --axis: #c3c2b7;
+    --border: rgba(11, 11, 11, 0.1);
+    --border-strong: rgba(11, 11, 11, 0.18);
+    --accent: #256abf;
+    --accent-soft: rgba(42, 120, 214, 0.1);
+    --focus: #2a78d6;
+    --series-is: #2a78d6;
+    --series-lm: #eb6834;
+    --series-3: #1baf7a;
+    --series-4: #eda100;
+    --series-5: #e87ba4;
+    --series-6: #008300;
+    --series-7: #4a3aa7;
+    --series-8: #e34948;
+    --eq0: #52514e;
+    --eq1: #0b0b0b;
+    --up: #006300;
+    --down: #b42318;
+    --good: #0ca30c;
+    --warning: #b77900;
+    --serious: #c2561f;
+    --critical: #d03b3b;
+    --warning-bg: rgba(250, 178, 25, 0.12);
+    --critical-bg: rgba(208, 59, 59, 0.08);
+    --info-bg: rgba(42, 120, 214, 0.07);
+    --band-trap: rgba(42, 120, 214, 0.07);
+    --band-classical: rgba(235, 104, 52, 0.08);
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 2px 8px rgba(0, 0, 0, 0.04);
+  }
+  html,
+  body,
+  .app {
+    background: #fff !important;
+  }
+  .topbar,
+  .module-nav,
+  .footer,
+  .lab-screen-only,
+  .card-tools {
+    display: none !important;
+  }
+  .card {
+    break-inside: avoid;
+    box-shadow: none;
+  }
+  .report-scenario {
+    break-inside: auto;
+  }
+  .lab-main {
+    max-width: none;
+    padding: 0;
+  }
+  details > summary {
+    list-style: none;
+  }
+}
+.module-intro.stacked {
+  display: block;
 }

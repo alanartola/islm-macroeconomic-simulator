@@ -35,3 +35,12 @@ export function emptyLevels(): Record<Level, LevelItem[]> {
 
 export const dirKey = (x: number, pos: string, neg: string) => ({ key: x >= 0 ? pos : neg });
 export const nonZero = (x: number, tol = 1e-7) => Math.abs(x) > tol;
+
+/**
+ * Level-1 item for a parameter change. The percentage change is omitted when
+ * the initial value is zero (it is undefined, never reported as 0 %).
+ */
+export function causeParam(nameKey: string, c: { from: number; to: number; abs: number; pct: number | null }): LevelItem {
+  const vars = { param: { key: nameKey }, from: c.from, to: c.to, delta: c.abs };
+  return c.pct === null ? { key: 'lvl.cause.paramAbs', vars } : { key: 'lvl.cause.param', vars: { ...vars, pct: c.pct } };
+}

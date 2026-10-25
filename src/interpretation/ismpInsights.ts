@@ -1,5 +1,5 @@
 import { compareISMP, delta, type ISMPComparison, type ISMPParamKey, type ISMPSolved } from '../engine/ismp/ismp';
-import { emptyLevels, nonZero, type LeveledReport } from './levels';
+import { emptyLevels, nonZero, type LeveledReport, causeParam } from './levels';
 
 const ORDER: ISMPParamKey[] = ['d', 'u', 'piE', 'piStar', 'rn', 'rStar', 'v', 'phiPi', 'phiY', 'sigma', 'kappa', 'iLB', 'iPeg'];
 
@@ -16,7 +16,7 @@ export function buildISMPInsights(s0: ISMPSolved, s1: ISMPSolved, cmp: ISMPCompa
   }
   for (const k of ORDER) {
     const c = cmp.paramChanges[k];
-    if (c) L[1].push({ key: 'lvl.cause.param', vars: { param: { key: `ismp.param.${k}.name` }, from: c.from, to: c.to, delta: c.abs, pct: c.pct ?? 0 } });
+    if (c) L[1].push(causeParam(`ismp.param.${k}.name`, c));
   }
   L[1].push({ key: peg ? 'ismp.l1.peg' : s1.elbBinding ? 'ismp.l1.elb' : 'ismp.l1.rule' });
 

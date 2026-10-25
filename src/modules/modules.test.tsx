@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import App from '../App';
 
 beforeAll(() => {
@@ -19,18 +19,23 @@ const open = (query: string) => {
 };
 
 describe('module navigation', () => {
-  it('lists the laboratory modules in Spanish and opens Module A by default', () => {
+  it('lists the modules A–H in Spanish and opens the home screen on a first visit', () => {
     open('');
     const nav = screen.getByRole('navigation', { name: 'Módulos del laboratorio' });
-    expect(nav).toHaveTextContent('IS-LM tradicional');
-    expect(nav).toHaveTextContent('IS-LM avanzado');
-    expect(nav).toHaveTextContent('Construcción de curvas');
-    expect(screen.getByRole('tab', { name: 'Simulador' })).toBeInTheDocument();
+    for (const name of ['Inicio', 'A IS-LM tradicional', 'B IS-LM avanzado', 'C Construcción de curvas', 'D Políticas económicas', 'E Mundell-Fleming', 'F Oferta y demanda agregada', 'G IS-MP y política monetaria', 'H Laboratorio de escenarios']) {
+      expect(within(nav).getByRole('button', { name })).toBeInTheDocument();
+    }
+    expect(within(nav).getAllByRole('button')).toHaveLength(9);
+    expect(screen.getByRole('heading', { level: 2, name: 'Laboratorio Avanzado de Macroeconomía' })).toBeInTheDocument();
+    // Each home card opens its module.
+    fireEvent.click(within(screen.getByRole('main')).getByRole('button', { name: /^G IS-MP y política monetaria/ }));
+    expect(screen.getByRole('heading', { name: 'IS-MP y política monetaria', level: 2 })).toBeInTheDocument();
   });
 
   it('remembers the last module', () => {
     const r = open('');
-    fireEvent.click(screen.getByRole('button', { name: /IS-LM avanzado/ }));
+    const nav = screen.getByRole('navigation', { name: 'Módulos del laboratorio' });
+    fireEvent.click(within(nav).getByRole('button', { name: /IS-LM avanzado/ }));
     expect(localStorage.getItem('islm.module')).toBe('advanced');
     r.unmount();
     open('');

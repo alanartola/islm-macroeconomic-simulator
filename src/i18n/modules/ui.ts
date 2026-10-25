@@ -58,6 +58,7 @@ export const uiEs = {
   'lvlA.math.target': 'Y* = α(A − b·ī) = {alpha|n3}·({A|n2} − {b|n2}·{it|n2}) = {Y|n3};  M* = P(kY* − h·ī) = {P|n2}·({k|n2}·{Y|n2} − {h|n2}·{it|n2}) = {M|n3}',
   'lvl.noShock': 'Sin perturbación: E₁ coincide con E₀.',
   'lvl.cause.param': '{param}: {from|n2} → {to|n2} ({delta|sn2}; {pct|spct}).',
+  'lvl.cause.paramAbs': '{param}: {from|n2} → {to|n2} ({delta|sn2}; variación porcentual no definida porque el valor inicial es cero).',
 };
 
 export const uiEn: Record<keyof typeof uiEs, string> = {
@@ -118,4 +119,5 @@ export const uiEn: Record<keyof typeof uiEs, string> = {
   'lvlA.math.target': 'Y* = α(A − b·ī) = {alpha|n3}·({A|n2} − {b|n2}·{it|n2}) = {Y|n3};  M* = P(kY* − h·ī) = {P|n2}·({k|n2}·{Y|n2} − {h|n2}·{it|n2}) = {M|n3}',
   'lvl.noShock': 'No perturbation: E₁ coincides with E₀.',
   'lvl.cause.param': '{param}: {from|n2} → {to|n2} ({delta|sn2}; {pct|spct}).',
+  'lvl.cause.paramAbs': '{param}: {from|n2} → {to|n2} ({delta|sn2}; percentage change undefined because the initial value is zero).',
 };

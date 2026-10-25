@@ -17,6 +17,8 @@ import {
 import { useI18n } from '../../i18n';
 import { buildOpenInsights } from '../../interpretation/openInsights';
 import { usePair } from '../../state/pair';
+import { SaveToLab } from '../../components/ui/SaveToLab';
+import type { LabConfig } from '../../lab/scenario';
 import { ChartCard } from '../../components/ui/ChartCard';
 import { CompareTable, Explanation, IssueList, type Row } from '../../components/ui/Explanation';
 import { Kpi, ModuleLayout } from '../../components/ui/ModuleLayout';
@@ -146,7 +148,7 @@ function OpenCharts({ s0, s1 }: { s0: OpenSolved; s1: OpenSolved }) {
         }
         formula={<pre className="formula">{t('open.formula')}</pre>}
       >
-        <XYChart xDomain={[yLo, yHi]} yDomain={[qLo, qHi]} xLabel={t('chart.x')} yLabel={t('open.chart.qAxis')} series={s1q} markers={markers} segments={path} ariaLabel={t('open.chart.yq')} valueFormat={(v) => f(v, 'n3')} />
+        <XYChart xDomain={[yLo, yHi]} yDomain={[qLo, qHi]} xLabel={t('chart.x')} yLabel={t('open.chart.qAxis')} series={s1q} markers={markers} segments={path} ariaLabel={t('open.chart.yq')} valueFormat={(v) => f(v, 'n3')} yFormat={(v) => f(v, 'n2')} />
         <p className="chart-note">{t('open.chart.convention')}</p>
       </ChartCard>
       <ChartCard title={t('open.chart.yi')} subtitle={t('open.chart.yi.sub')}>
@@ -181,10 +183,13 @@ function ImportSensitivity({ s1 }: { s1: OpenSolved }) {
 }
 
 /** Module E — small open economy (Mundell-Fleming). */
-export function OpenModule({ sidebarOpen, onCloseSidebar }: { sidebarOpen: boolean; onCloseSidebar: () => void }) {
+export function OpenModule({ sidebarOpen, onCloseSidebar, initial }: { sidebarOpen: boolean; onCloseSidebar: () => void; initial?: Extract<LabConfig, { model: 'open' }> }) {
   const { t, f } = useI18n();
-  const { state, dispatch, set } = usePair<OpenParams & Record<string, number>>(OPEN_DEFAULTS as OpenParams & Record<string, number>);
-  const [regime, setRegime] = useState<FXRegime>('flexible');
+  const { state, dispatch, set } = usePair<OpenParams & Record<string, number>>(
+    OPEN_DEFAULTS as OpenParams & Record<string, number>,
+    initial as { baseline: OpenParams & Record<string, number>; shocked: OpenParams & Record<string, number> } | undefined,
+  );
+  const [regime, setRegime] = useState<FXRegime>(initial?.regime ?? 'flexible');
   const [preset, setPreset] = useState<OpenPresetId | null>(null);
   const r0 = useMemo(() => solveOpen({ params: state.baseline, regime }), [state.baseline, regime]);
   const r1 = useMemo(() => solveOpen({ params: state.shocked, regime }), [state.shocked, regime]);
@@ -349,8 +354,11 @@ export function OpenModule({ sidebarOpen, onCloseSidebar }: { sidebarOpen: boole
   return (
     <ModuleLayout open={sidebarOpen} onClose={onCloseSidebar} sidebar={sidebar}>
       <div className="module-intro">
-        <h2>{t('mod.open')}</h2>
-        <p>{t('mod.open.desc')}</p>
+        <div>
+          <h2>{t('mod.open')}</h2>
+          <p>{t('mod.open.desc')}</p>
+        </div>
+        <SaveToLab config={r0.ok && r1.ok ? { model: 'open', baseline: state.baseline, shocked: state.shocked, regime } : null} defaultName={t('mod.open')} />
       </div>
       <IssueList groups={groups} prefix="open.issue." />
       {body}

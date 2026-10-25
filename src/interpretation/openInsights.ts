@@ -1,5 +1,5 @@
 import { compareOpen, openAutonomous, type OpenComparison, type OpenParamKey, type OpenSolved } from '../engine/open/mundellFleming';
-import { emptyLevels, nonZero, type LeveledReport } from './levels';
+import { emptyLevels, nonZero, type LeveledReport, causeParam } from './levels';
 
 const ORDER: OpenParamKey[] = ['G', 'T0', 't', 'TR', 'C0', 'c', 'I0', 'b', 'X0', 'v', 'Yf', 'xq', 'IM0', 'm', 'mq', 'D', 'R', 'iStar', 'Ebar', 'P', 'Pf', 'k', 'h'];
 const DEMAND: OpenParamKey[] = ['G', 'T0', 't', 'TR', 'C0', 'c', 'I0', 'b'];
@@ -21,7 +21,7 @@ export function buildOpenInsights(s0: OpenSolved, s1: OpenSolved, cmp: OpenCompa
   // Level 1
   for (const k of ORDER) {
     const c = cmp.paramChanges[k];
-    if (c) L[1].push({ key: 'lvl.cause.param', vars: { param: { key: `open.param.${k}.name` }, from: c.from, to: c.to, delta: c.abs, pct: c.pct ?? 0 } });
+    if (c) L[1].push(causeParam(`open.param.${k}.name`, c));
   }
   const demand = DEMAND.some(changed);
   const external = EXTERNAL.some(changed);

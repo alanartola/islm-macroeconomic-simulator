@@ -15,22 +15,46 @@ import { PolicyModule } from './modules/policy/PolicyModule';
 import { OpenModule } from './modules/open/OpenModule';
 import { ADASModule } from './modules/adas/ADASModule';
 import { ISMPModule } from './modules/ismp/ISMPModule';
+import { LabModule } from './modules/lab/LabModule';
+import { HomeModule } from './modules/home/HomeModule';
+import { LabProvider } from './state/lab';
+import { MODULE_OF, decodeConfigHash, encodeConfigHash, type LabConfig } from './lab/scenario';
 
 type Theme = 'light' | 'dark';
 const DEFAULT_THEME: Theme = 'dark';
 
 /** Laboratory modules, in navigation order. */
-export const MODULES = ['basic', 'advanced', 'construction', 'policy', 'open', 'adas', 'ismp'] as const;
+export const MODULES = ['basic', 'advanced', 'construction', 'policy', 'open', 'adas', 'ismp', 'lab'] as const;
 /** Navigation letters A–H. */
 const LETTER: Record<string, string> = { basic: 'A', advanced: 'B', construction: 'C', policy: 'D', open: 'E', adas: 'F', ismp: 'G', lab: 'H' };
-export type ModuleId = (typeof MODULES)[number];
+/** Screens: the introductory home screen plus the lettered modules. */
+export type ModuleId = 'home' | (typeof MODULES)[number];
+const SCREENS: readonly string[] = ['home', ...MODULES];
 
 const REPO_URL = 'https://github.com/alanartola/islm-macroeconomic-simulator';
+
+/** Configuration carried by a "#x=" link (any module); read once at start-up. */
+function linkedConfig(): LabConfig | null {
+  return typeof window !== 'undefined' ? decodeConfigHash(window.location.hash) : null;
+}
 
 function init(): SimState {
   const base = initialState();
   const shared = typeof window !== 'undefined' ? decodeShareHash(window.location.hash) : null;
-  return { ...base, ...(shared ?? {}), saved: loadSavedScenarios() };
+  const linked = linkedConfig();
+  const fromLink =
+    linked?.model === 'basic'
+      ? { baseline: linked.baseline, shocked: linked.shocked, regime: linked.regime, target0: linked.target0, target1: linked.target1 }
+      : {};
+  return { ...base, ...(shared ?? {}), ...fromLink, saved: loadSavedScenarios() };
+}
+
+function initAdv() {
+  const base = initialAdvState();
+  const linked = linkedConfig();
+  return linked?.model === 'advanced'
+    ? advReducer(base, { type: 'hydrate', baseline: linked.baseline, shocked: linked.shocked, lm: linked.lm, regime: linked.regime, target0: linked.target0, target1: linked.target1 })
+    : base;
 }
 
 function queryParam(name: string): string | null {
@@ -57,10 +81,13 @@ function detectTab(): BasicTab {
 
 function detectModule(): ModuleId {
   const q = queryParam('m');
-  if (q && (MODULES as readonly string[]).includes(q)) return q as ModuleId;
+  if (q && SCREENS.includes(q)) return q as ModuleId;
   if (typeof window !== 'undefined' && window.location.hash.startsWith('#s=')) return 'basic';
+  const linked = linkedConfig();
+  if (linked) return MODULE_OF[linked.model] as ModuleId;
   const stored = readPref('islm.module');
-  return stored && (MODULES as readonly string[]).includes(stored) ? (stored as ModuleId) : 'basic';
+  // First visit (no explicit choice): the introductory home screen.
+  return stored && SCREENS.includes(stored) ? (stored as ModuleId) : 'home';
 }
 
 function ModeSwitch({ t }: { t: (k: string) => string }) {
@@ -83,7 +110,9 @@ export default function App() {
   const [theme, setTheme] = useState<Theme>(detectTheme);
   const [initialTab] = useState<BasicTab>(detectTab);
   const [module, setModuleState] = useState<ModuleId>(detectModule);
-  const [adv, advDispatch] = useReducer(advReducer, undefined, initialAdvState);
+  const [adv, advDispatch] = useReducer(advReducer, undefined, initAdv);
+  /** Configuration opened from the lab or a link, for modules that keep their own state (E, F, G). */
+  const [opened, setOpened] = useState<{ cfg: LabConfig | null; nonce: number }>(() => ({ cfg: linkedConfig(), nonce: 0 }));
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const { t } = useMemo(() => makeI18n(lang), [lang]);
@@ -117,7 +146,20 @@ export default function App() {
     setModuleState(m);
     setSidebarOpen(false);
     writePref('islm.module', m);
+    document.documentElement.scrollTop = 0;
   };
+  const openConfig = (cfg: LabConfig) => {
+    if (cfg.model === 'basic') {
+      dispatch({ type: 'hydrate', state: { baseline: cfg.baseline, shocked: cfg.shocked, regime: cfg.regime, target0: cfg.target0, target1: cfg.target1 } });
+    } else if (cfg.model === 'advanced') {
+      advDispatch({ type: 'hydrate', baseline: cfg.baseline, shocked: cfg.shocked, lm: cfg.lm, regime: cfg.regime, target0: cfg.target0, target1: cfg.target1 });
+    } else {
+      setOpened((o) => ({ cfg, nonce: o.nonce + 1 }));
+    }
+    setModule(MODULE_OF[cfg.model] as ModuleId);
+  };
+  const initialFor = <M extends LabConfig['model']>(model: M) =>
+    opened.cfg?.model === model ? (opened.cfg as Extract<LabConfig, { model: M }>) : undefined;
   const overlays: SavedOverlay[] = savedSims.flatMap((s) => (s.sim.ok ? [{ id: s.id, name: s.name, color: s.color, e1: s.sim.e1 }] : []));
 
   const share = async () => {
@@ -126,7 +168,13 @@ export default function App() {
     if (lang !== DEFAULT_LANG) params.set('lang', lang);
     if (module !== 'basic') params.set('m', module);
     const query = params.toString() ? `?${params}` : '';
-    const hash = module === 'basic' ? encodeShareHash(state) : '';
+    // Module A keeps its compact "#s=" link; B, C and D share the advanced configuration.
+    const hash =
+      module === 'basic'
+        ? encodeShareHash(state)
+        : module === 'advanced' || module === 'construction' || module === 'policy'
+          ? encodeConfigHash({ model: 'advanced', baseline: adv.baseline, shocked: adv.shocked, lm: adv.lm, regime: adv.regime, target0: adv.target0, target1: adv.target1 })
+          : '';
     const url = `${window.location.origin}${window.location.pathname}${query}${hash}`;
     try {
       await navigator.clipboard.writeText(url);
@@ -160,9 +208,10 @@ export default function App() {
   return (
     <I18nProvider lang={lang}>
       <ModeProvider>
+      <LabProvider>
       <div className="app">
         <header className="topbar">
-          <button className="btn icon mobile-only" aria-label={t('btn.params')} onClick={() => setSidebarOpen(true)}>
+          <button className="btn icon mobile-only" aria-label={t('btn.params')} onClick={() => setSidebarOpen(true)} hidden={module === 'home' || module === 'lab'}>
             <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
               <path d="M2 4h12M2 8h12M2 12h12" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
             </svg>
@@ -210,9 +259,18 @@ export default function App() {
         </header>
 
         <nav className="module-nav" aria-label={t('nav.modules')}>
+          <button aria-current={module === 'home' ? 'page' : undefined} onClick={() => setModule('home')}>
+            {t('mod.home')}
+          </button>
           {MODULES.map((m) => (
-            <button key={m} aria-current={module === m ? 'page' : undefined} onClick={() => setModule(m)} title={t(`mod.${m}.desc`)}>
-              <span className="mod-letter">{LETTER[m]}</span> {t(`mod.${m}`)}
+            <button
+              key={m}
+              aria-current={module === m ? 'page' : undefined}
+              onClick={() => setModule(m)}
+              aria-label={`${LETTER[m]} ${t(`mod.${m}`)}`}
+              title={`${t(`mod.${m}`)}: ${t(`mod.${m}.desc`)}`}
+            >
+              <span className="mod-letter">{LETTER[m]}</span> {t(`nav.short.${m}`)}
             </button>
           ))}
         </nav>
@@ -232,9 +290,11 @@ export default function App() {
         {module === 'advanced' && (
           <AdvancedModule state={adv} dispatch={advDispatch} sim={advSim} sidebarOpen={sidebarOpen} onCloseSidebar={() => setSidebarOpen(false)} />
         )}
-        {module === 'adas' && <ADASModule sidebarOpen={sidebarOpen} onCloseSidebar={() => setSidebarOpen(false)} />}
-        {module === 'ismp' && <ISMPModule sidebarOpen={sidebarOpen} onCloseSidebar={() => setSidebarOpen(false)} />}
-        {module === 'open' && <OpenModule sidebarOpen={sidebarOpen} onCloseSidebar={() => setSidebarOpen(false)} />}
+        {module === 'adas' && <ADASModule key={opened.nonce} initial={initialFor('adas')} sidebarOpen={sidebarOpen} onCloseSidebar={() => setSidebarOpen(false)} />}
+        {module === 'ismp' && <ISMPModule key={opened.nonce} initial={initialFor('ismp')} sidebarOpen={sidebarOpen} onCloseSidebar={() => setSidebarOpen(false)} />}
+        {module === 'open' && <OpenModule key={opened.nonce} initial={initialFor('open')} sidebarOpen={sidebarOpen} onCloseSidebar={() => setSidebarOpen(false)} />}
+        {module === 'lab' && <LabModule onOpen={openConfig} />}
+        {module === 'home' && <HomeModule modules={MODULES} letters={LETTER} onOpen={(m) => setModule(m as ModuleId)} />}
         {module === 'policy' && <PolicyModule state={adv} dispatch={advDispatch} sidebarOpen={sidebarOpen} onCloseSidebar={() => setSidebarOpen(false)} />}
         {module === 'construction' && (
           <ConstructionModule state={adv} dispatch={advDispatch} sim={advSim} sidebarOpen={sidebarOpen} onCloseSidebar={() => setSidebarOpen(false)} />
@@ -247,6 +307,7 @@ export default function App() {
           </a>
         </footer>
       </div>
+      </LabProvider>
       </ModeProvider>
     </I18nProvider>
   );

@@ -1,5 +1,5 @@
 import { compareAdvanced, type AdvComparison, type AdvParamKey, type AdvSolved } from '../engine/advanced';
-import { dirKey, emptyLevels, nonZero, type LeveledReport, type LevelItem } from './levels';
+import { dirKey, emptyLevels, nonZero, type LeveledReport, type LevelItem, causeParam } from './levels';
 
 const ORDER: AdvParamKey[] = ['G', 'T0', 't', 'TR', 'C0', 'c', 'I0', 'b', 'M', 'P', 'k', 'h', 'L0', 'a', 'iMin', 'iFloor'];
 const DEMAND: AdvParamKey[] = ['G', 'T0', 'TR', 'C0', 'I0', 'c', 't'];
@@ -41,7 +41,7 @@ export function buildAdvancedInsights(s0: AdvSolved, s1: AdvSolved, cmp: AdvComp
   // ── Level 1: what changed ──────────────────────────────────────────────
   for (const k of ORDER) {
     const c = cmp.paramChanges[k];
-    if (c) L[1].push({ key: 'lvl.cause.param', vars: { param: { key: advParamName(k) }, from: c.from, to: c.to, delta: c.abs, pct: c.pct ?? 0 } });
+    if (c) L[1].push(causeParam(advParamName(k), c));
   }
   if (cmp.targetRateChange) L[1].push({ key: 'ins.cause.target', vars: { from: cmp.targetRateChange.from, to: cmp.targetRateChange.to, delta: cmp.targetRateChange.abs } });
   const demandShock = DEMAND.some(changed);

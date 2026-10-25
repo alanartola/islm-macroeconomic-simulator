@@ -12,7 +12,7 @@ beforeAll(() => {
 beforeEach(() => {
   localStorage.clear();
   sessionStorage.clear();
-  window.history.replaceState(null, '', '/?lang=en');
+  window.history.replaceState(null, '', '/?lang=en&m=basic');
 });
 
 function kpi(label: string) {
@@ -61,11 +61,13 @@ describe('App (integration)', () => {
 });
 
 describe('default language (Spanish first)', () => {
-  it('a first visit without preferences or query renders Spanish', () => {
+  it('a first visit without preferences or query renders Spanish, starting on the home screen', () => {
     localStorage.clear();
     window.history.replaceState(null, '', '/');
     render(<App />);
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Laboratorio Avanzado de Macroeconomía');
+    expect(screen.getByRole('heading', { level: 3, name: 'Módulos' })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Empezar con el IS-LM tradicional' }));
     expect(screen.getByRole('tab', { name: 'Simulador' })).toBeInTheDocument();
     expect(screen.getByText('Análisis e interpretación económica')).toBeInTheDocument();
     expect(document.documentElement.lang).toBe('es');
@@ -84,18 +86,18 @@ describe('default language (Spanish first)', () => {
     window.history.replaceState(null, '', '/');
     const first = render(<App />);
     fireEvent.change(screen.getByLabelText('Idioma'), { target: { value: 'en' } });
-    expect(screen.getByRole('tab', { name: 'Simulator' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Start with the traditional IS-LM' })).toBeInTheDocument();
     expect(localStorage.getItem('islm.lang')).toBe('en');
     first.unmount();
 
     const second = render(<App />); // reload: stored English choice is kept
-    expect(screen.getByRole('tab', { name: 'Simulator' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Start with the traditional IS-LM' })).toBeInTheDocument();
     fireEvent.change(screen.getByLabelText('Language'), { target: { value: 'es' } });
     expect(localStorage.getItem('islm.lang')).toBe('es');
     expect(window.location.search).toBe('');
     second.unmount();
 
     render(<App />);
-    expect(screen.getByRole('tab', { name: 'Simulador' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Empezar con el IS-LM tradicional' })).toBeInTheDocument();
   });
 });

@@ -334,7 +334,7 @@ export function PolicyModule({ state, dispatch, sidebarOpen, onCloseSidebar }: P
   const base = useMemo(() => ({ ...specOf(state, 'baseline'), regime: 'money' as const }), [state]);
   return (
     <ModuleLayout open={sidebarOpen} onClose={onCloseSidebar} sidebar={<PolicySidebar state={state} dispatch={dispatch} />}>
-      <div className="module-intro">
+      <div className="module-intro stacked">
         <h2>{t('mod.policy')}</h2>
         <p>{t('mod.policy.desc')}</p>
       </div>

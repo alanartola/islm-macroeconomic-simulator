@@ -1,5 +1,5 @@
 import { compareADAS, type ADASComparison, type ADASParamKey, type ADASSolved } from '../engine/adas/adas';
-import { emptyLevels, nonZero, type LeveledReport } from './levels';
+import { emptyLevels, nonZero, type LeveledReport, causeParam } from './levels';
 
 const ORDER: ADASParamKey[] = ['M', 'G', 'T0', 't', 'TR', 'C0', 'c', 'I0', 'b', 'k', 'h', 'L0', 's', 'Yn', 'Pe', 'theta'];
 const DEMAND: ADASParamKey[] = ['M', 'G', 'T0', 't', 'TR', 'C0', 'c', 'I0', 'b', 'k', 'h', 'L0'];
@@ -24,7 +24,7 @@ export function buildADASInsights(s0: ADASSolved, s1: ADASSolved, cmp: ADASCompa
   }
   for (const k of ORDER) {
     const c = cmp.paramChanges[k];
-    if (c) L[1].push({ key: 'lvl.cause.param', vars: { param: { key: adasParamName(k) }, from: c.from, to: c.to, delta: c.abs, pct: c.pct ?? 0 } });
+    if (c) L[1].push(causeParam(adasParamName(k), c));
   }
   const demand = DEMAND.some(changed);
   const supply = SUPPLY.some(changed);

@@ -17,6 +17,8 @@ import { alphaOf, autonomousOf } from '../../engine/advanced';
 import { useI18n } from '../../i18n';
 import { adasParamName, buildADASInsights } from '../../interpretation/adasInsights';
 import { usePair } from '../../state/pair';
+import { SaveToLab } from '../../components/ui/SaveToLab';
+import type { LabConfig } from '../../lab/scenario';
 import { ChartCard } from '../../components/ui/ChartCard';
 import { CompareTable, Explanation, IssueList, type Row } from '../../components/ui/Explanation';
 import { Kpi, ModuleLayout } from '../../components/ui/ModuleLayout';
@@ -205,9 +207,9 @@ function PathCharts({ s1 }: { s1: ADASSolved }) {
 }
 
 /** Module F — aggregate demand and aggregate supply. */
-export function ADASModule({ sidebarOpen, onCloseSidebar }: { sidebarOpen: boolean; onCloseSidebar: () => void }) {
+export function ADASModule({ sidebarOpen, onCloseSidebar, initial }: { sidebarOpen: boolean; onCloseSidebar: () => void; initial?: Extract<LabConfig, { model: 'adas' }> }) {
   const { t, f } = useI18n();
-  const { state, dispatch, set } = usePair<P>(ADAS_DEFAULTS as P);
+  const { state, dispatch, set } = usePair<P>(ADAS_DEFAULTS as P, initial as { baseline: P; shocked: P } | undefined);
   const [preset, setPreset] = useState<ADASPresetId | null>(null);
   const r0 = useMemo(() => solveADAS(state.baseline), [state.baseline]);
   const r1 = useMemo(() => solveADAS(state.shocked), [state.shocked]);
@@ -315,8 +317,11 @@ export function ADASModule({ sidebarOpen, onCloseSidebar }: { sidebarOpen: boole
   return (
     <ModuleLayout open={sidebarOpen} onClose={onCloseSidebar} sidebar={sidebar}>
       <div className="module-intro">
-        <h2>{t('mod.adas')}</h2>
-        <p>{t('mod.adas.desc')}</p>
+        <div>
+          <h2>{t('mod.adas')}</h2>
+          <p>{t('mod.adas.desc')}</p>
+        </div>
+        <SaveToLab config={r0.ok && r1.ok ? { model: 'adas', baseline: state.baseline, shocked: state.shocked } : null} defaultName={t('mod.adas')} />
       </div>
       <IssueList groups={groups} prefix="adas.issue." />
       {body}

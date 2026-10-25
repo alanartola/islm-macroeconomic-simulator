@@ -269,7 +269,7 @@ export function ConstructionModule({ state, dispatch, sim, sidebarOpen, onCloseS
   const { t } = useI18n();
   return (
     <ModuleLayout open={sidebarOpen} onClose={onCloseSidebar} sidebar={<AdvSidebar state={state} dispatch={dispatch} sim={sim} onPick={onCloseSidebar} />}>
-      <div className="module-intro">
+      <div className="module-intro stacked">
         <h2>{t('mod.construction')}</h2>
         <p>{t('mod.construction.desc')}</p>
       </div>
