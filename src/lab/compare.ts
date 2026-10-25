@@ -44,7 +44,8 @@ export function comparisonCsvRows(cmp: Comparison, label: (f: Family) => string,
   for (const r of cmp.rows) {
     for (const stat of ['E0', 'E1', 'delta'] as const) {
       const line: (string | number | null)[] = [label(r.family), stat];
-      for (const c of r.cells) line.push(c === null ? null : stat === 'E0' ? c.v0 : stat === 'E1' ? c.v1 : c.delta);
+      // 12 significant digits: removes floating-point noise (2000.0000000000005) without losing precision.
+      for (const c of r.cells) line.push(c === null ? null : Number((stat === 'E0' ? c.v0 : stat === 'E1' ? c.v1 : c.delta).toPrecision(12)));
       out.push(line);
     }
   }

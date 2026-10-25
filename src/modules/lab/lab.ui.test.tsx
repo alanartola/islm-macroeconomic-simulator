@@ -3,7 +3,7 @@ import App from '../../App';
 import { DEFAULT_PARAMS } from '../../engine';
 import { ADAS_DEFAULTS } from '../../engine/adas/adas';
 import { ISMP_DEFAULTS } from '../../engine/ismp/ismp';
-import { encodeConfigHash, exportScenarios, type LabConfig } from '../../lab/scenario';
+import { decodeConfigHash, encodeConfigHash, exportScenarios, type LabConfig } from '../../lab/scenario';
 
 beforeAll(() => {
   Object.defineProperty(window, 'matchMedia', {
@@ -108,5 +108,18 @@ describe('Module H — scenario lab', () => {
   it('a malformed link is ignored and the module opens with its defaults', () => {
     open('/?m=adas#x=%%%');
     expect(screen.getByRole('heading', { name: 'Oferta y demanda agregada', level: 2 })).toBeInTheDocument();
+  });
+
+  it('the top-bar link reproduces the configuration of modules that keep local state (F)', async () => {
+    const copied: string[] = [];
+    Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText: async (s: string) => void copied.push(s) } });
+    open('/?m=adas');
+    fireEvent.click(screen.getByRole('button', { name: /^Expansión monetaria/ }));
+    fireEvent.click(screen.getByRole('button', { name: 'Copiar enlace' }));
+    await waitFor(() => expect(copied).toHaveLength(1));
+    const url = new URL(copied[0]!);
+    expect(url.searchParams.get('m')).toBe('adas');
+    const cfg = decodeConfigHash(url.hash);
+    expect(cfg?.model === 'adas' && cfg.shocked.M).toBe(1200);
   });
 });

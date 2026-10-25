@@ -22,7 +22,6 @@ export const labEs = {
   'home.modes': 'Nivel educativo: variables esenciales y explicaciones paso a paso. Nivel avanzado: todos los parámetros, derivadas y diagnósticos.',
 
   'lab.save.hint': 'Guarda los parámetros de E₀ y E₁ en el laboratorio de escenarios (los resultados siempre se recalculan).',
-  'lab.copyLink': 'Copiar enlace',
   'lab.copyLink.hint': 'Enlace que reabre exactamente esta configuración.',
   'lab.copied': 'Enlace copiado',
 
@@ -184,7 +183,6 @@ export const labEn: Record<keyof typeof labEs, string> = {
   'home.modes': 'Educational level: essential variables and step-by-step explanations. Advanced level: every parameter, derivatives and diagnostics.',
 
   'lab.save.hint': 'Saves the E₀ and E₁ parameters to the scenario lab (results are always recomputed).',
-  'lab.copyLink': 'Copy link',
   'lab.copyLink.hint': 'Link that reopens exactly this configuration.',
   'lab.copied': 'Link copied',
 

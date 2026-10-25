@@ -1,18 +1,21 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useI18n } from '../../i18n';
 import { useLab } from '../../state/lab';
+import { setCurrentConfig } from '../../state/currentConfig';
 import type { LabConfig } from '../../lab/scenario';
-import { configUrl, copyLink } from '../../lab/labels';
 
-/** Saves the current experiment (inputs only) to the scenario lab, or copies a link that reopens it. */
+/**
+ * Saves the current experiment (inputs only) to the scenario lab and registers
+ * it as the configuration shared by the top-bar "Copiar enlace" button.
+ */
 export function SaveToLab({ config, defaultName }: { config: LabConfig | null; defaultName: string }) {
   const { t, lang } = useI18n();
   const { save } = useLab();
-  const [done, setDone] = useState<'saved' | 'copied' | null>(null);
-  const flash = (what: 'saved' | 'copied') => {
-    setDone(what);
-    window.setTimeout(() => setDone(null), 1800);
-  };
+  const [done, setDone] = useState(false);
+  useEffect(() => {
+    setCurrentConfig(config);
+  }, [config]);
+  useEffect(() => () => setCurrentConfig(null), []);
   return (
     <div className="save-to-lab">
       <button
@@ -22,23 +25,12 @@ export function SaveToLab({ config, defaultName }: { config: LabConfig | null; d
           if (!config) return;
           const time = new Date().toLocaleTimeString(lang, { hour: '2-digit', minute: '2-digit' });
           save(config, `${defaultName} · ${time}`);
-          flash('saved');
+          setDone(true);
+          window.setTimeout(() => setDone(false), 1800);
         }}
         title={t('lab.save.hint')}
       >
-        {done === 'saved' ? t('ui.saved') : t('ui.saveExperiment')}
-      </button>
-      <button
-        className="btn small ghost"
-        disabled={!config}
-        onClick={async () => {
-          if (!config) return;
-          await copyLink(configUrl(config, lang));
-          flash('copied');
-        }}
-        title={t('lab.copyLink.hint')}
-      >
-        {done === 'copied' ? t('lab.copied') : t('lab.copyLink')}
+        {done ? t('ui.saved') : t('ui.saveExperiment')}
       </button>
     </div>
   );

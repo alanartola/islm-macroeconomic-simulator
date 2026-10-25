@@ -58,7 +58,7 @@ npm run dev
 
 ## Validation
 
-369 automated tests (Vitest) check the engines against hand-derived solutions,
+370 automated tests (Vitest) check the engines against hand-derived solutions,
 residuals and finite-difference derivatives, the Brent solver, the generated
 explanations in both languages, the scenario lab (recomputation, comparability,
 CSV/JSON/link round trips, invalid imports) and the interface defaults
