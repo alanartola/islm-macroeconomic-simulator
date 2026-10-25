@@ -97,7 +97,8 @@ export function DeltaBars({ data, ariaLabel, format = 'sbn' }: { data: DeltaDatu
             const v = Math.abs(d.value) < 1e-9 ? 0 : d.value;
             const x0 = Math.min(x(0), x(v));
             const bwidth = Math.abs(x(v) - x(0));
-            const color = v >= 0 ? 'var(--series-is)' : 'var(--series-8)';
+            // Sign of the change: the same convention as every Δ figure in the laboratory.
+            const color = v >= 0 ? 'var(--up)' : 'var(--down)';
             return (
               <g key={d.label} transform={`translate(0,${yy})`}>
                 <text x={-10} y={row / 2} dy="0.32em" textAnchor="end" fontSize={12} fill="var(--text-secondary)" fontWeight={d.emphasis ? 700 : 400}>{d.label}</text>

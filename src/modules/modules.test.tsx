@@ -182,3 +182,34 @@ describe('Module G (IS-MP, Phillips, Taylor)', () => {
     expect(screen.getByText('Vinculante')).toBeInTheDocument();
   });
 });
+
+describe('masthead and module headers (redesign)', () => {
+  it('the wordmark returns to the home screen', () => {
+    open('?m=adas');
+    fireEvent.click(screen.getByRole('button', { name: /Laboratorio Avanzado de Macroeconomía/ }));
+    expect(screen.getByRole('heading', { level: 2, name: 'Laboratorio Avanzado de Macroeconomía' })).toBeInTheDocument();
+  });
+
+  it('the narrow-screen switcher lists the modules by theme and opens one', () => {
+    open('?m=basic');
+    const toggle = screen.getByRole('button', { name: /Módulo A · IS-LM tradicional/ });
+    expect(toggle).toHaveAttribute('aria-expanded', 'false');
+    fireEvent.click(toggle);
+    const menu = screen.getByRole('menu', { name: 'Módulos del laboratorio' });
+    expect(within(menu).getByText('Precios, inflación y política monetaria')).toBeInTheDocument();
+    fireEvent.click(within(menu).getByRole('menuitem', { name: /Mundell-Fleming/ }));
+    expect(screen.getByRole('heading', { name: 'Mundell-Fleming', level: 2 })).toBeInTheDocument();
+    expect(screen.queryByRole('menu')).not.toBeInTheDocument();
+  });
+
+  it('every module header names its letter and theme', () => {
+    open('?m=ismp');
+    expect(screen.getByText(/Módulo G · Precios, inflación y política monetaria/)).toBeInTheDocument();
+  });
+
+  it('the home figure is computed by the Module A engine', () => {
+    open('');
+    expect(screen.getByText(/el producto sube de 1\.900 a 2\.000 y la tasa de 5,00% a 6,00%/)).toBeInTheDocument();
+    expect(screen.getByText(/absorbe el 50,0% del impulso keynesiano/)).toBeInTheDocument();
+  });
+});

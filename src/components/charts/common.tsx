@@ -20,16 +20,16 @@ export function AxisBottom({ scale, gridLength, ticks = 6, format, label }: Axis
     <g className="axis axis-x" aria-hidden="true">
       {scale.ticks(ticks).map((v) => (
         <g key={v} transform={`translate(${scale(v)},0)`}>
-          <line y1={0} y2={-gridLength} stroke="var(--grid)" strokeWidth={1} />
-          <line y1={0} y2={4} stroke="var(--axis)" />
-          <text y={16} textAnchor="middle" fontSize={11} fill="var(--text-muted)" className="num">
+          <line y1={0} y2={-gridLength} stroke="var(--grid-v)" strokeWidth={1} />
+          <line y1={0} y2={3} stroke="var(--axis)" />
+          <text y={15} textAnchor="middle" fontSize={10.5} fill="var(--text-muted)" className="num">
             {fmt(v)}
           </text>
         </g>
       ))}
       <line x1={r0} x2={r1} stroke="var(--axis)" />
       {label && (
-        <text x={(r0 + r1) / 2} y={34} textAnchor="middle" fontSize={11.5} fill="var(--text-secondary)">
+        <text x={(r0 + r1) / 2} y={34} textAnchor="middle" fontSize={11} fill="var(--text-secondary)" letterSpacing="0.02em">
           {label}
         </text>
       )}
@@ -47,15 +47,15 @@ export function AxisLeft({ scale, gridLength, ticks = 6, format, label }: AxisPr
       {scale.ticks(ticks).map((v) => (
         <g key={v} transform={`translate(0,${scale(v)})`}>
           <line x1={0} x2={gridLength} stroke="var(--grid)" strokeWidth={1} />
-          <line x1={-4} x2={0} stroke="var(--axis)" />
-          <text x={-8} dy="0.32em" textAnchor="end" fontSize={11} fill="var(--text-muted)" className="num">
+          <line x1={-3} x2={0} stroke="var(--axis)" />
+          <text x={-7} dy="0.32em" textAnchor="end" fontSize={10.5} fill="var(--text-muted)" className="num">
             {fmt(v)}
           </text>
         </g>
       ))}
       <line y1={r0} y2={r1} stroke="var(--axis)" />
       {label && (
-        <text transform={`translate(-42,${(r0 + r1) / 2}) rotate(-90)`} textAnchor="middle" fontSize={11.5} fill="var(--text-secondary)">
+        <text transform={`translate(-42,${(r0 + r1) / 2}) rotate(-90)`} textAnchor="middle" fontSize={11} fill="var(--text-secondary)" letterSpacing="0.02em">
           {label}
         </text>
       )}

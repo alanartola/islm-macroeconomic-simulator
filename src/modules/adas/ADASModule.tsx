@@ -27,6 +27,7 @@ import { deltaCls } from '../../components/ui/format';
 import { XYChart, type Pt, type XYMarker, type XYSeries } from '../../components/charts/XYChart';
 import { DeltaBars } from '../../components/charts/BarCharts';
 import { LegendLine } from '../../components/charts/common';
+import { ModuleHeader } from '../../components/ui/ModuleHeader';
 
 type P = ADASParams & Record<string, number>;
 type F = FieldMeta<ADASParamKey>;
@@ -56,8 +57,8 @@ const FIELDS: F[] = [
 ];
 
 const AD = 'var(--series-is)';
-const AS = 'var(--series-lm)';
-const LR = 'var(--series-3)';
+const AS = 'var(--series-supply)';
+const LR = 'var(--series-ref)';
 
 function ADASChart({ s0, s1 }: { s0: ADASSolved; s1: ADASSolved }) {
   const { t, f } = useI18n();
@@ -316,13 +317,9 @@ export function ADASModule({ sidebarOpen, onCloseSidebar, initial }: { sidebarOp
   }
   return (
     <ModuleLayout open={sidebarOpen} onClose={onCloseSidebar} sidebar={sidebar}>
-      <div className="module-intro">
-        <div>
-          <h2>{t('mod.adas')}</h2>
-          <p>{t('mod.adas.desc')}</p>
-        </div>
+      <ModuleHeader id="adas">
         <SaveToLab config={r0.ok && r1.ok ? { model: 'adas', baseline: state.baseline, shocked: state.shocked } : null} defaultName={t('mod.adas')} />
-      </div>
+      </ModuleHeader>
       <IssueList groups={groups} prefix="adas.issue." />
       {body}
     </ModuleLayout>

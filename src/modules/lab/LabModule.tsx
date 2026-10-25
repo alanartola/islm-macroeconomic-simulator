@@ -25,6 +25,7 @@ import { HeatMap } from '../../components/charts/HeatMap';
 import { XYChart, type Pt, type XYMarker, type XYSegment, type XYSeries } from '../../components/charts/XYChart';
 import { LegendLine } from '../../components/charts/common';
 import { OVERLAY_COLORS } from '../../components/charts/colors';
+import { ModuleHeader } from '../../components/ui/ModuleHeader';
 
 const COLORS = OVERLAY_COLORS.slice(0, MAX_COMPARE) as readonly string[];
 const LEVELS: Level[] = [1, 2, 3, 4, 5];
@@ -107,11 +108,7 @@ export function LabModule({ onOpen }: { onOpen: (cfg: LabConfig) => void }) {
 
   return (
     <main className="main lab-main">
-      <div className="module-intro lab-screen-only">
-        <div>
-          <h2>{t('mod.lab')}</h2>
-          <p>{t('lab.intro')}</p>
-        </div>
+      <ModuleHeader id="lab" className="lab-screen-only" description={t('lab.intro')}>
         <div className="save-to-lab">
           <button className="btn small" onClick={() => fileRef.current?.click()}>
             {t('lab.import')}
@@ -132,7 +129,7 @@ export function LabModule({ onOpen }: { onOpen: (cfg: LabConfig) => void }) {
             }}
           />
         </div>
-      </div>
+      </ModuleHeader>
       {notice && (
         <div className={`issue-box ${notice.kind === 'ok' ? 'info' : 'error'} lab-screen-only`} role="status">
           {notice.text}

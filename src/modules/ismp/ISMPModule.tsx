@@ -28,6 +28,7 @@ import { deltaCls } from '../../components/ui/format';
 import { XYChart, type Pt, type XYMarker, type XYSeries } from '../../components/charts/XYChart';
 import { DeltaBars } from '../../components/charts/BarCharts';
 import { LegendLine } from '../../components/charts/common';
+import { ModuleHeader } from '../../components/ui/ModuleHeader';
 
 type P = ISMPParams & Record<string, number>;
 type F = FieldMeta<ISMPParamKey>;
@@ -61,8 +62,8 @@ function fields(regime: MPRegime): F[] {
 
 const ISC = 'var(--series-is)';
 const MPC = 'var(--series-lm)';
-const PCC = 'var(--series-3)';
-const RC = 'var(--series-7)';
+const PCC = 'var(--series-supply)';
+const RC = 'var(--series-lm)';
 
 function ISMPCharts({ s0, s1 }: { s0: ISMPSolved; s1: ISMPSolved }) {
   const { t, f } = useI18n();
@@ -108,7 +109,7 @@ function ISMPCharts({ s0, s1 }: { s0: ISMPSolved; s1: ISMPSolved }) {
   const tr: XYSeries[] = [
     { id: 'rule', points: ruleLine, color: RC, label: t('ismp.chart.rule') },
     { id: 'fisher', points: [piLo, piHi].map((pi) => [pi, p1.rStar + pi] as Pt), color: 'var(--text-muted)', dash: 'dot', label: 'r̂* + π' },
-    { id: 'lb', points: [[piLo - 50, p1.iLB], [piHi + 50, p1.iLB]], color: 'var(--series-8)', dash: 'dash', label: t('ismp.chart.lb'), hover: false },
+    { id: 'lb', points: [[piLo - 50, p1.iLB], [piHi + 50, p1.iLB]], color: 'var(--series-ref)', dash: 'dash', label: t('ismp.chart.lb'), hover: false },
   ];
   if (reg === 'peg') tr.push({ id: 'peg', points: [[piLo - 50, p1.iPeg], [piHi + 50, p1.iPeg]], color: MPC, label: 'ī', hover: false });
   const is_ = [q0.i, q1.i, ...ruleLine.map((x) => x[1]), p1.iLB];
@@ -288,13 +289,9 @@ export function ISMPModule({ sidebarOpen, onCloseSidebar, initial }: { sidebarOp
   }
   return (
     <ModuleLayout open={sidebarOpen} onClose={onCloseSidebar} sidebar={sidebar}>
-      <div className="module-intro">
-        <div>
-          <h2>{t('mod.ismp')}</h2>
-          <p>{t('mod.ismp.desc')}</p>
-        </div>
+      <ModuleHeader id="ismp">
         <SaveToLab config={r0.ok && r1.ok ? { model: 'ismp', baseline: state.baseline, shocked: state.shocked, regime } : null} defaultName={t('mod.ismp')} />
-      </div>
+      </ModuleHeader>
       <IssueList groups={groups} prefix="ismp.issue." />
       {body}
     </ModuleLayout>

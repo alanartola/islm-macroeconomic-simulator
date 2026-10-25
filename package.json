@@ -20,6 +20,7 @@
     "validate": "npm run typecheck && npm run lint && npm run test && vite build"
   },
   "dependencies": {
+    "@fontsource-variable/source-serif-4": "5.2.8",
     "@fontsource/ibm-plex-mono": "5.2.7",
     "@fontsource/ibm-plex-sans": "5.2.8",
     "d3-scale": "4.0.2",

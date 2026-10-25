@@ -85,16 +85,16 @@ export function ISLMChart({ e0, e1, showInitial, showShifted, showGuides, saved 
     // Label at the end that is further right (or higher, for near-vertical lines).
     const useA = labelAt === 'right' ? ax > bx : ay < by;
     const lx = Math.min((useA ? ax : bx) + 6, w + 4);
-    let ly = Math.max(10, Math.min(h - 4, useA ? ay : by));
+    let ly = Math.max(10, Math.min(h - 14, useA ? ay : by));
     if (label) {
       while (placed.some((p) => Math.abs(p.x - lx) < 34 && Math.abs(p.y - ly) < 14)) ly += 14;
       placed.push({ x: lx, y: ly });
     }
     return (
       <g key={key} opacity={opacity}>
-        <line x1={ax} y1={ay} x2={bx} y2={by} stroke={color} strokeWidth={dashed ? 1.75 : 2.25} strokeDasharray={dashed ? '6 5' : undefined} strokeLinecap="round" />
+        <line x1={ax} y1={ay} x2={bx} y2={by} stroke={color} strokeWidth={dashed ? 1.4 : 2} strokeDasharray={dashed ? '5 4' : undefined} strokeLinecap="round" />
         {label && (
-          <text x={lx} y={ly} dy="0.32em" fontSize={12} fontWeight={600} fill="var(--text-primary)">
+          <text x={lx} y={ly} dy="0.32em" fontFamily="var(--font-serif)" fontStyle="italic" fontSize={14} fontWeight={500} fill="var(--text-primary)">
             {label}
           </text>
         )}
@@ -242,7 +242,7 @@ export function ISLMChart({ e0, e1, showInitial, showShifted, showGuides, saved 
           {/* Constant-rate (Keynesian) point: output on IS₁ at i₀ */}
           {showGuides && isMoved && Math.abs(q1.i - q0.i) > 1e-6 && keynesY >= yLo && keynesY <= yHi && (
             <g>
-              <circle cx={x(keynesY)} cy={y(q0.i)} r={4.5} fill="var(--surface-1)" stroke={IS_COLOR} strokeWidth={1.5} strokeDasharray="2 2" />
+              <circle cx={x(keynesY)} cy={y(q0.i)} r={4.5} fill="var(--page)" stroke={IS_COLOR} strokeWidth={1.5} strokeDasharray="2 2" />
               <title>{t('chart.keynesian.desc')}</title>
             </g>
           )}
@@ -252,19 +252,19 @@ export function ISLMChart({ e0, e1, showInitial, showShifted, showGuides, saved 
             const q = s.e1.equilibrium;
             return (
               <g key={`${s.id}-pt`} transform={`translate(${x(q.Y)},${y(q.i)})`}>
-                <rect x={-5} y={-5} width={10} height={10} transform="rotate(45)" fill={s.color} stroke="var(--surface-1)" strokeWidth={2} />
+                <rect x={-5} y={-5} width={10} height={10} transform="rotate(45)" fill={s.color} stroke="var(--page)" strokeWidth={2} />
               </g>
             );
           })}
 
           {/* Equilibria */}
           <g>
-            <circle cx={pxE0.x} cy={pxE0.y} r={6} fill="var(--surface-1)" stroke="var(--eq0)" strokeWidth={2} />
-            <text x={pxE0.x - 10} y={pxE0.y - 10} textAnchor="end" fontSize={12.5} fontWeight={600} fill="var(--text-secondary)">E₀</text>
+            <circle cx={pxE0.x} cy={pxE0.y} r={5} fill="var(--page)" stroke="var(--eq0)" strokeWidth={1.6} />
+            <text x={pxE0.x - 10} y={pxE0.y - 10} textAnchor="end" fontFamily="var(--font-serif)" fontStyle="italic" fontSize={14.5} fontWeight={500} fill="var(--text-secondary)">E₀</text>
             {moved && (
               <>
-                <circle cx={pxE1.x} cy={pxE1.y} r={6} fill="var(--eq1)" stroke="var(--surface-1)" strokeWidth={2} />
-                <text x={pxE1.x + 10} y={pxE1.y - 10} fontSize={12.5} fontWeight={700} fill="var(--text-primary)">E₁</text>
+                <circle cx={pxE1.x} cy={pxE1.y} r={5.5} fill="var(--eq1)" stroke="var(--page)" strokeWidth={2} />
+                <text x={pxE1.x + 10} y={pxE1.y - 10} fontFamily="var(--font-serif)" fontStyle="italic" fontSize={14.5} fontWeight={600} fill="var(--text-primary)">E₁</text>
               </>
             )}
           </g>

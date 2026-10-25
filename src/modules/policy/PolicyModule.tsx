@@ -24,6 +24,7 @@ import { HeatMap } from '../../components/charts/HeatMap';
 import { LegendLine } from '../../components/charts/common';
 import { advFields } from '../advanced/fields';
 import { IS, LM, useAdvChart } from '../advanced/useAdvChart';
+import { ModuleHeader } from '../../components/ui/ModuleHeader';
 
 type Tab = 'fiscal' | 'monetary' | 'mix' | 'sensitivity';
 const FISCAL: PolicyKind[] = ['G', 'T0', 't', 'TR', 'GT0', 'Gacc'];
@@ -334,10 +335,7 @@ export function PolicyModule({ state, dispatch, sidebarOpen, onCloseSidebar }: P
   const base = useMemo(() => ({ ...specOf(state, 'baseline'), regime: 'money' as const }), [state]);
   return (
     <ModuleLayout open={sidebarOpen} onClose={onCloseSidebar} sidebar={<PolicySidebar state={state} dispatch={dispatch} />}>
-      <div className="module-intro stacked">
-        <h2>{t('mod.policy')}</h2>
-        <p>{t('mod.policy.desc')}</p>
-      </div>
+      <ModuleHeader id="policy" />
       <nav className="tabs" role="tablist">
         {(['fiscal', 'monetary', 'mix', 'sensitivity'] as Tab[]).map((k) => (
           <button key={k} role="tab" aria-selected={tab === k} onClick={() => setTab(k)}>

@@ -235,7 +235,7 @@ export function MoneyMarketChart({ sim }: { sim: AdvSimOk }) {
   if (Math.abs(q0.Y - q1.Y) > 1e-9 || s0.spec.lm !== s1.spec.lm) series.push({ id: 'l0', points: demandCurve(spec0, q0.Y, iLo, iHi, mMax), color: LM, dash: 'dash', label: 'L(Y₀, i)' });
   series.push({ id: 'l1', points: demandCurve(spec1, q1.Y, iLo, iHi, mMax), color: LM, label: 'L(Y₁, i)' });
   if (s1.spec.regime === 'rate') {
-    series.push({ id: 'peg', points: [[0, s1.spec.targetRate], [mMax, s1.spec.targetRate]], color: 'var(--series-3)', label: 'ī', hover: false });
+    series.push({ id: 'peg', points: [[0, s1.spec.targetRate], [mMax, s1.spec.targetRate]], color: 'var(--series-ref)', label: 'ī', hover: false });
   } else {
     if (Math.abs(q0.realMoney - q1.realMoney) > 1e-9) series.push({ id: 'm0', points: [[q0.realMoney, iLo - 50], [q0.realMoney, iHi + 50]], color: 'var(--text-secondary)', dash: 'dash', label: '(M/P)₀', hover: false });
     series.push({ id: 'm1', points: [[q1.realMoney, iLo - 50], [q1.realMoney, iHi + 50]], color: 'var(--text-primary)', label: '(M/P)₁', hover: false });

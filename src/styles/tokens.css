@@ -1,0 +1,144 @@
+/* ────────────────────────────────────────────────────────────────────────────
+   Design tokens of the laboratory.
+
+   Identity: a research instrument rather than a dashboard. Graphite surfaces,
+   warm neutral text, a single brass accent for interface state, and chart
+   colours that carry ECONOMIC meaning and are the same in every module:
+
+     demand / goods market (IS, AD, IS*, I(i), GA) ..... copper   --series-is
+     money market / monetary policy (LM, MP, Taylor) ... steel    --series-lm
+     supply / prices (SRAS, Phillips curve) ............ plum     --series-supply
+     external sector (BP, parity, NX) .................. olive    --series-ext
+     references (potential, long run, bounds, tangent) . neutral  --series-ref
+     E₀ hollow ring (--eq0) · E₁ solid point (--eq1)
+     increase / decrease of a variable ................. --up / --down
+
+   Dark is the default theme (no OS preference); light is a separate paper-like
+   palette, not an inversion. Every pair was checked for contrast on its surface.
+   ──────────────────────────────────────────────────────────────────────────── */
+:root {
+  color-scheme: dark;
+
+  /* Type */
+  --font-serif: 'Source Serif 4 Variable', 'Source Serif 4', Georgia, 'Times New Roman', serif;
+  --font-sans: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'Cascadia Mono', Consolas, monospace;
+  --fs-xxs: 10.5px; /* kickers, axis captions */
+  --fs-xs: 11.5px; /* labels, notes */
+  --fs-sm: 12.5px; /* controls, tables */
+  --fs-md: 14px; /* body */
+  --fs-lg: 17px; /* figure titles, lede */
+  --fs-xl: 26px; /* module titles */
+  --fs-xxl: 40px; /* home title */
+
+  /* Space: a 4-px base, used unevenly on purpose (content groups breathe more than rows). */
+  --s1: 4px;
+  --s2: 8px;
+  --s3: 12px;
+  --s4: 16px;
+  --s5: 24px;
+  --s6: 32px;
+  --s7: 48px;
+
+  --radius: 3px;
+  --radius-sm: 2px;
+  --sidebar-w: 316px;
+  --mast-h: 52px;
+  --nav-h: 40px;
+
+  /* Surfaces (graphite) */
+  --page: #121315;
+  --surface-1: #17181b;
+  --surface-2: #1e2024;
+  --surface-3: #282b30;
+  --border: rgba(236, 232, 224, 0.085);
+  --border-strong: rgba(236, 232, 224, 0.17);
+
+  /* Text (warm neutrals) */
+  --text-primary: #ebe7df;
+  --text-secondary: #b6b1a7;
+  --text-muted: #8a857c;
+
+  /* Interface accent: brass, used only for state (active, focus, selection). */
+  --accent: #d4ab5f;
+  --accent-soft: rgba(212, 171, 95, 0.12);
+  --focus: #e2bd78;
+
+  /* Charts */
+  --grid: rgba(236, 232, 224, 0.06);
+  --grid-v: rgba(236, 232, 224, 0.025);
+  --axis: #4a4842;
+  --series-is: #d98a5a;
+  --series-lm: #86a8c8;
+  --series-supply: #c792b9;
+  --series-ext: #a9b86f;
+  --series-ref: #8f8a80;
+  /* Categorical slots (saved scenarios, construction tracks); never used for a market. */
+  --series-3: #a9b86f;
+  --series-4: #d4ab5f;
+  --series-5: #c792b9;
+  --series-6: #7fb3a5;
+  --series-7: #a8b0ba;
+  --series-8: #e07a6a;
+  --eq0: #a39e94;
+  --eq1: #f3efe7;
+
+  /* Signs and states */
+  --up: #93c48c;
+  --down: #e48474;
+  --good: #93c48c;
+  --warning: #e3a24f;
+  --serious: #e3864f;
+  --critical: #e48474;
+  --warning-bg: rgba(227, 162, 79, 0.08);
+  --critical-bg: rgba(228, 132, 116, 0.08);
+  --info-bg: rgba(236, 232, 224, 0.035);
+  --band-trap: rgba(134, 168, 200, 0.07);
+  --band-classical: rgba(217, 138, 90, 0.07);
+  --shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+}
+
+/* Light: paper and ink. Chart colours are darker steps of the same hues. */
+:root[data-theme='light'] {
+  color-scheme: light;
+  --page: #f4f2ec;
+  --surface-1: #faf9f5;
+  --surface-2: #ece9e1;
+  --surface-3: #e1ddd2;
+  --border: rgba(30, 28, 24, 0.12);
+  --border-strong: rgba(30, 28, 24, 0.24);
+  --text-primary: #1c1b18;
+  --text-secondary: #4b4842;
+  --text-muted: #726e66;
+  --accent: #86621a;
+  --accent-soft: rgba(134, 98, 26, 0.1);
+  --focus: #9a7224;
+  --grid: rgba(30, 28, 24, 0.075);
+  --grid-v: rgba(30, 28, 24, 0.035);
+  --axis: #aaa497;
+  --series-is: #b0532a;
+  --series-lm: #2f628f;
+  --series-supply: #87457a;
+  --series-ext: #5b7426;
+  --series-ref: #847f74;
+  --series-3: #5b7426;
+  --series-4: #9a6c12;
+  --series-5: #87457a;
+  --series-6: #2f7566;
+  --series-7: #5e6670;
+  --series-8: #b03a2e;
+  --eq0: #6c685f;
+  --eq1: #1c1b18;
+  --up: #3d7a37;
+  --down: #b03a2e;
+  --good: #3d7a37;
+  --warning: #9a6200;
+  --serious: #a8521f;
+  --critical: #b03a2e;
+  --warning-bg: rgba(154, 98, 0, 0.07);
+  --critical-bg: rgba(176, 58, 46, 0.06);
+  --info-bg: rgba(30, 28, 24, 0.03);
+  --band-trap: rgba(47, 98, 143, 0.06);
+  --band-classical: rgba(176, 83, 42, 0.06);
+  --shadow: 0 12px 40px rgba(40, 32, 20, 0.16);
+}
