@@ -57,16 +57,16 @@ const SAVE = click('Guardar experimento');
 const FILL_LAB = [
   click('C · Expansión fiscal: G↑'),
   SAVE,
-  nav('IS-LM avanzado'),
+  nav('B IS-LM avanzado'),
   click('Expansión fiscal con t > 0'),
   SAVE,
-  nav('Oferta y demanda agregada'),
+  nav('F OA-DA'),
   click('Expansión fiscal'),
   SAVE,
-  nav('Mundell-Fleming'),
+  nav('E Mundell-Fleming'),
   click('Expansión fiscal (fijo)'),
   SAVE,
-  nav('Laboratorio de escenarios'),
+  nav('H Escenarios'),
 ];
 
 // Spanish and dark mode are the defaults, so the main captures carry neither ?lang nor ?theme.
