@@ -36,3 +36,6 @@ desktop.ini
 .env
 .env.*
 !.env.example
+
+# Local tooling
+.claude/
