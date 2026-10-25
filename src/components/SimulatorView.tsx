@@ -33,7 +33,7 @@ export function SimulatorView({ sim, state, dispatch, overlays }: Props) {
       <Kpis e0={e0} e1={e1} cmp={cmp} />
       <div className="sim-grid">
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16, minWidth: 0 }}>
-          <div className="card">
+          <div className="card chart-card">
             <div className="card-head">
               <div>
                 <h2>{t('chart.title')}</h2>

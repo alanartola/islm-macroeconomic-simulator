@@ -27,6 +27,7 @@ import { deltaCls } from '../../components/ui/format';
 import { XYChart, type XYMarker, type XYSegment, type XYSeries } from '../../components/charts/XYChart';
 import { GroupedBars } from '../../components/charts/BarCharts';
 import { LegendLine } from '../../components/charts/common';
+import { ModuleHeader } from '../../components/ui/ModuleHeader';
 
 type F = FieldMeta<OpenParamKey>;
 const f_ = (key: OpenParamKey, sym: string, group: string, min: number, max: number, step: number, digits: number, unit: string, level: 'edu' | 'adv', tag?: string): F => ({
@@ -75,7 +76,7 @@ function openFields(regime: FXRegime): F[] {
 
 const IS = 'var(--series-is)';
 const LM = 'var(--series-lm)';
-const BP = 'var(--series-3)';
+const BP = 'var(--series-ext)';
 
 function OpenCharts({ s0, s1 }: { s0: OpenSolved; s1: OpenSolved }) {
   const { t, f } = useI18n();
@@ -353,13 +354,9 @@ export function OpenModule({ sidebarOpen, onCloseSidebar, initial }: { sidebarOp
 
   return (
     <ModuleLayout open={sidebarOpen} onClose={onCloseSidebar} sidebar={sidebar}>
-      <div className="module-intro">
-        <div>
-          <h2>{t('mod.open')}</h2>
-          <p>{t('mod.open.desc')}</p>
-        </div>
+      <ModuleHeader id="open">
         <SaveToLab config={r0.ok && r1.ok ? { model: 'open', baseline: state.baseline, shocked: state.shocked, regime } : null} defaultName={t('mod.open')} />
-      </div>
+      </ModuleHeader>
       <IssueList groups={groups} prefix="open.issue." />
       {body}
     </ModuleLayout>

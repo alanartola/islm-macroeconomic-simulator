@@ -137,7 +137,7 @@ export function XYChart(props: XYChartProps) {
     while (placed.some((p) => Math.abs(p.x - lx) < 40 && Math.abs(p.y - ly) < 13)) ly += 13;
     placed.push({ x: lx, y: ly });
     return (
-      <text key={`${s.id}-lbl`} x={lx} y={ly} dy="0.32em" textAnchor={overflow ? 'end' : 'start'} fontSize={11.5} fontWeight={600} fill="var(--text-primary)">
+      <text key={`${s.id}-lbl`} x={lx} y={ly} dy="0.32em" textAnchor={overflow ? 'end' : 'start'} fontFamily="var(--font-serif)" fontStyle="italic" fontSize={13.5} fontWeight={500} fill="var(--text-primary)">
         {s.label}
       </text>
     );
@@ -185,7 +185,7 @@ export function XYChart(props: XYChartProps) {
     }
   }
 
-  const dashArray = (d?: 'dash' | 'dot') => (d === 'dash' ? '6 5' : d === 'dot' ? '2 3' : undefined);
+  const dashArray = (d?: 'dash' | 'dot') => (d === 'dash' ? '5 4' : d === 'dot' ? '1.5 3' : undefined);
 
   return (
     <div className="chart-wrap" ref={ref}>
@@ -243,7 +243,7 @@ export function XYChart(props: XYChartProps) {
                 d={path(s.points) ?? ''}
                 fill="none"
                 stroke={s.color}
-                strokeWidth={s.width ?? (s.dash ? 1.7 : 2.2)}
+                strokeWidth={s.width ?? (s.dash ? 1.4 : 2)}
                 strokeDasharray={dashArray(s.dash)}
                 strokeLinejoin="round"
                 strokeLinecap="round"
@@ -256,14 +256,14 @@ export function XYChart(props: XYChartProps) {
             const cx = x(m.x);
             const cy = y(m.y);
             if (m.kind === 'ghost') {
-              return <circle key={m.id} cx={cx} cy={cy} r={4.5} fill="var(--surface-1)" stroke={m.color ?? 'var(--text-muted)'} strokeWidth={1.5} strokeDasharray="2 2" />;
+              return <circle key={m.id} cx={cx} cy={cy} r={4.5} fill="var(--page)" stroke={m.color ?? 'var(--text-muted)'} strokeWidth={1.4} strokeDasharray="2 2" />;
             }
             if (m.kind === 'point') {
               return (
                 <g key={m.id}>
-                  <circle cx={cx} cy={cy} r={4.5} fill={m.color ?? 'var(--series-3)'} stroke="var(--surface-1)" strokeWidth={1.5} />
+                  <circle cx={cx} cy={cy} r={4.5} fill={m.color ?? 'var(--series-3)'} stroke="var(--page)" strokeWidth={1.5} />
                   {m.label && (
-                    <text x={cx + 7} y={cy - 7} fontSize={11} fontWeight={600} fill="var(--text-primary)">
+                    <text x={cx + 7} y={cy - 7} fontFamily="var(--font-serif)" fontStyle="italic" fontSize={13} fontWeight={500} fill="var(--text-primary)">
                       {m.label}
                     </text>
                   )}
@@ -273,9 +273,9 @@ export function XYChart(props: XYChartProps) {
             const filled = m.kind === 'e1';
             return (
               <g key={m.id}>
-                <circle cx={cx} cy={cy} r={6} fill={filled ? 'var(--eq1)' : 'var(--surface-1)'} stroke={filled ? 'var(--surface-1)' : 'var(--eq0)'} strokeWidth={2} />
+                <circle cx={cx} cy={cy} r={filled ? 5.5 : 5} fill={filled ? 'var(--eq1)' : 'var(--page)'} stroke={filled ? 'var(--page)' : 'var(--eq0)'} strokeWidth={filled ? 2 : 1.6} />
                 {m.label && (
-                  <text x={filled ? cx + 9 : cx - 9} y={cy - 9} textAnchor={filled ? 'start' : 'end'} fontSize={12} fontWeight={700} fill="var(--text-primary)">
+                  <text x={filled ? cx + 9 : cx - 9} y={cy - 9} textAnchor={filled ? 'start' : 'end'} fontFamily="var(--font-serif)" fontStyle="italic" fontSize={14} fontWeight={filled ? 600 : 500} fill={filled ? 'var(--text-primary)' : 'var(--text-secondary)'}>
                     {m.label}
                   </text>
                 )}

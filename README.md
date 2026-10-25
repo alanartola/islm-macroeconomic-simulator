@@ -31,11 +31,12 @@ en la barra superior)
 4. [Laboratorio de escenarios](#laboratorio-de-escenarios)
 5. [Capturas](#capturas)
 6. [Preferencias: idioma, tema y nivel](#preferencias-idioma-tema-y-nivel)
-7. [Arquitectura](#arquitectura)
-8. [Instalación y ejecución local](#instalación-y-ejecución-local)
-9. [Validaciones y pruebas](#validaciones-y-pruebas)
-10. [Limitaciones](#limitaciones)
-11. [Bibliografía](#bibliografía)
+7. [Diseño](#diseño)
+8. [Arquitectura](#arquitectura)
+9. [Instalación y ejecución local](#instalación-y-ejecución-local)
+10. [Validaciones y pruebas](#validaciones-y-pruebas)
+11. [Limitaciones](#limitaciones)
+12. [Bibliografía](#bibliografía)
 
 ---
 
@@ -119,9 +120,13 @@ Ejemplos verificables a mano con las calibraciones por defecto:
 | ![Mundell-Fleming con tipo de cambio fijo](docs/screenshots/mundell-fleming-oscuro.png) | ![Oferta y demanda agregada: shock de oferta](docs/screenshots/oa-da-oscuro.png) |
 | ![IS-MP: shock inflacionario de oferta](docs/screenshots/is-mp-oscuro.png) | ![Laboratorio de escenarios](docs/screenshots/laboratorio-oscuro.png) |
 | ![Informe de escenarios (tema claro)](docs/screenshots/laboratorio-informe-claro.png) | ![IS-LM tradicional en tema claro](docs/screenshots/simulador-monetaria-claro.png) |
+| ![Pantalla de inicio en tema claro](docs/screenshots/inicio-claro.png) | ![IS-LM avanzado en una notebook de 1024 px](docs/screenshots/notebook-1024-oscuro.png) |
 | ![Paneles de transmisión](docs/screenshots/transmision-oscuro.png) | ![Análisis de sensibilidad](docs/screenshots/sensibilidad-claro.png) |
 
-<p align="center"><img src="docs/screenshots/movil-oscuro.png" alt="Vista en un teléfono" width="320"></p>
+<p align="center">
+  <img src="docs/screenshots/inicio-movil-oscuro.png" alt="Pantalla de inicio en un teléfono" width="260">
+  <img src="docs/screenshots/movil-oscuro.png" alt="IS-LM tradicional en un teléfono" width="260">
+</p>
 
 Las capturas se generan con `node scripts/screenshots.mjs` a partir de un
 almacenamiento local vacío, es decir, con las preferencias de una primera visita.
@@ -141,6 +146,28 @@ almacenamiento local vacío, es decir, con las preferencias de una primera visit
   *avanzado* (todos los parámetros, derivadas, elasticidades y diagnósticos).
 - **Pantalla inicial:** la primera visita abre la pantalla de inicio; luego se
   recuerda el último módulo. `?m=basic|advanced|construction|policy|open|adas|ismp|lab|home` abre un módulo.
+
+## Diseño
+
+La interfaz está pensada como una herramienta de investigación y no como un
+tablero: se estructura con tipografía y filetes en lugar de tarjetas.
+
+- **Tipografía:** Source Serif 4 para títulos, análisis, epígrafes y variables;
+  IBM Plex Sans para la interfaz; cifras tabulares para que los valores se
+  comparen en columna.
+- **Color con significado económico**, igual en los ocho módulos: cobre para la
+  demanda y el mercado de bienes (IS, DA), acero para el mercado monetario y la
+  política monetaria (LM, MP, Taylor), ciruela para la oferta y los precios (OA,
+  Phillips), oliva para el sector externo, gris para las referencias; E₀ es un
+  anillo hueco y E₁ un punto sólido. El acento latón marca solo el estado de la
+  interfaz.
+- **Modo oscuro grafito** predeterminado y un **modo claro** propio (papel y
+  tinta), no una inversión de colores.
+- Resultados en una banda contable, gráficos como figuras numeradas y la
+  explicación en cinco niveles compuesta como un texto analítico.
+
+Auditoría, sistema de diseño y comparación antes/después: [docs/rediseno](docs/rediseno/README.md).
+La versión anterior se conserva en la etiqueta `v2.0-antes-del-rediseno`.
 
 ## Arquitectura
 
@@ -193,7 +220,7 @@ npm run dev
 
 ## Validaciones y pruebas
 
-370 pruebas automáticas (Vitest) cubren, entre otros aspectos:
+374 pruebas automáticas (Vitest) cubren, entre otros aspectos:
 
 - **Motores** frente a soluciones calculadas a mano en los cinco modelos;
   identidades contables y residuos; derivadas analíticas frente a diferencias
@@ -208,8 +235,10 @@ npm run dev
 - **Laboratorio**: resultados recalculados, comparabilidad entre modelos, CSV,
   ida y vuelta de JSON y de enlaces, rechazo de archivos inválidos, límite de
   cuatro escenarios, informe.
-- **Interfaz**: navegación A–H, pantalla de inicio, español y modo oscuro por
-  defecto, persistencia de idioma y tema, modos educativo y avanzado.
+- **Interfaz**: navegación A–H por temas, selector de módulos en pantallas
+  angostas, pantalla de inicio con una figura calculada por el motor, español y
+  modo oscuro por defecto, persistencia de idioma y tema, modos educativo y
+  avanzado.
 
 GitHub Actions ejecuta typecheck, lint, pruebas y compilación en cada push y
 pull request, y publica `main` en GitHub Pages solo si todo se aprueba.

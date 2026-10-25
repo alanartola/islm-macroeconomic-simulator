@@ -8,7 +8,7 @@
  * real interface (preset buttons, "Guardar experimento", tabs).
  *
  *   npm run dev -- --port 5173 --strictPort     # in another terminal
- *   node scripts/screenshots.mjs [baseUrl] [browserPath] [--pdf file.pdf]
+ *   node scripts/screenshots.mjs [baseUrl] [browserPath] [--out dir] [--pdf file.pdf]
  */
 import { spawn } from 'node:child_process';
 import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
@@ -18,6 +18,8 @@ import { join, resolve } from 'node:path';
 const args = process.argv.slice(2);
 const pdfAt = args.indexOf('--pdf');
 const PDF = pdfAt >= 0 ? args.splice(pdfAt, 2)[1] : null;
+const outAt = args.indexOf('--out');
+const OUT_DIR = outAt >= 0 ? args.splice(outAt, 2)[1] : 'docs/screenshots';
 const BASE = args[0] ?? 'http://localhost:5173/islm-macroeconomic-simulator/';
 const CANDIDATES = [
   args[1],
@@ -30,7 +32,7 @@ const CANDIDATES = [
 const BROWSER = CANDIDATES.find((p) => existsSync(p));
 if (!BROWSER) throw new Error('No Chromium-based browser found; pass its path as the second argument.');
 
-const OUT = resolve('docs/screenshots');
+const OUT = resolve(OUT_DIR);
 mkdirSync(OUT, { recursive: true });
 
 const DEFAULT = { C0: 200, c: 0.75, T: 200, I0: 300, b: 25, G: 250, M: 700, P: 1, k: 0.5, h: 50 };
@@ -72,6 +74,7 @@ const FILL_LAB = [
 // Spanish and dark mode are the defaults, so the main captures carry neither ?lang nor ?theme.
 const SHOTS = [
   { file: 'inicio-oscuro.png', query: '', w: 1440, h: 1000 },
+  { file: 'inicio-claro.png', query: '?theme=light', w: 1440, h: 1000 },
   { file: 'simulador-fiscal-oscuro.png', query: '?m=basic', hash: share({ G: 300 }), w: 1440, h: 1180 },
   { file: 'simulador-monetaria-claro.png', query: '?m=basic&theme=light', hash: share({ M: 800 }), w: 1440, h: 1180 },
   { file: 'transmision-oscuro.png', query: '?m=basic&tab=transmission', hash: share({ G: 300 }), w: 1440, h: 1000 },
@@ -88,6 +91,9 @@ const SHOTS = [
   { file: 'laboratorio-informe-claro.png', query: '?m=basic&theme=light', actions: [...FILL_LAB, click('Informe'), scrollTo('.lab-report')], w: 1440, h: 1180 },
   { file: 'escenarios-claro.png', query: '?m=basic&theme=light&tab=scenarios', hash: share({ G: 300 }), w: 1440, h: 760 },
   { file: 'movil-oscuro.png', query: '?m=basic', hash: share({ M: 800 }), w: 390, h: 1100, mobile: true, scale: 2 },
+  { file: 'inicio-movil-oscuro.png', query: '', w: 390, h: 1500, mobile: true, scale: 2 },
+  { file: 'notebook-1024-oscuro.png', query: '?m=advanced', actions: [click('Expansión fiscal con t > 0')], w: 1024, h: 900 },
+  { file: 'tablet-768-oscuro.png', query: '?m=adas', actions: [click('Shock negativo de oferta')], w: 768, h: 1024 },
   // Secondary (English) documentation
   { file: 'en-simulator-fiscal-dark.png', query: '?m=basic&lang=en', hash: share({ G: 300 }), w: 1440, h: 1180 },
   { file: 'en-transmission-light.png', query: '?m=basic&lang=en&theme=light&tab=transmission', hash: share({ M: 800 }), w: 1440, h: 1000 },

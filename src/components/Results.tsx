@@ -165,14 +165,12 @@ const KIND_ORDER: InsightKind[] = ['cause', 'shift', 'movement', 'transmission',
 export function InsightsPanel({ report }: { report: InsightReport }) {
   const { t } = useI18n();
   return (
-    <div className="card">
-      <div className="card-head">
-        <div>
-          <h2>{t('insights.title')}</h2>
-          <p>{t('insights.subtitle')}</p>
-        </div>
-      </div>
-      <div className="card-body">
+    <section className="analysis" aria-label={t('insights.title')}>
+      <header>
+        <h2>{t('insights.title')}</h2>
+        <p>{t('insights.subtitle')}</p>
+      </header>
+      <div>
         <p className="headline">{report.headline.map((h) => t(h.key, h.vars)).join(' ')}</p>
         {KIND_ORDER.map((kind, n) => {
           const items = report.items.filter((x) => x.kind === kind);
@@ -192,7 +190,7 @@ export function InsightsPanel({ report }: { report: InsightReport }) {
           );
         })}
       </div>
-    </div>
+    </section>
   );
 }
 

@@ -5,21 +5,21 @@ import { useMode } from '../../state/mode';
 const LEVELS: Level[] = [1, 2, 3, 4, 5];
 
 /**
- * Five-level explanation. In educational mode levels 1–3 are open and the
- * mathematical/interpretive levels are collapsible; advanced mode opens all.
+ * Five-level explanation, set as a short analytical text: a lede with the
+ * result, then one numbered section per level. In educational mode levels 1–3
+ * are open and the mathematical/interpretive levels are collapsible; advanced
+ * mode opens all.
  */
 export function Explanation({ report }: { report: LeveledReport }) {
   const { t } = useI18n();
   const { isAdvanced } = useMode();
   return (
-    <div className="card">
-      <div className="card-head">
-        <div>
-          <h2>{t('insights.title')}</h2>
-          <p>{t('lvl.subtitle')}</p>
-        </div>
-      </div>
-      <div className="card-body">
+    <section className="analysis" aria-label={t('insights.title')}>
+      <header>
+        <h2>{t('insights.title')}</h2>
+        <p>{t('lvl.subtitle')}</p>
+      </header>
+      <div>
         <p className="headline">{report.headline.map((h) => t(h.key, h.vars)).join(' ')}</p>
         {LEVELS.map((lv) => {
           const items = report.levels[lv];
@@ -43,7 +43,7 @@ export function Explanation({ report }: { report: LeveledReport }) {
           );
         })}
       </div>
-    </div>
+    </section>
   );
 }
 
@@ -69,14 +69,12 @@ export function IssueList({ groups, prefix }: { groups: { side: 'baseline' | 'sh
     if (lines.length) boxes.push({ severity, lines });
   }
   if (!boxes.length) return null;
-  const icon = { error: '⛔', warning: '⚠', info: 'ℹ' } as const;
   const title = { error: 'issues.errors', warning: 'issues.warnings', info: 'issues.notes' } as const;
   return (
     <div className="issues" role={boxes.some((b) => b.severity === 'error') ? 'alert' : 'status'}>
       {boxes.map((b) => (
         <div key={b.severity} className={`issue-box ${b.severity}`}>
           <strong>
-            <span aria-hidden="true">{icon[b.severity]}</span>
             {t(title[b.severity])}
           </strong>
           <ul>

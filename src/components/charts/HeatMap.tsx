@@ -4,8 +4,8 @@ import { useI18n } from '../../i18n';
 import { Tooltip } from './common';
 import { useWidth } from './utils';
 
-/** Sequential single-hue ramp (light → dark blue), validated steps 150…650. */
-const RAMP = ['#b7d3f6', '#9ec5f4', '#86b6ef', '#6da7ec', '#5598e7', '#3987e5', '#2a78d6', '#256abf', '#1c5cab', '#184f95', '#104281'];
+/** Sequential single-hue ramp (sand → deep copper): readable on both themes, ordered by lightness. */
+const RAMP = ['#f2e6d0', '#ead6b5', '#e2c39a', '#d9ae80', '#cf9868', '#c38253', '#b46c41', '#a15934', '#8a482a', '#713922', '#582c1b'];
 
 function colorFor(t: number): string {
   const k = Math.max(0, Math.min(RAMP.length - 1, Math.round(t * (RAMP.length - 1))));
@@ -73,7 +73,7 @@ export function HeatMap({ xs, ys, z, xLabel, yLabel, valueLabel, ariaLabel, curr
               height={y.bandwidth() + 3}
               rx={3}
               fill="none"
-              stroke="var(--series-lm)"
+              stroke="var(--text-primary)"
               strokeWidth={2.5}
             />
           )}

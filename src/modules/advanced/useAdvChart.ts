@@ -6,7 +6,7 @@ import { advWindow, isPoints, lmPoints, zoneBands } from './curves';
 
 export const IS = 'var(--series-is)';
 export const LM = 'var(--series-lm)';
-export const LIN = 'var(--series-7)';
+export const LIN = 'var(--series-ref)';
 
 /** IS-LM chart model (curves, equilibria, guides, zones) for Modules B, C and D. */
 export function useAdvChart(sim: AdvSimOk, opts: { showTangent?: boolean } = {}) {

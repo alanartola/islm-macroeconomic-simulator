@@ -51,7 +51,7 @@ export function serializeSvg(svg: SVGSVGElement): string {
   bg.setAttribute('y', String(vb?.y ?? 0));
   bg.setAttribute('width', String(vb?.width ?? svg.clientWidth));
   bg.setAttribute('height', String(vb?.height ?? svg.clientHeight));
-  bg.setAttribute('fill', styles.getPropertyValue('--surface-1').trim() || '#ffffff');
+  bg.setAttribute('fill', styles.getPropertyValue('--page').trim() || '#ffffff');
   clone.insertBefore(bg, clone.firstChild);
   return new XMLSerializer().serializeToString(clone);
 }

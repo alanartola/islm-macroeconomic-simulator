@@ -5,7 +5,9 @@ import type { SavedOverlay } from './components/charts/ISLMChart';
 import { initialState, reducer, type SimState } from './state/store';
 import { runSimulation } from './state/simulation';
 import { decodeShareHash, encodeShareHash, loadSavedScenarios, readPref, storeSavedScenarios, writePref } from './state/persistence';
-import { ModeProvider, useMode } from './state/mode';
+import { ModeProvider } from './state/mode';
+import { MODULES } from './modules/catalog';
+import { Masthead } from './components/Masthead';
 import { advReducer, initialAdvState, runAdvanced } from './state/advancedState';
 import { BasicModule } from './modules/basic/BasicModule';
 import { BASIC_TABS, type BasicTab } from './modules/basic/tabs';
@@ -24,10 +26,6 @@ import { MODULE_OF, decodeConfigHash, encodeConfigHash, type LabConfig } from '.
 type Theme = 'light' | 'dark';
 const DEFAULT_THEME: Theme = 'dark';
 
-/** Laboratory modules, in navigation order. */
-export const MODULES = ['basic', 'advanced', 'construction', 'policy', 'open', 'adas', 'ismp', 'lab'] as const;
-/** Navigation letters A–H. */
-const LETTER: Record<string, string> = { basic: 'A', advanced: 'B', construction: 'C', policy: 'D', open: 'E', adas: 'F', ismp: 'G', lab: 'H' };
 /** Screens: the introductory home screen plus the lettered modules. */
 export type ModuleId = 'home' | (typeof MODULES)[number];
 const SCREENS: readonly string[] = ['home', ...MODULES];
@@ -89,20 +87,6 @@ function detectModule(): ModuleId {
   const stored = readPref('islm.module');
   // First visit (no explicit choice): the introductory home screen.
   return stored && SCREENS.includes(stored) ? (stored as ModuleId) : 'home';
-}
-
-function ModeSwitch({ t }: { t: (k: string) => string }) {
-  const { mode, setMode } = useMode();
-  return (
-    <div className="segmented compact" role="group" aria-label={t('mode.label')}>
-      <button aria-pressed={mode === 'edu'} onClick={() => setMode('edu')} title={t('mode.edu.hint')}>
-        {t('mode.edu')}
-      </button>
-      <button aria-pressed={mode === 'adv'} onClick={() => setMode('adv')} title={t('mode.adv.hint')}>
-        {t('mode.adv')}
-      </button>
-    </div>
-  );
 }
 
 export default function App() {
@@ -208,77 +192,24 @@ export default function App() {
       /* ignore */
     }
   };
-  const themeLabel = theme === 'dark' ? t('theme.toLight') : t('theme.toDark');
 
   return (
     <I18nProvider lang={lang}>
       <ModeProvider>
       <LabProvider>
       <div className="app">
-        <header className="topbar">
-          <button className="btn icon mobile-only" aria-label={t('btn.params')} onClick={() => setSidebarOpen(true)} hidden={module === 'home' || module === 'lab'}>
-            <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
-              <path d="M2 4h12M2 8h12M2 12h12" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-            </svg>
-          </button>
-          <div className="brand">
-            <h1>
-              <span className="title-full">{t('app.title')}</span>
-              <span className="title-short">{t('app.short')}</span>
-            </h1>
-            <p>{t('app.subtitle')}</p>
-          </div>
-          <div className="spacer" />
-          <div className="toolbar">
-            <span className="hide-sm">
-              <ModeSwitch t={t} />
-            </span>
-            <button className="btn small hide-sm" onClick={share}>
-              {copied ? t('btn.copied') : t('btn.share')}
-            </button>
-            <label className="sr-only" htmlFor="lang">
-              {t('lang.label')}
-            </label>
-            <select id="lang" className="select" value={lang} onChange={(e) => changeLang(e.target.value as Lang)}>
-              <option value="en">EN</option>
-              <option value="es">ES</option>
-            </select>
-            <button className="btn icon" onClick={toggleTheme} aria-label={themeLabel} title={themeLabel}>
-              {theme === 'dark' ? (
-                <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
-                  <circle cx="8" cy="8" r="3.2" fill="currentColor" />
-                  <path
-                    d="M8 1.5v1.6M8 12.9v1.6M1.5 8h1.6M12.9 8h1.6M3.4 3.4l1.1 1.1M11.5 11.5l1.1 1.1M3.4 12.6l1.1-1.1M11.5 4.5l1.1-1.1"
-                    stroke="currentColor"
-                    strokeWidth="1.4"
-                    strokeLinecap="round"
-                  />
-                </svg>
-              ) : (
-                <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
-                  <path d="M13.5 9.6A5.6 5.6 0 0 1 6.4 2.5a5.6 5.6 0 1 0 7.1 7.1z" fill="currentColor" />
-                </svg>
-              )}
-            </button>
-          </div>
-        </header>
-
-        <nav className="module-nav" aria-label={t('nav.modules')}>
-          <button aria-current={module === 'home' ? 'page' : undefined} onClick={() => setModule('home')}>
-            {t('mod.home')}
-          </button>
-          {MODULES.map((m) => (
-            <button
-              key={m}
-              aria-current={module === m ? 'page' : undefined}
-              onClick={() => setModule(m)}
-              aria-label={`${LETTER[m]} ${t(`mod.${m}`)}`}
-              title={`${t(`mod.${m}`)}: ${t(`mod.${m}.desc`)}`}
-            >
-              <span className="mod-letter">{LETTER[m]}</span> {t(`nav.short.${m}`)}
-            </button>
-          ))}
-        </nav>
+        <Masthead
+          t={t}
+          module={module}
+          onModule={setModule}
+          lang={lang}
+          onLang={changeLang}
+          theme={theme}
+          onToggleTheme={toggleTheme}
+          onShare={share}
+          copied={copied}
+          onOpenParams={() => setSidebarOpen(true)}
+        />
 
         {module === 'basic' && (
           <BasicModule
@@ -299,7 +230,7 @@ export default function App() {
         {module === 'ismp' && <ISMPModule key={opened.nonce} initial={initialFor('ismp')} sidebarOpen={sidebarOpen} onCloseSidebar={() => setSidebarOpen(false)} />}
         {module === 'open' && <OpenModule key={opened.nonce} initial={initialFor('open')} sidebarOpen={sidebarOpen} onCloseSidebar={() => setSidebarOpen(false)} />}
         {module === 'lab' && <LabModule onOpen={openConfig} />}
-        {module === 'home' && <HomeModule modules={MODULES} letters={LETTER} onOpen={(m) => setModule(m as ModuleId)} />}
+        {module === 'home' && <HomeModule onOpen={(m) => setModule(m as ModuleId)} />}
         {module === 'policy' && <PolicyModule state={adv} dispatch={advDispatch} sidebarOpen={sidebarOpen} onCloseSidebar={() => setSidebarOpen(false)} />}
         {module === 'construction' && (
           <ConstructionModule state={adv} dispatch={advDispatch} sim={advSim} sidebarOpen={sidebarOpen} onCloseSidebar={() => setSidebarOpen(false)} />

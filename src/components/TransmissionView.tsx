@@ -39,8 +39,8 @@ export function TransmissionView({ sim }: { sim: SimulationOk }) {
   if (targeting) {
     moneyLines.push(
       ...pair(
-        { id: 'peg0', x0: -1e6, y0: e0.spec.targetRate, x1: 1e6, y1: e0.spec.targetRate, color: 'var(--series-3)', label: '' },
-        { id: 'peg1', x0: -1e6, y0: e1.spec.targetRate, x1: 1e6, y1: e1.spec.targetRate, color: 'var(--series-3)', label: 'ī' },
+        { id: 'peg0', x0: -1e6, y0: e0.spec.targetRate, x1: 1e6, y1: e0.spec.targetRate, color: 'var(--series-ref)', label: '' },
+        { id: 'peg1', x0: -1e6, y0: e1.spec.targetRate, x1: 1e6, y1: e1.spec.targetRate, color: 'var(--series-ref)', label: 'ī' },
         'ī',
       ),
     );
@@ -93,7 +93,7 @@ export function TransmissionView({ sim }: { sim: SimulationOk }) {
         <p style={{ margin: 0, color: 'var(--text-muted)', fontSize: 12.5 }}>{t('tr.subtitle')}</p>
       </div>
       <div className="grid-3">
-        <div className="card">
+        <div className="card chart-card">
           <div className="card-head"><div><h3>{t('tr.money.title')}</h3><p>{t('tr.money.desc')}</p></div></div>
           <div className="card-body">
             <PanelChart
@@ -108,12 +108,12 @@ export function TransmissionView({ sim }: { sim: SimulationOk }) {
             <div className="chart-legend">
               <LegendLine color="var(--series-lm)" label={t('tr.money.demand')} />
               <LegendLine color="var(--text-primary)" label={t('tr.money.supply')} />
-              {targeting && <LegendLine color="var(--series-3)" label="ī" />}
+              {targeting && <LegendLine color="var(--series-ref)" label="ī" />}
               <span className="legend-item">{t('tr.legend')}</span>
             </div>
           </div>
         </div>
-        <div className="card">
+        <div className="card chart-card">
           <div className="card-head"><div><h3>{t('tr.inv.title')}</h3><p>{t('tr.inv.desc')}</p></div></div>
           <div className="card-body">
             <PanelChart
@@ -131,7 +131,7 @@ export function TransmissionView({ sim }: { sim: SimulationOk }) {
             </div>
           </div>
         </div>
-        <div className="card">
+        <div className="card chart-card">
           <div className="card-head"><div><h3>{t('tr.cross.title')}</h3><p>{t('tr.cross.desc')}</p></div></div>
           <div className="card-body">
             <PanelChart
@@ -153,7 +153,7 @@ export function TransmissionView({ sim }: { sim: SimulationOk }) {
         </div>
       </div>
       <div className="grid-3">
-        <div className="card">
+        <div className="card chart-card">
           <div className="card-head"><div><h3>{t('tr.comp.title')}</h3><p>{t('tr.comp.desc')}</p></div></div>
           <div className="card-body">
             <GroupedBars
@@ -168,7 +168,7 @@ export function TransmissionView({ sim }: { sim: SimulationOk }) {
             />
           </div>
         </div>
-        <div className="card">
+        <div className="card chart-card">
           <div className="card-head"><div><h3>{t('tr.delta.title')}</h3><p>{t('tr.delta.desc')}</p></div></div>
           <div className="card-body">
             <DeltaBars
@@ -185,7 +185,7 @@ export function TransmissionView({ sim }: { sim: SimulationOk }) {
             />
           </div>
         </div>
-        <div className="card">
+        <div className="card chart-card">
           <div className="card-head"><div><h3>{t('tr.decomp.title')}</h3><p>{t('tr.decomp.desc')}</p></div></div>
           <div className="card-body">
             <DeltaBars

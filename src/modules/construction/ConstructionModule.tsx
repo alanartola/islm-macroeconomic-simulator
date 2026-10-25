@@ -18,6 +18,7 @@ import {
   MoneyMarketChart,
 } from './charts';
 import { defaultSelection, isSteps, lmSteps, type Selection } from './selection';
+import { ModuleHeader } from '../../components/ui/ModuleHeader';
 
 interface Props {
   state: AdvState;
@@ -266,13 +267,9 @@ function ConstructionCharts({ sim }: { sim: AdvSimOk }) {
 
 /** Module C — graphical construction of IS and LM (shares Module B's parameters). */
 export function ConstructionModule({ state, dispatch, sim, sidebarOpen, onCloseSidebar }: Props) {
-  const { t } = useI18n();
   return (
     <ModuleLayout open={sidebarOpen} onClose={onCloseSidebar} sidebar={<AdvSidebar state={state} dispatch={dispatch} sim={sim} onPick={onCloseSidebar} />}>
-      <div className="module-intro stacked">
-        <h2>{t('mod.construction')}</h2>
-        <p>{t('mod.construction.desc')}</p>
-      </div>
+      <ModuleHeader id="construction" />
       <IssueList groups={issueGroups(sim)} prefix="adv.issue." />
       {sim.ok && <ConstructionCharts key={`${sim.s1.spec.lm}-${sim.s1.spec.regime}`} sim={sim} />}
     </ModuleLayout>
