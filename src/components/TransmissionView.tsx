@@ -81,8 +81,8 @@ export function TransmissionView({ sim }: { sim: SimulationOk }) {
   if (showAeAtI0) {
     crossLines.push({ id: 'ae1i0', x0: yLo, y0: ae(p1, q1.A, q0.i, yLo), x1: yHi, y1: ae(p1, q1.A, q0.i, yHi), color: 'var(--series-is)', dotted: true, opacity: 0.85 });
   }
-  const crossPts: PanelPoint[] = [{ id: 'E0', x: q0.Y, y: q0.Y, label: 'E₀', filled: false, rows: [['Y = AE', f(q0.Y, 'bn')]] }];
-  if (Math.abs(q1.Y - q0.Y) > 1e-9) crossPts.push({ id: 'E1', x: q1.Y, y: q1.Y, label: 'E₁', filled: true, rows: [['Y = AE', f(q1.Y, 'bn')]] });
+  const crossPts: PanelPoint[] = [{ id: 'E0', x: q0.Y, y: q0.Y, label: 'E₀', filled: false, rows: [[t('tr.cross.eq'), f(q0.Y, 'bn')]] }];
+  if (Math.abs(q1.Y - q0.Y) > 1e-9) crossPts.push({ id: 'E1', x: q1.Y, y: q1.Y, label: 'E₁', filled: true, rows: [[t('tr.cross.eq'), f(q1.Y, 'bn')]] });
 
   const ch = cmp.changes;
 

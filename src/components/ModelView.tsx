@@ -9,26 +9,32 @@ function Tex({ children, inline = false }: { children: string; inline?: boolean 
   return inline ? <span dangerouslySetInnerHTML={{ __html: html }} /> : <div className="eq" dangerouslySetInnerHTML={{ __html: html }} />;
 }
 
-/** Verifiable academic references (no invented sources). */
-const BIBLIOGRAPHY = [
-  'Blanchard, O. (2021). Macroeconomics (8th ed.). Pearson. — IS-LM chapters, with the LM curve drawn as a policy-rate line.',
-  'Dornbusch, R., Fischer, S., & Startz, R. (2014). Macroeconomics (12th ed.). McGraw-Hill Education.',
-  'Galí, J. (2015). Monetary Policy, Inflation, and the Business Cycle: An Introduction to the New Keynesian Framework (2nd ed.). Princeton University Press.',
-  'Hansen, A. H. (1953). A Guide to Keynes. McGraw-Hill.',
-  'Hicks, J. R. (1937). Mr. Keynes and the "Classics"; A Suggested Interpretation. Econometrica, 5(2), 147–159. https://doi.org/10.2307/1907242',
-  'Keynes, J. M. (1936). The General Theory of Employment, Interest and Money. Macmillan.',
-  'Krugman, P. R. (1998). It\'s Baaack: Japan\'s Slump and the Return of the Liquidity Trap. Brookings Papers on Economic Activity, 1998(2), 137–205. https://doi.org/10.2307/2534694',
-  'Mankiw, N. G. (2019). Macroeconomics (10th ed.). Worth Publishers. — Aggregate Demand I–II chapters (IS-LM model).',
-  'Poole, W. (1970). Optimal Choice of Monetary Policy Instruments in a Simple Stochastic Macro Model. Quarterly Journal of Economics, 84(2), 197–216. https://doi.org/10.2307/1883009',
-  'Romer, D. (2000). Keynesian Macroeconomics without the LM Curve. Journal of Economic Perspectives, 14(2), 149–169. https://doi.org/10.1257/jep.14.2.149',
-  'Sargent, T. J., & Wallace, N. (1975). "Rational" Expectations, the Optimal Monetary Instrument, and the Optimal Money Supply Rule. Journal of Political Economy, 83(2), 241–254. https://doi.org/10.1086/260321',
-  'Taylor, J. B. (1993). Discretion versus Policy Rules in Practice. Carnegie-Rochester Conference Series on Public Policy, 39, 195–214. https://doi.org/10.1016/0167-2231(93)90009-L',
-  'Woodford, M. (2003). Interest and Prices: Foundations of a Theory of Monetary Policy. Princeton University Press.',
+type Lang = 'en' | 'es';
+
+/**
+ * Verifiable academic references (no invented sources). Titles stay in their
+ * original language; edition labels and annotations are localised.
+ */
+const BIBLIOGRAPHY: ((lang: Lang, and: string) => string)[] = [
+  (l) => `Blanchard, O. (2021). Macroeconomics (${l === 'es' ? '8.ª ed.' : '8th ed.'}). Pearson.`,
+  (l, y) => `Dornbusch, R., Fischer, S., ${y} Startz, R. (2014). Macroeconomics (${l === 'es' ? '12.ª ed.' : '12th ed.'}). McGraw-Hill Education.`,
+  (l) => `Galí, J. (2015). Monetary Policy, Inflation, and the Business Cycle: An Introduction to the New Keynesian Framework (${l === 'es' ? '2.ª ed.' : '2nd ed.'}). Princeton University Press.`,
+  () => 'Hansen, A. H. (1953). A Guide to Keynes. McGraw-Hill.',
+  () => 'Hicks, J. R. (1937). Mr. Keynes and the "Classics"; A Suggested Interpretation. Econometrica, 5(2), 147–159. https://doi.org/10.2307/1907242',
+  () => 'Keynes, J. M. (1936). The General Theory of Employment, Interest and Money. Macmillan.',
+  () => "Krugman, P. R. (1998). It's Baaack: Japan's Slump and the Return of the Liquidity Trap. Brookings Papers on Economic Activity, 1998(2), 137–205. https://doi.org/10.2307/2534694",
+  (l) => `Mankiw, N. G. (2019). Macroeconomics (${l === 'es' ? '10.ª ed.' : '10th ed.'}). Worth Publishers.`,
+  () => 'Poole, W. (1970). Optimal Choice of Monetary Policy Instruments in a Simple Stochastic Macro Model. Quarterly Journal of Economics, 84(2), 197–216. https://doi.org/10.2307/1883009',
+  () => 'Romer, D. (2000). Keynesian Macroeconomics without the LM Curve. Journal of Economic Perspectives, 14(2), 149–169. https://doi.org/10.1257/jep.14.2.149',
+  (_l, y) => `Sargent, T. J., ${y} Wallace, N. (1975). "Rational" Expectations, the Optimal Monetary Instrument, and the Optimal Money Supply Rule. Journal of Political Economy, 83(2), 241–254. https://doi.org/10.1086/260321`,
+  () => 'Taylor, J. B. (1993). Discretion versus Policy Rules in Practice. Carnegie-Rochester Conference Series on Public Policy, 39, 195–214. https://doi.org/10.1016/0167-2231(93)90009-L',
+  () => 'Woodford, M. (2003). Interest and Prices: Foundations of a Theory of Monetary Policy. Princeton University Press.',
 ];
 
 export default function ModelView({ e1 }: { e1: SolvedEconomy | null }) {
-  const { t, f } = useI18n();
+  const { t, f, lang } = useI18n();
   const p = e1?.spec.params;
+  const bn = t('unit.bn');
   const n = (x: number, fmt = 'n2') => f(x, fmt).replace(/\s/g, '\\,');
 
   return (
@@ -48,7 +54,7 @@ export default function ModelView({ e1 }: { e1: SolvedEconomy | null }) {
 
       <h3>{t('doc.units.title')}</h3>
       <p>{t('doc.units.text')}</p>
-      <Tex>{'[Y],[C],[I],[G],[T],[M/P] = \\text{bn}, \\quad [i] = \\text{pp}, \\quad [b],[h] = \\tfrac{\\text{bn}}{\\text{pp}}, \\quad [c],[k] = 1'}</Tex>
+      <Tex>{`[Y],[C],[I],[G],[T],[M/P] = \\text{${bn}}, \\quad [i] = \\text{pp}, \\quad [b],[h] = \\tfrac{\\text{${bn}}}{\\text{pp}}, \\quad [c],[k] = 1`}</Tex>
 
       <h3>{t('doc.is.title')}</h3>
       <p>{t('doc.is.text')}</p>
@@ -81,7 +87,7 @@ export default function ModelView({ e1 }: { e1: SolvedEconomy | null }) {
 
       <h3>{t('doc.crowd.title')}</h3>
       <p>{t('doc.crowd.text')}</p>
-      <Tex>{'\\Delta Y = \\underbrace{\\big[Y_{IS_1}(i_0) - Y_0\\big]}_{\\text{IS shift at } i_0} \\; \\underbrace{-\\,\\alpha_1\\, b_1\\,\\Delta i}_{\\text{interest-rate effect}}, \\qquad \\text{crowding-out share} = \\frac{b\\,k}{h(1-c) + b\\,k}'}</Tex>
+      <Tex>{`\\Delta Y = \\underbrace{\\big[Y_{IS_1}(i_0) - Y_0\\big]}_{\\text{${t('doc.tex.isShift')} } i_0} \\; \\underbrace{-\\,\\alpha_1\\, b_1\\,\\Delta i}_{\\text{${t('doc.tex.rateEffect')}}}, \\qquad \\text{${t('doc.tex.share')}} = \\frac{b\\,k}{h(1-c) + b\\,k}`}</Tex>
 
       <h3>{t('doc.regime.title')}</h3>
       <p>{t('doc.regime.text1')}</p>
@@ -110,9 +116,10 @@ export default function ModelView({ e1 }: { e1: SolvedEconomy | null }) {
       <p>{t('doc.tests.text')}</p>
 
       <h3>{t('doc.biblio.title')}</h3>
+      <p>{t('doc.biblio.note')}</p>
       <ol className="biblio">
-        {BIBLIOGRAPHY.map((b) => (
-          <li key={b}>{b}</li>
+        {BIBLIOGRAPHY.map((ref, k) => (
+          <li key={k}>{ref(lang, lang === 'es' ? 'y' : '&')}</li>
         ))}
       </ol>
     </article>

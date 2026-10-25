@@ -1,5 +1,5 @@
 import { Suspense, lazy, useEffect, useMemo, useReducer, useState } from 'react';
-import { I18nProvider, detectLang, makeI18n, type Lang } from './i18n';
+import { DEFAULT_LANG, I18nProvider, detectLang, makeI18n, type Lang } from './i18n';
 import { Sidebar } from './components/Sidebar';
 import { SimulatorView } from './components/SimulatorView';
 import { TransmissionView } from './components/TransmissionView';
@@ -61,7 +61,8 @@ export default function App() {
   }, [theme]);
   useEffect(() => {
     document.documentElement.lang = lang;
-  }, [lang]);
+    document.title = t('app.title');
+  }, [lang, t]);
   useEffect(() => storeSavedScenarios(state.saved), [state.saved]);
 
   const { baseline, shocked, regime, target0, target1 } = state;
@@ -82,7 +83,9 @@ export default function App() {
   const overlays: SavedOverlay[] = savedSims.flatMap((s) => (s.sim.ok ? [{ id: s.id, name: s.name, color: s.color, e1: s.sim.e1 }] : []));
 
   const share = async () => {
-    const url = `${window.location.origin}${window.location.pathname}${encodeShareHash(state)}`;
+    // Links open in Spanish unless they were shared from the English interface.
+    const query = lang === DEFAULT_LANG ? '' : `?lang=${lang}`;
+    const url = `${window.location.origin}${window.location.pathname}${query}${encodeShareHash(state)}`;
     try {
       await navigator.clipboard.writeText(url);
     } catch {
@@ -100,6 +103,15 @@ export default function App() {
   const changeLang = (l: Lang) => {
     setLang(l);
     writePref('islm.lang', l);
+    // Keep the address consistent with the explicit choice so a reload does not revert it.
+    try {
+      const url = new URL(window.location.href);
+      if (l === DEFAULT_LANG) url.searchParams.delete('lang');
+      else url.searchParams.set('lang', l);
+      window.history.replaceState(null, '', url);
+    } catch {
+      /* ignore */
+    }
   };
   const themeLabel = theme === 'dark' ? t('theme.toLight') : t('theme.toDark');
 

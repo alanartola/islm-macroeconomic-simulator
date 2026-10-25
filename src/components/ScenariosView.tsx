@@ -42,7 +42,7 @@ export function ScenariosView({ state, dispatch, current, savedSims }: Props) {
             className="scenario-form"
             onSubmit={(e) => {
               e.preventDefault();
-              dispatch({ type: 'saveScenario', name: name || `${t('nav.scenarios')} ${state.saved.length + 1}` });
+              dispatch({ type: 'saveScenario', name: name || t('sc.defaultName', { n: String(state.saved.length + 1) }) });
               setName('');
             }}
           >

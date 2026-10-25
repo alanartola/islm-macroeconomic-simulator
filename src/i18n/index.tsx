@@ -41,15 +41,27 @@ export function useT() {
   return useCallback((key: TranslationKey, vars?: Record<string, TemplateVar>) => t(key, vars), [t]);
 }
 
+export const DEFAULT_LANG: Lang = 'es';
+
+/**
+ * Initial interface language. Spanish is the default for every visitor; English
+ * is used only when explicitly requested, either by the link (`?lang=en`) or by
+ * a choice the user made earlier with the language selector (stored locally).
+ * The browser language is deliberately ignored.
+ */
 // eslint-disable-next-line react-refresh/only-export-components
-export function detectLang(): Lang {
+export function detectLang(search: string = typeof window !== 'undefined' ? window.location.search : ''): Lang {
   try {
-    const q = new URLSearchParams(window.location.search).get('lang');
+    const q = new URLSearchParams(search).get('lang');
     if (q === 'en' || q === 'es') return q;
+  } catch {
+    /* malformed query: ignore */
+  }
+  try {
     const stored = localStorage.getItem('islm.lang');
     if (stored === 'en' || stored === 'es') return stored;
   } catch {
-    /* ignore */
+    /* storage unavailable: ignore */
   }
-  return typeof navigator !== 'undefined' && navigator.language?.toLowerCase().startsWith('es') ? 'es' : 'en';
+  return DEFAULT_LANG;
 }

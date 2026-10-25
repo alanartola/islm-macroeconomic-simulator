@@ -1,7 +1,7 @@
 /**
  * Core types of the IS-LM engine.
  *
- * Dimensional conventions (see docs/MODEL.md §2):
+ * Dimensional conventions (see docs/MODELO.md §2):
  *  - Flow quantities (Y, C, I, G, T, C0, I0) and money stocks (M, M/P) are
  *    measured in billions of currency units ("bn"), flows per period.
  *  - P is a dimensionless price index (base = 1).

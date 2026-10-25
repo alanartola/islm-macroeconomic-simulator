@@ -1,7 +1,7 @@
 import { en } from './en';
 import { es } from './es';
 import { formatAs, formatNumber } from './format';
-import { makeI18n } from './index';
+import { detectLang, makeI18n } from './index';
 
 const placeholders = (s: string) => [...s.matchAll(/\{(\w+)(?:\|(\w+))?\}/g)].map((m) => m[0]).sort();
 
@@ -43,5 +43,23 @@ describe('number formatting', () => {
   it('signs changes explicitly', () => {
     expect(formatAs('en', 100, 'sbn')).toBe('+100.0 bn');
     expect(formatAs('en', -1, 'spp')).toBe('-1.00 pp');
+  });
+});
+
+describe('detectLang', () => {
+  beforeEach(() => localStorage.clear());
+
+  it('defaults to Spanish regardless of the browser language', () => {
+    expect(detectLang('')).toBe('es');
+  });
+  it('honours an explicit ?lang= in the link', () => {
+    expect(detectLang('?lang=en')).toBe('en');
+    expect(detectLang('?lang=es')).toBe('es');
+    expect(detectLang('?lang=fr')).toBe('es');
+  });
+  it('honours a stored explicit choice when the link does not specify one', () => {
+    localStorage.setItem('islm.lang', 'en');
+    expect(detectLang('')).toBe('en');
+    expect(detectLang('?lang=es')).toBe('es');
   });
 });

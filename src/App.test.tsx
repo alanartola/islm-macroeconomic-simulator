@@ -59,3 +59,43 @@ describe('App (integration)', () => {
     expect(screen.getByRole('tab', { name: 'Simulador' })).toBeInTheDocument();
   });
 });
+
+describe('default language (Spanish first)', () => {
+  it('a first visit without preferences or query renders Spanish', () => {
+    localStorage.clear();
+    window.history.replaceState(null, '', '/');
+    render(<App />);
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Simulador de Política Macroeconómica');
+    expect(screen.getByRole('tab', { name: 'Simulador' })).toBeInTheDocument();
+    expect(screen.getByText('Análisis e interpretación económica')).toBeInTheDocument();
+    expect(document.documentElement.lang).toBe('es');
+    expect(document.title).toBe('IS-LM | Simulador de Política Macroeconómica');
+  });
+
+  it('a shared scenario link without a language opens in Spanish', () => {
+    localStorage.clear();
+    window.history.replaceState(null, '', '/#s=invalid');
+    render(<App />);
+    expect(screen.getByRole('tab', { name: 'Simulador' })).toBeInTheDocument();
+  });
+
+  it('respects an explicit English choice and a later return to Spanish', () => {
+    localStorage.clear();
+    window.history.replaceState(null, '', '/');
+    const first = render(<App />);
+    fireEvent.change(screen.getByLabelText('Idioma'), { target: { value: 'en' } });
+    expect(screen.getByRole('tab', { name: 'Simulator' })).toBeInTheDocument();
+    expect(localStorage.getItem('islm.lang')).toBe('en');
+    first.unmount();
+
+    const second = render(<App />); // reload: stored English choice is kept
+    expect(screen.getByRole('tab', { name: 'Simulator' })).toBeInTheDocument();
+    fireEvent.change(screen.getByLabelText('Language'), { target: { value: 'es' } });
+    expect(localStorage.getItem('islm.lang')).toBe('es');
+    expect(window.location.search).toBe('');
+    second.unmount();
+
+    render(<App />);
+    expect(screen.getByRole('tab', { name: 'Simulador' })).toBeInTheDocument();
+  });
+});

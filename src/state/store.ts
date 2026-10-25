@@ -147,7 +147,7 @@ export function reducer(state: SimState, action: Action): SimState {
     case 'saveScenario': {
       const entry: SavedScenario = {
         id: action.id ?? newId(),
-        name: action.name.trim() || `Scenario ${state.saved.length + 1}`,
+        name: action.name.trim() || `E₁ #${state.saved.length + 1}`,
         baseline: { ...state.baseline },
         shocked: { ...state.shocked },
         regime: state.regime,

@@ -1,5 +1,7 @@
 # Model reference — IS-LM with two monetary regimes
 
+> English translation. Primary (Spanish) version: [MODELO.md](MODELO.md).
+
 This document is the technical reference for the engine in `src/engine/`. Every formula below is implemented there and covered by tests in `src/engine/*.test.ts`.
 
 ## 1. Assumptions
@@ -156,4 +158,4 @@ The engine solves (with warnings) several admissible but implausible cases that 
 
 ## 12. Limitations
 
-See the *Limitations* section of the [README](../README.md#limitations).
+See the *Limitations* section of the [English README](README.en.md#limitations).

@@ -3,7 +3,7 @@ export type Lang = 'en' | 'es';
 /** A template variable: a number (formatted by the placeholder) or a translation key. */
 export type TemplateVar = number | string | { key: string };
 
-const LOCALES: Record<Lang, string> = { en: 'en-US', es: 'es-ES' };
+const LOCALES: Record<Lang, string> = { en: 'en-US', es: 'es-AR' };
 
 const cache = new Map<string, Intl.NumberFormat>();
 function nf(lang: Lang, digits: number, signed = false): Intl.NumberFormat {
@@ -42,7 +42,7 @@ export function formatNumber(lang: Lang, x: number, digits = 2, signed = false):
  */
 export function formatAs(lang: Lang, x: number, fmt: string): string {
   if (!Number.isFinite(x)) return '—';
-  const bn = lang === 'es' ? 'mm' : 'bn';
+  const bn = lang === 'es' ? 'mil M' : 'bn';
   switch (fmt) {
     case 'bn':
       return `${formatNumber(lang, x, 1)} ${bn}`;

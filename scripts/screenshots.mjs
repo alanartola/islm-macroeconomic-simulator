@@ -31,14 +31,19 @@ const DEFAULT = { C0: 200, c: 0.75, T: 200, I0: 300, b: 25, G: 250, M: 700, P: 1
 const share = (shocked, regime = 'money-supply', t0 = 5, t1 = 5) =>
   '#s=' + Buffer.from(JSON.stringify({ b: DEFAULT, s: { ...DEFAULT, ...shocked }, r: regime, t0, t1 })).toString('base64url');
 
+// Spanish is the default interface language, so the main captures carry no ?lang.
 const SHOTS = [
-  { file: 'simulator-fiscal-dark.png', query: '?lang=en&theme=dark', hash: share({ G: 300 }), w: 1440, h: 1180 },
-  { file: 'simulator-monetary-light.png', query: '?lang=en&theme=light', hash: share({ M: 800 }), w: 1440, h: 1180 },
-  { file: 'transmission-dark.png', query: '?lang=en&theme=dark&tab=transmission', hash: share({ G: 300 }), w: 1440, h: 1000 },
-  { file: 'sensitivity-light.png', query: '?lang=en&theme=light&tab=sensitivity', hash: share({}), w: 1440, h: 1000 },
-  { file: 'interest-target-es-dark.png', query: '?lang=es&theme=dark', hash: share({ G: 300 }, 'interest-target'), w: 1440, h: 1180 },
-  { file: 'model-docs-light.png', query: '?lang=en&theme=light&tab=model', hash: share({}), w: 1440, h: 1000 },
-  { file: 'mobile-dark.png', query: '?lang=en&theme=dark', hash: share({ M: 800 }), w: 390, h: 1100, mobile: true, scale: 2 },
+  { file: 'simulador-fiscal-oscuro.png', query: '?theme=dark', hash: share({ G: 300 }), w: 1440, h: 1180 },
+  { file: 'simulador-monetaria-claro.png', query: '?theme=light', hash: share({ M: 800 }), w: 1440, h: 1180 },
+  { file: 'transmision-oscuro.png', query: '?theme=dark&tab=transmission', hash: share({ G: 300 }), w: 1440, h: 1000 },
+  { file: 'sensibilidad-claro.png', query: '?theme=light&tab=sensitivity', hash: share({}), w: 1440, h: 1000 },
+  { file: 'objetivo-tasa-oscuro.png', query: '?theme=dark', hash: share({ G: 300 }, 'interest-target'), w: 1440, h: 1180 },
+  { file: 'modelo-claro.png', query: '?theme=light&tab=model', hash: share({}), w: 1440, h: 1000 },
+  { file: 'escenarios-claro.png', query: '?theme=light&tab=scenarios', hash: share({ G: 300 }), w: 1440, h: 760 },
+  { file: 'movil-oscuro.png', query: '?theme=dark', hash: share({ M: 800 }), w: 390, h: 1100, mobile: true, scale: 2 },
+  // Secondary (English) documentation
+  { file: 'en-simulator-fiscal-dark.png', query: '?lang=en&theme=dark', hash: share({ G: 300 }), w: 1440, h: 1180 },
+  { file: 'en-transmission-light.png', query: '?lang=en&theme=light&tab=transmission', hash: share({ M: 800 }), w: 1440, h: 1000 },
 ];
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
