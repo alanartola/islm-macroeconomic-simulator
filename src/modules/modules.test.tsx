@@ -123,3 +123,23 @@ describe('Module D (policy lab)', () => {
     expect(screen.getAllByText(/Suma de efectos aislados/)).toHaveLength(4);
   });
 });
+
+describe('Module E (Mundell-Fleming)', () => {
+  it('starts at the hand-checked equilibrium with balanced trade', () => {
+    open('?m=open');
+    expect(screen.getByRole('heading', { name: 'Economía abierta', level: 2 })).toBeInTheDocument();
+    expect(screen.getAllByText('2.000,0 mil M').length).toBeGreaterThan(0);
+  });
+
+  it('fiscal expansion with a flexible rate: no output change and a real appreciation', () => {
+    open('?m=open');
+    fireEvent.click(screen.getByRole('button', { name: /Expansión fiscal \(flexible\)/ }));
+    expect(screen.getByText(/la moneda se aprecia en términos reales/)).toBeInTheDocument();
+  });
+
+  it('monetary expansion under a peg is offset by reserve losses', () => {
+    open('?m=open');
+    fireEvent.click(screen.getByRole('button', { name: /Expansión monetaria \(fijo\)/ }));
+    expect(screen.getByText(/el banco central vende reservas \(-100,0 mil M\)/)).toBeInTheDocument();
+  });
+});

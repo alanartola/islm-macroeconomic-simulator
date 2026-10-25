@@ -2,6 +2,7 @@ import { advEn, advEs } from './advanced';
 import { uiEn, uiEs } from './ui';
 import { conEn, conEs } from './construction';
 import { polEn, polEs } from './policy';
+import { openEn, openEs } from './open';
 
 /** Per-module dictionaries; each module file defines Spanish (primary) and English with identical keys. */
 export const MODULE_PAIRS: { name: string; es: Record<string, string>; en: Record<string, string> }[] = [
@@ -9,6 +10,7 @@ export const MODULE_PAIRS: { name: string; es: Record<string, string>; en: Recor
   { name: 'advanced', es: advEs, en: advEn },
   { name: 'construction', es: conEs, en: conEn },
   { name: 'policy', es: polEs, en: polEn },
+  { name: 'open', es: openEs, en: openEn },
 ];
 
 export const MODULE_DICTS = {

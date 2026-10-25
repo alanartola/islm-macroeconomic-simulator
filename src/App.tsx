@@ -12,11 +12,12 @@ import { BASIC_TABS, type BasicTab } from './modules/basic/tabs';
 import { AdvancedModule } from './modules/advanced/AdvancedModule';
 import { ConstructionModule } from './modules/construction/ConstructionModule';
 import { PolicyModule } from './modules/policy/PolicyModule';
+import { OpenModule } from './modules/open/OpenModule';
 
 type Theme = 'light' | 'dark';
 
 /** Laboratory modules, in navigation order. */
-export const MODULES = ['basic', 'advanced', 'construction', 'policy'] as const;
+export const MODULES = ['basic', 'advanced', 'construction', 'policy', 'open'] as const;
 export type ModuleId = (typeof MODULES)[number];
 
 const REPO_URL = 'https://github.com/alanartola/islm-macroeconomic-simulator';
@@ -225,6 +226,7 @@ export default function App() {
         {module === 'advanced' && (
           <AdvancedModule state={adv} dispatch={advDispatch} sim={advSim} sidebarOpen={sidebarOpen} onCloseSidebar={() => setSidebarOpen(false)} />
         )}
+        {module === 'open' && <OpenModule sidebarOpen={sidebarOpen} onCloseSidebar={() => setSidebarOpen(false)} />}
         {module === 'policy' && <PolicyModule state={adv} dispatch={advDispatch} sidebarOpen={sidebarOpen} onCloseSidebar={() => setSidebarOpen(false)} />}
         {module === 'construction' && (
           <ConstructionModule state={adv} dispatch={advDispatch} sim={advSim} sidebarOpen={sidebarOpen} onCloseSidebar={() => setSidebarOpen(false)} />
