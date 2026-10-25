@@ -101,3 +101,25 @@ describe('Module C (curve construction)', () => {
     expect(screen.queryByRole('dialog', { name: 'Modo presentación' })).not.toBeInTheDocument();
   });
 });
+
+describe('Module D (policy lab)', () => {
+  it('runs the default fiscal experiment and reports crowding out from the solved equilibria', () => {
+    open('?m=policy');
+    expect(screen.getByRole('heading', { name: 'Laboratorio de políticas', level: 2 })).toBeInTheDocument();
+    expect(screen.getByText('Multiplicador efectivo')).toBeInTheDocument();
+    expect(screen.getByText('Efecto desplazamiento')).toBeInTheDocument();
+  });
+
+  it('accommodated fiscal expansion has zero rate change and the full simple multiplier', () => {
+    open('?m=policy');
+    fireEvent.click(screen.getByRole('radio', { name: /Expansión fiscal con acomodación/ }));
+    // ΔG = 50, α = 2.5 ⇒ ΔY = 125 at a constant rate
+    expect(screen.getAllByText('+125,0 mil M').length).toBeGreaterThan(0);
+  });
+
+  it('the policy-mix matrix shows four joint equilibria', () => {
+    open('?m=policy');
+    fireEvent.click(screen.getByRole('tab', { name: 'Combinación de políticas' }));
+    expect(screen.getAllByText(/Suma de efectos aislados/)).toHaveLength(4);
+  });
+});

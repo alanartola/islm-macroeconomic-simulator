@@ -1176,6 +1176,25 @@ ol.steps li.done {
   margin: 0 auto;
 }
 
+/* ── Policy lab ─────────────────────────────────────────────────────────── */
+.policy-picker {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 6px;
+}
+table.matrix td.matrix-cell {
+  text-align: left;
+  vertical-align: top;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.6;
+  white-space: normal;
+}
+table.matrix td.matrix-cell .muted {
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
 /* ── Responsive ─────────────────────────────────────────────────────────── */
 @media (min-width: 1700px) {
   .kpis {

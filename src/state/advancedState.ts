@@ -35,7 +35,9 @@ export type AdvAction =
   | { type: 'target'; value: number }
   | { type: 'compare'; on: boolean }
   | { type: 'preset'; id: AdvPresetId }
-  | { type: 'restore' };
+  | { type: 'restore' }
+  /** Edit E₀ directly (used by the policy lab), carrying unperturbed values to E₁. */
+  | { type: 'setBase'; key: keyof AdvParams; value: number };
 
 export function initialAdvState(): AdvState {
   return {
@@ -94,6 +96,15 @@ export function advReducer(s: AdvState, a: AdvAction): AdvState {
     }
     case 'restore':
       return { ...initialAdvState() };
+    case 'setBase': {
+      const linked = s.shocked[a.key] === s.baseline[a.key];
+      return {
+        ...s,
+        baseline: { ...s.baseline, [a.key]: a.value },
+        shocked: linked ? { ...s.shocked, [a.key]: a.value } : s.shocked,
+        preset: null,
+      };
+    }
     case 'reset':
       return { ...pairReducer(s, a), target1: s.target0, preset: null } as AdvState;
     case 'adopt':
