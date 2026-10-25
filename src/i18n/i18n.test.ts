@@ -2,6 +2,8 @@ import { en } from './en';
 import { es } from './es';
 import { formatAs, formatNumber } from './format';
 import { detectLang, makeI18n } from './index';
+import { MODULE_PAIRS } from './modules';
+import { en as baseEn } from './en';
 
 const placeholders = (s: string) => [...s.matchAll(/\{(\w+)(?:\|(\w+))?\}/g)].map((m) => m[0]).sort();
 
@@ -61,5 +63,25 @@ describe('detectLang', () => {
     localStorage.setItem('islm.lang', 'en');
     expect(detectLang('')).toBe('en');
     expect(detectLang('?lang=es')).toBe('es');
+  });
+});
+
+describe('module dictionaries', () => {
+  it.each(MODULE_PAIRS.map((p) => [p.name, p] as const))('%s: Spanish and English share keys and placeholders', (_n, p) => {
+    expect(Object.keys(p.es).sort()).toEqual(Object.keys(p.en).sort());
+    for (const k of Object.keys(p.es)) {
+      expect(placeholders(p.en[k]!), k).toEqual(placeholders(p.es[k]!));
+      expect(p.es[k]!.trim(), k).not.toBe('');
+    }
+  });
+
+  it('module keys never silently override base keys or each other', () => {
+    const seen = new Set(Object.keys(baseEn));
+    for (const p of MODULE_PAIRS) {
+      for (const k of Object.keys(p.es)) {
+        expect(seen.has(k), `${p.name}: ${k}`).toBe(false);
+        seen.add(k);
+      }
+    }
   });
 });

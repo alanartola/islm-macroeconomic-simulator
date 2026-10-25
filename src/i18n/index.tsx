@@ -1,11 +1,15 @@
 import { createContext, useCallback, useContext, useMemo, type ReactNode } from 'react';
 import { en, type TranslationKey } from './en';
 import { es } from './es';
+import { MODULE_DICTS } from './modules';
 import { formatAs, interpolate, type Lang, type TemplateVar } from './format';
 
 export type { Lang, TemplateVar, TranslationKey };
 
-const DICTS: Record<Lang, Record<string, string>> = { en, es };
+const DICTS: Record<Lang, Record<string, string>> = {
+  en: { ...en, ...MODULE_DICTS.en },
+  es: { ...es, ...MODULE_DICTS.es },
+};
 
 export interface I18n {
   lang: Lang;

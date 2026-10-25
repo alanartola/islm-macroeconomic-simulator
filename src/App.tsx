@@ -1,22 +1,21 @@
-import { Suspense, lazy, useEffect, useMemo, useReducer, useState } from 'react';
+import { useEffect, useMemo, useReducer, useState } from 'react';
 import { DEFAULT_LANG, I18nProvider, detectLang, makeI18n, type Lang } from './i18n';
-import { Sidebar } from './components/Sidebar';
-import { SimulatorView } from './components/SimulatorView';
-import { TransmissionView } from './components/TransmissionView';
-import { SensitivityView } from './components/SensitivityView';
-import { ScenariosView } from './components/ScenariosView';
-import { IssuesPanel } from './components/Results';
 import { OVERLAY_COLORS } from './components/charts/colors';
 import type { SavedOverlay } from './components/charts/ISLMChart';
 import { initialState, reducer, type SimState } from './state/store';
 import { runSimulation } from './state/simulation';
 import { decodeShareHash, encodeShareHash, loadSavedScenarios, readPref, storeSavedScenarios, writePref } from './state/persistence';
+import { ModeProvider, useMode } from './state/mode';
+import { advReducer, initialAdvState, runAdvanced } from './state/advancedState';
+import { BasicModule } from './modules/basic/BasicModule';
+import { BASIC_TABS, type BasicTab } from './modules/basic/tabs';
+import { AdvancedModule } from './modules/advanced/AdvancedModule';
 
-const ModelView = lazy(() => import('./components/ModelView'));
-
-type Tab = 'simulator' | 'transmission' | 'sensitivity' | 'scenarios' | 'model';
-const TABS: Tab[] = ['simulator', 'transmission', 'sensitivity', 'scenarios', 'model'];
 type Theme = 'light' | 'dark';
+
+/** Laboratory modules, in navigation order. */
+export const MODULES = ['basic', 'advanced'] as const;
+export type ModuleId = (typeof MODULES)[number];
 
 const REPO_URL = 'https://github.com/alanartola/islm-macroeconomic-simulator';
 
@@ -42,16 +41,40 @@ function detectTheme(): Theme {
   return typeof window !== 'undefined' && window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 }
 
-function detectTab(): Tab {
+function detectTab(): BasicTab {
   const q = queryParam('tab');
-  return q && (TABS as string[]).includes(q) ? (q as Tab) : 'simulator';
+  return q && (BASIC_TABS as string[]).includes(q) ? (q as BasicTab) : 'simulator';
+}
+
+function detectModule(): ModuleId {
+  const q = queryParam('m');
+  if (q && (MODULES as readonly string[]).includes(q)) return q as ModuleId;
+  if (typeof window !== 'undefined' && window.location.hash.startsWith('#s=')) return 'basic';
+  const stored = readPref('islm.module');
+  return stored && (MODULES as readonly string[]).includes(stored) ? (stored as ModuleId) : 'basic';
+}
+
+function ModeSwitch({ t }: { t: (k: string) => string }) {
+  const { mode, setMode } = useMode();
+  return (
+    <div className="segmented compact" role="group" aria-label={t('mode.label')}>
+      <button aria-pressed={mode === 'edu'} onClick={() => setMode('edu')} title={t('mode.edu.hint')}>
+        {t('mode.edu')}
+      </button>
+      <button aria-pressed={mode === 'adv'} onClick={() => setMode('adv')} title={t('mode.adv.hint')}>
+        {t('mode.adv')}
+      </button>
+    </div>
+  );
 }
 
 export default function App() {
   const [state, dispatch] = useReducer(reducer, undefined, init);
   const [lang, setLang] = useState<Lang>(detectLang);
   const [theme, setTheme] = useState<Theme>(detectTheme);
-  const [tab, setTab] = useState<Tab>(detectTab);
+  const [initialTab] = useState<BasicTab>(detectTab);
+  const [module, setModuleState] = useState<ModuleId>(detectModule);
+  const [adv, advDispatch] = useReducer(advReducer, undefined, initialAdvState);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const { t } = useMemo(() => makeI18n(lang), [lang]);
@@ -80,12 +103,22 @@ export default function App() {
       })),
     [state.saved],
   );
+  const advSim = useMemo(() => runAdvanced(adv), [adv]);
+  const setModule = (m: ModuleId) => {
+    setModuleState(m);
+    setSidebarOpen(false);
+    writePref('islm.module', m);
+  };
   const overlays: SavedOverlay[] = savedSims.flatMap((s) => (s.sim.ok ? [{ id: s.id, name: s.name, color: s.color, e1: s.sim.e1 }] : []));
 
   const share = async () => {
     // Links open in Spanish unless they were shared from the English interface.
-    const query = lang === DEFAULT_LANG ? '' : `?lang=${lang}`;
-    const url = `${window.location.origin}${window.location.pathname}${query}${encodeShareHash(state)}`;
+    const params = new URLSearchParams();
+    if (lang !== DEFAULT_LANG) params.set('lang', lang);
+    if (module !== 'basic') params.set('m', module);
+    const query = params.toString() ? `?${params}` : '';
+    const hash = module === 'basic' ? encodeShareHash(state) : '';
+    const url = `${window.location.origin}${window.location.pathname}${query}${hash}`;
     try {
       await navigator.clipboard.writeText(url);
     } catch {
@@ -117,6 +150,7 @@ export default function App() {
 
   return (
     <I18nProvider lang={lang}>
+      <ModeProvider>
       <div className="app">
         <header className="topbar">
           <button className="btn icon mobile-only" aria-label={t('btn.params')} onClick={() => setSidebarOpen(true)}>
@@ -133,6 +167,9 @@ export default function App() {
           </div>
           <div className="spacer" />
           <div className="toolbar">
+            <span className="hide-sm">
+              <ModeSwitch t={t} />
+            </span>
             <button className="btn small hide-sm" onClick={share}>
               {copied ? t('btn.copied') : t('btn.share')}
             </button>
@@ -163,38 +200,29 @@ export default function App() {
           </div>
         </header>
 
-        <div className="layout">
-          {sidebarOpen && <div className="scrim mobile-only" onClick={() => setSidebarOpen(false)} />}
-          <Sidebar state={state} dispatch={dispatch} sim={sim} open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+        <nav className="module-nav" aria-label={t('nav.modules')}>
+          {MODULES.map((m) => (
+            <button key={m} aria-current={module === m ? 'page' : undefined} onClick={() => setModule(m)} title={t(`mod.${m}.desc`)}>
+              {t(`mod.${m}`)}
+            </button>
+          ))}
+        </nav>
 
-          <main className="main">
-            <nav className="tabs" role="tablist">
-              {TABS.map((k) => (
-                <button key={k} role="tab" aria-selected={tab === k} onClick={() => setTab(k)}>
-                  {t(`nav.${k}`)}
-                </button>
-              ))}
-            </nav>
-
-            <IssuesPanel sim={sim} />
-
-            {tab === 'model' ? (
-              <Suspense fallback={<div className="card" style={{ padding: 20 }}>…</div>}>
-                <ModelView e1={sim.e1} />
-              </Suspense>
-            ) : tab === 'scenarios' ? (
-              <ScenariosView state={state} dispatch={dispatch} current={sim} savedSims={savedSims} />
-            ) : sim.ok ? (
-              tab === 'simulator' ? (
-                <SimulatorView sim={sim} state={state} dispatch={dispatch} overlays={overlays} />
-              ) : tab === 'transmission' ? (
-                <TransmissionView sim={sim} />
-              ) : (
-                <SensitivityView sim={sim} />
-              )
-            ) : null}
-          </main>
-        </div>
+        {module === 'basic' && (
+          <BasicModule
+            state={state}
+            dispatch={dispatch}
+            sim={sim}
+            savedSims={savedSims}
+            overlays={overlays}
+            initialTab={initialTab}
+            sidebarOpen={sidebarOpen}
+            onCloseSidebar={() => setSidebarOpen(false)}
+          />
+        )}
+        {module === 'advanced' && (
+          <AdvancedModule state={adv} dispatch={advDispatch} sim={advSim} sidebarOpen={sidebarOpen} onCloseSidebar={() => setSidebarOpen(false)} />
+        )}
 
         <footer className="footer">
           <span>{t('app.disclaimer')}</span>
@@ -203,6 +231,7 @@ export default function App() {
           </a>
         </footer>
       </div>
+      </ModeProvider>
     </I18nProvider>
   );
 }

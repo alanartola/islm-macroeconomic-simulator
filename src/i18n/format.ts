@@ -73,8 +73,12 @@ export function formatAs(lang: Lang, x: number, fmt: string): string {
     case 'sn2':
       return formatNumber(lang, x, 2, true);
     case 'n2':
-    default:
       return formatNumber(lang, x, 2);
+    default: {
+      const m = /^(s?)n(\d)$/.exec(fmt);
+      if (m) return formatNumber(lang, x, Number(m[2]), m[1] === 's');
+      return formatNumber(lang, x, 2);
+    }
   }
 }
 
