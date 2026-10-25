@@ -4,7 +4,9 @@ import type { Action, SimState } from '../state/store';
 import type { SimulationOk } from '../state/simulation';
 import { ISLMChart, type SavedOverlay } from './charts/ISLMChart';
 import { LegendLine } from './charts/common';
-import { ChangesTable, InsightsPanel, Kpis, MultipliersTable } from './Results';
+import { ChangesTable, Kpis, MultipliersTable } from './Results';
+import { Explanation } from './ui/Explanation';
+import { toLeveled } from '../interpretation/basicLevels';
 
 interface Props {
   sim: SimulationOk;
@@ -106,7 +108,7 @@ export function SimulatorView({ sim, state, dispatch, overlays }: Props) {
           <ChangesTable e0={e0} e1={e1} cmp={cmp} />
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16, minWidth: 0 }}>
-          <InsightsPanel report={sim.insights} />
+          <Explanation report={toLeveled(sim.insights, e1, cmp)} />
           <MultipliersTable e0={e0} e1={e1} />
         </div>
       </div>

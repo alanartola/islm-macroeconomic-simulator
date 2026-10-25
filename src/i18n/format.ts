@@ -42,7 +42,8 @@ export function formatNumber(lang: Lang, x: number, digits = 2, signed = false):
  */
 export function formatAs(lang: Lang, x: number, fmt: string): string {
   if (!Number.isFinite(x)) return '—';
-  const bn = lang === 'es' ? 'mil M' : 'bn';
+  // Non-breaking space inside the Spanish unit: a line may break before the unit, never inside it.
+  const bn = lang === 'es' ? 'mil M' : 'bn';
   switch (fmt) {
     case 'bn':
       return `${formatNumber(lang, x, 1)} ${bn}`;
@@ -73,8 +74,12 @@ export function formatAs(lang: Lang, x: number, fmt: string): string {
     case 'sn2':
       return formatNumber(lang, x, 2, true);
     case 'n2':
-    default:
       return formatNumber(lang, x, 2);
+    default: {
+      const m = /^(s?)n(\d)$/.exec(fmt);
+      if (m) return formatNumber(lang, x, Number(m[2]), m[1] === 's');
+      return formatNumber(lang, x, 2);
+    }
   }
 }
 
