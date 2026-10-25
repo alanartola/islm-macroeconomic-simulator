@@ -61,7 +61,7 @@ export function useAdvChart(sim: AdvSimOk, opts: { showTangent?: boolean } = {})
   if (s1.spec.lm === 'nonlinear' && s1.spec.regime === 'money') {
     segments.push({ id: 'imin', x0: yLo - 1e5, y0: s1.spec.params.iMin, x1: yHi + 1e5, y1: s1.spec.params.iMin, color: LM, dash: 'dot', width: 1 });
   }
-  const bands = zoneBands(s1, { trap: t('adv.zoneTitle.trap'), intermediate: t('adv.zoneTitle.intermediate'), classical: t('adv.zoneTitle.classical'), floor: t('adv.zoneTitle.floor') });
+  const bands = zoneBands(s1, { trap: t('adv.zoneShort.trap'), intermediate: t('adv.zoneShort.intermediate'), classical: t('adv.zoneShort.classical'), floor: t('adv.zoneShort.floor') });
   return { series, markers, segments, bands, xDomain: win.y, yDomain: win.i };
 }
 

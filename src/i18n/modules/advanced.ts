@@ -48,6 +48,10 @@ export const advEs = {
   'adv.zoneTitle.floor': 'Cota inferior vinculante',
   'adv.zone.pegged': 'régimen de tasa fijada por el banco central',
   'adv.zoneTitle.pegged': 'Tasa fijada por el banco central',
+  'adv.zoneShort.trap': 'Trampa de liquidez',
+  'adv.zoneShort.intermediate': 'Intermedia',
+  'adv.zoneShort.classical': 'Clásica',
+  'adv.zoneShort.floor': 'Cota inferior',
   'adv.kpi.zone': 'Región de la LM en E₁',
 
   'adv.chart.title': 'Equilibrio IS-LM avanzado',
@@ -248,6 +252,10 @@ export const advEn: Record<keyof typeof advEs, string> = {
   'adv.zoneTitle.floor': 'Binding lower bound',
   'adv.zone.pegged': 'pegged-rate regime',
   'adv.zoneTitle.pegged': 'Rate set by the central bank',
+  'adv.zoneShort.trap': 'Liquidity trap',
+  'adv.zoneShort.intermediate': 'Intermediate',
+  'adv.zoneShort.classical': 'Classical',
+  'adv.zoneShort.floor': 'Lower bound',
   'adv.kpi.zone': 'LM region at E₁',
 
   'adv.chart.title': 'Advanced IS-LM equilibrium',

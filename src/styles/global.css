@@ -1076,6 +1076,106 @@ li.math {
   color: var(--warning);
 }
 
+/* ── Construction module ────────────────────────────────────────────────── */
+.construction-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.side-by-side {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 8px;
+}
+.toolbar-row {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.inline-fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  align-items: center;
+  margin-top: 8px;
+}
+.inline-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+.inline-field input {
+  width: 84px;
+  padding: 3px 6px;
+  border-radius: 5px;
+  border: 1px solid var(--border-strong);
+  background: var(--surface-1);
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.step-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+ol.steps {
+  margin: 8px 0 0;
+  padding-left: 20px;
+  font-size: 12.5px;
+}
+ol.steps li {
+  margin: 3px 0;
+}
+ol.steps li.todo {
+  color: var(--text-muted);
+  opacity: 0.55;
+}
+ol.steps li.done {
+  color: var(--text-secondary);
+}
+.presentation {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: var(--page);
+  display: flex;
+  flex-direction: column;
+  outline: none;
+}
+.presentation-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-1);
+}
+.presentation-bar .spacer {
+  flex: 1;
+}
+.presentation-bar .hint {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.presentation-body {
+  flex: 1;
+  overflow: auto;
+  padding: 16px max(16px, 6vw);
+}
+.presentation-body .card {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
 /* ── Responsive ─────────────────────────────────────────────────────────── */
 @media (min-width: 1700px) {
   .kpis {
@@ -1084,7 +1184,8 @@ li.math {
 }
 
 @media (max-width: 1280px) {
-  .sim-grid {
+  .sim-grid,
+  .construction-grid {
     grid-template-columns: minmax(0, 1fr);
   }
 }
@@ -1124,7 +1225,8 @@ li.math {
     display: inline-flex;
   }
   .grid-2,
-  .grid-3 {
+  .grid-3,
+  .side-by-side {
     grid-template-columns: minmax(0, 1fr);
   }
   .topbar {

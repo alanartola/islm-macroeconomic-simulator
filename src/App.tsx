@@ -10,11 +10,12 @@ import { advReducer, initialAdvState, runAdvanced } from './state/advancedState'
 import { BasicModule } from './modules/basic/BasicModule';
 import { BASIC_TABS, type BasicTab } from './modules/basic/tabs';
 import { AdvancedModule } from './modules/advanced/AdvancedModule';
+import { ConstructionModule } from './modules/construction/ConstructionModule';
 
 type Theme = 'light' | 'dark';
 
 /** Laboratory modules, in navigation order. */
-export const MODULES = ['basic', 'advanced'] as const;
+export const MODULES = ['basic', 'advanced', 'construction'] as const;
 export type ModuleId = (typeof MODULES)[number];
 
 const REPO_URL = 'https://github.com/alanartola/islm-macroeconomic-simulator';
@@ -222,6 +223,9 @@ export default function App() {
         )}
         {module === 'advanced' && (
           <AdvancedModule state={adv} dispatch={advDispatch} sim={advSim} sidebarOpen={sidebarOpen} onCloseSidebar={() => setSidebarOpen(false)} />
+        )}
+        {module === 'construction' && (
+          <ConstructionModule state={adv} dispatch={advDispatch} sim={advSim} sidebarOpen={sidebarOpen} onCloseSidebar={() => setSidebarOpen(false)} />
         )}
 
         <footer className="footer">

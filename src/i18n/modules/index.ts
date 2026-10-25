@@ -1,10 +1,12 @@
 import { advEn, advEs } from './advanced';
 import { uiEn, uiEs } from './ui';
+import { conEn, conEs } from './construction';
 
 /** Per-module dictionaries; each module file defines Spanish (primary) and English with identical keys. */
 export const MODULE_PAIRS: { name: string; es: Record<string, string>; en: Record<string, string> }[] = [
   { name: 'ui', es: uiEs, en: uiEn },
   { name: 'advanced', es: advEs, en: advEn },
+  { name: 'construction', es: conEs, en: conEn },
 ];
 
 export const MODULE_DICTS = {

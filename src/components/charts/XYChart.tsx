@@ -129,12 +129,15 @@ export function XYChart(props: XYChartProps) {
     const vis = s.points.filter(inside);
     if (vis.length === 0) return null;
     const last = vis.reduce((a, b) => (x(b[0]) > x(a[0]) ? b : a));
-    const lx = Math.min(x(last[0]) + 6, w + 4);
-    let ly = Math.max(10, Math.min(h - 4, y(last[1])));
+    // Labels that would overflow the right margin are drawn inside the plot, right-aligned.
+    const estWidth = s.label.length * 6.6;
+    const overflow = x(last[0]) + 6 + estWidth > w + MARGIN.right - 2;
+    const lx = overflow ? Math.min(x(last[0]), w) - 4 : Math.min(x(last[0]) + 6, w + 4);
+    let ly = Math.max(10, Math.min(h - 4, y(last[1]) - (overflow ? 10 : 0)));
     while (placed.some((p) => Math.abs(p.x - lx) < 40 && Math.abs(p.y - ly) < 13)) ly += 13;
     placed.push({ x: lx, y: ly });
     return (
-      <text key={`${s.id}-lbl`} x={lx} y={ly} dy="0.32em" fontSize={11.5} fontWeight={600} fill="var(--text-primary)">
+      <text key={`${s.id}-lbl`} x={lx} y={ly} dy="0.32em" textAnchor={overflow ? 'end' : 'start'} fontSize={11.5} fontWeight={600} fill="var(--text-primary)">
         {s.label}
       </text>
     );
@@ -205,7 +208,7 @@ export function XYChart(props: XYChartProps) {
               return (
                 <g key={b.id}>
                   <rect x={Math.min(bx0, bx1)} y={Math.min(by0, by1)} width={Math.abs(bx1 - bx0)} height={Math.abs(by1 - by0)} fill={b.color} />
-                  {b.label && (
+                  {b.label && Math.abs(bx1 - bx0) > b.label.length * 6.2 + 10 && (
                     <text x={Math.min(bx0, bx1) + 6} y={Math.min(by0, by1) + 14} fontSize={10.5} fill="var(--text-muted)" fontWeight={600}>
                       {b.label}
                     </text>

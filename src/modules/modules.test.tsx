@@ -1,0 +1,103 @@
+import { fireEvent, render, screen } from '@testing-library/react';
+import App from '../App';
+
+beforeAll(() => {
+  Object.defineProperty(window, 'matchMedia', {
+    writable: true,
+    value: (q: string) => ({ matches: false, media: q, addEventListener: () => {}, removeEventListener: () => {} }),
+  });
+});
+
+beforeEach(() => {
+  localStorage.clear();
+  sessionStorage.clear();
+});
+
+const open = (query: string) => {
+  window.history.replaceState(null, '', `/${query}`);
+  return render(<App />);
+};
+
+describe('module navigation', () => {
+  it('lists the laboratory modules in Spanish and opens Module A by default', () => {
+    open('');
+    const nav = screen.getByRole('navigation', { name: 'Módulos del laboratorio' });
+    expect(nav).toHaveTextContent('IS-LM básico');
+    expect(nav).toHaveTextContent('IS-LM avanzado');
+    expect(nav).toHaveTextContent('Construcción de curvas');
+    expect(screen.getByRole('tab', { name: 'Simulador' })).toBeInTheDocument();
+  });
+
+  it('remembers the last module', () => {
+    const r = open('');
+    fireEvent.click(screen.getByRole('button', { name: 'IS-LM avanzado' }));
+    expect(localStorage.getItem('islm.module')).toBe('advanced');
+    r.unmount();
+    open('');
+    expect(screen.getByRole('heading', { name: 'IS-LM avanzado', level: 2 })).toBeInTheDocument();
+  });
+});
+
+describe('Module B (advanced IS-LM) in the interface', () => {
+  it('shows the hand-checked equilibrium and its LM region', () => {
+    open('?m=advanced');
+    expect(screen.getAllByText('2.000,0 mil M').length).toBeGreaterThan(0);
+    expect(screen.getByText('Zona intermedia')).toBeInTheDocument();
+  });
+
+  it('the liquidity-trap scenario is classified and explained from computed values', () => {
+    open('?m=advanced');
+    fireEvent.click(screen.getByRole('button', { name: /Trampa de liquidez: política monetaria/ }));
+    expect(screen.getAllByText('Zona de trampa de liquidez').length).toBeGreaterThan(0);
+    expect(screen.getByText(/la economía se encuentra en la zona de trampa de liquidez/)).toBeInTheDocument();
+  });
+
+  it('educational mode hides advanced parameters; advanced mode reveals them', () => {
+    open('?m=advanced');
+    expect(screen.queryByRole('slider', { name: /i_min/ })).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Avanzado' }));
+    expect(screen.getByRole('slider', { name: /i_min/ })).toBeInTheDocument();
+    expect(screen.getByText('Elasticidades')).toBeInTheDocument();
+  });
+
+  it('switching to the lower-bound specification exposes the floor parameter', () => {
+    open('?m=advanced');
+    fireEvent.click(screen.getByRole('button', { name: 'Con cota inferior' }));
+    expect(screen.getByRole('slider', { name: /i_piso/ })).toBeInTheDocument();
+  });
+});
+
+describe('Module C (curve construction)', () => {
+  it('renders the seven coordinated charts', () => {
+    open('?m=construction');
+    for (const title of [
+      '1 · Cruz keynesiana',
+      '2 · Formación de la IS',
+      '3 · IS en cuatro cuadrantes',
+      '4 · Mercado monetario',
+      '5 · Formación de la LM',
+      '6 · LM en cuatro cuadrantes',
+      '7 · Equilibrio IS-LM completo',
+    ]) {
+      expect(screen.getByRole('heading', { name: title })).toBeInTheDocument();
+    }
+  });
+
+  it('step-by-step IS construction uses the model numbers', () => {
+    open('?m=construction');
+    // I(3) = 300 − 25·3 = 225 and Y(3) = 2.5·(925 − 75) = 2125
+    expect(screen.getByText(/I\(i_a\) = I₀ − b·3,00 = 225,0 mil M/)).toBeInTheDocument();
+    expect(screen.getByText(/Y_a = 2\.125,0 mil M/)).toBeInTheDocument();
+  });
+
+  it('presentation mode shows one chart at a time and navigates with the keyboard', () => {
+    open('?m=construction');
+    fireEvent.click(screen.getByRole('button', { name: 'Modo presentación' }));
+    const dialog = screen.getByRole('dialog', { name: 'Modo presentación' });
+    expect(dialog).toHaveTextContent('1 / 7');
+    fireEvent.keyDown(window, { key: 'ArrowRight' });
+    expect(dialog).toHaveTextContent('2 / 7');
+    fireEvent.keyDown(window, { key: 'Escape' });
+    expect(screen.queryByRole('dialog', { name: 'Modo presentación' })).not.toBeInTheDocument();
+  });
+});
