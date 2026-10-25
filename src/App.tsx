@@ -15,6 +15,7 @@ import { PolicyModule } from './modules/policy/PolicyModule';
 import { OpenModule } from './modules/open/OpenModule';
 
 type Theme = 'light' | 'dark';
+const DEFAULT_THEME: Theme = 'dark';
 
 /** Laboratory modules, in navigation order. */
 export const MODULES = ['basic', 'advanced', 'construction', 'policy', 'open'] as const;
@@ -41,7 +42,8 @@ function detectTheme(): Theme {
   if (q === 'light' || q === 'dark') return q;
   const stored = readPref('islm.theme');
   if (stored === 'light' || stored === 'dark') return stored;
-  return typeof window !== 'undefined' && window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  // Dark is the default for every visitor without an explicit choice (OS preference ignored).
+  return DEFAULT_THEME;
 }
 
 function detectTab(): BasicTab {

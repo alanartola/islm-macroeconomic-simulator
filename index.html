@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="es">
+<html lang="es" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
@@ -9,6 +9,26 @@
       content="Plataforma interactiva de simulación macroeconómica para explorar el equilibrio IS-LM, la transmisión de las políticas monetaria y fiscal, la dinámica de la tasa de interés y la estática comparativa mediante modelización matemática y visualizaciones en tiempo real."
     />
     <meta name="color-scheme" content="dark light" />
+    <style>
+      html { background: #0f1318; color-scheme: dark; }
+      html[data-theme='light'] { background: #f4f4f1; color-scheme: light; }
+    </style>
+    <script>
+      // Apply the theme before the first paint (no flash): dark by default;
+      // light only when requested by the link (?theme=light) or chosen earlier.
+      (function () {
+        var theme = 'dark';
+        try {
+          var q = new URLSearchParams(window.location.search).get('theme');
+          var s = window.localStorage.getItem('islm.theme');
+          if (q === 'light' || q === 'dark') theme = q;
+          else if (s === 'light' || s === 'dark') theme = s;
+        } catch (e) {
+          /* storage unavailable: keep dark */
+        }
+        document.documentElement.setAttribute('data-theme', theme);
+      })();
+    </script>
     <title>IS-LM | Simulador de Política Macroeconómica</title>
   </head>
   <body>

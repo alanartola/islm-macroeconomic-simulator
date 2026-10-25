@@ -52,59 +52,22 @@
   --sidebar-w: 340px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:where(:not([data-theme='light'])) {
-    color-scheme: dark;
-    --page: #0d0d0d;
-    --surface-1: #1a1a19;
-    --surface-2: #222220;
-    --surface-3: #2c2c2a;
-    --text-primary: #ffffff;
-    --text-secondary: #c3c2b7;
-    --text-muted: #9a988f;
-    --grid: #2c2c2a;
-    --axis: #4a4a46;
-    --border: rgba(255, 255, 255, 0.1);
-    --border-strong: rgba(255, 255, 255, 0.2);
-    --accent: #5598e7;
-    --accent-soft: rgba(57, 135, 229, 0.16);
-    --focus: #6da7ec;
-    --series-is: #3987e5;
-    --series-lm: #d95926;
-    --series-3: #199e70;
-    --series-4: #c98500;
-    --series-5: #d55181;
-    --series-6: #008300;
-    --series-7: #9085e9;
-    --series-8: #e66767;
-    --eq0: #c3c2b7;
-    --eq1: #ffffff;
-    --up: #2fbf2f;
-    --down: #f07167;
-    --warning: #fab219;
-    --serious: #ec835a;
-    --critical: #e66767;
-    --warning-bg: rgba(250, 178, 25, 0.1);
-    --critical-bg: rgba(230, 103, 103, 0.1);
-    --info-bg: rgba(57, 135, 229, 0.1);
-    --band-trap: rgba(57, 135, 229, 0.1);
-    --band-classical: rgba(217, 89, 38, 0.11);
-    --shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
-  }
-}
-:root[data-theme='dark'] {
+/* Dark is the DEFAULT theme: it applies unless the user explicitly chose light
+   (data-theme='light'). The operating-system colour preference is deliberately
+   ignored, so a first visit always opens in dark mode. */
+:root:not([data-theme='light']) {
   color-scheme: dark;
-  --page: #0d0d0d;
-  --surface-1: #1a1a19;
-  --surface-2: #222220;
-  --surface-3: #2c2c2a;
-  --text-primary: #ffffff;
-  --text-secondary: #c3c2b7;
-  --text-muted: #9a988f;
-  --grid: #2c2c2a;
-  --axis: #4a4a46;
-  --border: rgba(255, 255, 255, 0.1);
-  --border-strong: rgba(255, 255, 255, 0.2);
+  --page: #0f1318;
+  --surface-1: #161b22;
+  --surface-2: #1c222b;
+  --surface-3: #252c36;
+  --text-primary: #e6e9ee;
+  --text-secondary: #b3bac5;
+  --text-muted: #8b93a0;
+  --grid: #242a33;
+  --axis: #3b434e;
+  --border: rgba(230, 233, 238, 0.09);
+  --border-strong: rgba(230, 233, 238, 0.17);
   --accent: #5598e7;
   --accent-soft: rgba(57, 135, 229, 0.16);
   --focus: #6da7ec;
@@ -116,8 +79,8 @@
   --series-6: #008300;
   --series-7: #9085e9;
   --series-8: #e66767;
-  --eq0: #c3c2b7;
-  --eq1: #ffffff;
+  --eq0: #b3bac5;
+  --eq1: #e6e9ee;
   --up: #2fbf2f;
   --down: #f07167;
   --warning: #fab219;
