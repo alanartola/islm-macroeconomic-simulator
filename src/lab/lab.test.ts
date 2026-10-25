@@ -81,6 +81,8 @@ describe('comparability', () => {
     const yDelta = lines.find((l) => l.startsWith('Y,delta,'))!.split(',');
     expect(Number(yDelta[2])).toBeCloseTo(100, 9);
     expect(yDelta[3]).toBe(''); // output is not defined in IS-MP
+    // No floating-point noise in the exported values.
+    for (const line of lines.slice(1)) for (const cell of line.split(',').slice(2)) expect(cell).not.toMatch(/\d{13,}/);
   });
 });
 

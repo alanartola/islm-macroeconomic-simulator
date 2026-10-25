@@ -193,7 +193,7 @@ npm run dev
 
 ## Validaciones y pruebas
 
-369 pruebas automáticas (Vitest) cubren, entre otros aspectos:
+370 pruebas automáticas (Vitest) cubren, entre otros aspectos:
 
 - **Motores** frente a soluciones calculadas a mano en los cinco modelos;
   identidades contables y residuos; derivadas analíticas frente a diferencias

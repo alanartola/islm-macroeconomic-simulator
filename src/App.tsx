@@ -18,6 +18,7 @@ import { ISMPModule } from './modules/ismp/ISMPModule';
 import { LabModule } from './modules/lab/LabModule';
 import { HomeModule } from './modules/home/HomeModule';
 import { LabProvider } from './state/lab';
+import { getCurrentConfig } from './state/currentConfig';
 import { MODULE_OF, decodeConfigHash, encodeConfigHash, type LabConfig } from './lab/scenario';
 
 type Theme = 'light' | 'dark';
@@ -168,13 +169,17 @@ export default function App() {
     if (lang !== DEFAULT_LANG) params.set('lang', lang);
     if (module !== 'basic') params.set('m', module);
     const query = params.toString() ? `?${params}` : '';
-    // Module A keeps its compact "#s=" link; B, C and D share the advanced configuration.
+    // Module A keeps its compact "#s=" link; B, C and D share the advanced configuration;
+    // E, F and G share the configuration registered by the module on screen.
+    const onScreen = getCurrentConfig();
     const hash =
       module === 'basic'
         ? encodeShareHash(state)
         : module === 'advanced' || module === 'construction' || module === 'policy'
           ? encodeConfigHash({ model: 'advanced', baseline: adv.baseline, shocked: adv.shocked, lm: adv.lm, regime: adv.regime, target0: adv.target0, target1: adv.target1 })
-          : '';
+          : onScreen && MODULE_OF[onScreen.model] === module
+            ? encodeConfigHash(onScreen)
+            : '';
     const url = `${window.location.origin}${window.location.pathname}${query}${hash}`;
     try {
       await navigator.clipboard.writeText(url);
