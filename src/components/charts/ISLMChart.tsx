@@ -75,19 +75,26 @@ export function ISLMChart({ e0, e1, showInitial, showShifted, showGuides, saved 
     return clipSegment(p[0], p[1], p[2], p[3], 0, w, 0, h);
   };
 
+  // Curve-end labels placed so far in this render, used to avoid overlaps (e.g. LM₀ / LM₁ at the top edge).
+  const placed: { x: number; y: number }[] = [];
+
   function renderLine(l: Line, color: string, dashed: boolean, label: string, key: string, opacity = 1, labelAt: 'right' | 'top' = 'right') {
     const c = clip(l);
     if (!c) return null;
     const [ax, ay, bx, by] = c;
     // Label at the end that is further right (or higher, for near-vertical lines).
     const useA = labelAt === 'right' ? ax > bx : ay < by;
-    const lx = useA ? ax : bx;
-    const ly = useA ? ay : by;
+    const lx = Math.min((useA ? ax : bx) + 6, w + 4);
+    let ly = Math.max(10, Math.min(h - 4, useA ? ay : by));
+    if (label) {
+      while (placed.some((p) => Math.abs(p.x - lx) < 34 && Math.abs(p.y - ly) < 14)) ly += 14;
+      placed.push({ x: lx, y: ly });
+    }
     return (
       <g key={key} opacity={opacity}>
         <line x1={ax} y1={ay} x2={bx} y2={by} stroke={color} strokeWidth={dashed ? 1.75 : 2.25} strokeDasharray={dashed ? '6 5' : undefined} strokeLinecap="round" />
         {label && (
-          <text x={Math.min(lx + 6, w + 4)} y={Math.max(10, Math.min(h - 4, ly))} dy="0.32em" fontSize={12} fontWeight={600} fill="var(--text-primary)">
+          <text x={lx} y={ly} dy="0.32em" fontSize={12} fontWeight={600} fill="var(--text-primary)">
             {label}
           </text>
         )}

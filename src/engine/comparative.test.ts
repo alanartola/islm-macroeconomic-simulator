@@ -104,3 +104,29 @@ describe('sensitivityProfile()', () => {
     expect(pts.every((p) => Number.isFinite(p.fiscal) && Number.isFinite(p.monetary))).toBe(true);
   });
 });
+
+describe('README example table (regression)', () => {
+  const ms = (p: Partial<ModelParams>) => compare(solved(spec()), solved(spec(p)));
+  const it2 = (p: Partial<ModelParams>, t1: number) =>
+    compare(solved(spec({}, { regime: 'interest-target', targetRate: 5 })), solved(spec(p, { regime: 'interest-target', targetRate: t1 })));
+
+  it.each([
+    ['A · M 700 → 800', ms({ M: 800 }), 100, -1, 25],
+    ['B · M 700 → 600', ms({ M: 600 }), -100, 1, -25],
+    ['C · G 250 → 300', ms({ G: 300 }), 100, 1, -25],
+    ['C · T 200 → 150', ms({ T: 150 }), 75, 0.75, -18.75],
+    ['D · G 250 → 200', ms({ G: 200 }), -100, -1, 25],
+    ['E · I0 300 → 250', ms({ I0: 250 }), -100, -1, -25],
+    ['C under peg', it2({ G: 300 }, 5), 200, 0, 0],
+    ['rate cut under peg', it2({}, 4), 100, -1, 25],
+  ] as const)('%s', (_name, c, dY, di, dI) => {
+    expect(c.changes.Y.abs).toBeCloseTo(dY, 9);
+    expect(c.changes.i.abs).toBeCloseTo(di, 9);
+    expect(c.changes.I.abs).toBeCloseTo(dI, 9);
+  });
+
+  it('money stock rises by 100 in both interest-target examples', () => {
+    expect(it2({ G: 300 }, 5).changes.M.abs).toBeCloseTo(100, 9);
+    expect(it2({}, 4).changes.M.abs).toBeCloseTo(100, 9);
+  });
+});
