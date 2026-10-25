@@ -90,7 +90,7 @@ export function ParamControl({ sym, name, description, unit, value, reference, m
       <span id={`${id}-desc`} className="sr-only">{description}</span>
       {hasDelta && (
         <span className="param-delta">
-          {t('param.delta')}: {f(delta, digits === 0 ? 'sn2' : 'sn2')} ({f(reference ?? 0, `n${Math.min(digits, 4)}`)} → {f(value, `n${Math.min(digits, 4)}`)})
+          {t('param.delta')}: {f(delta, 'sn2')} ({f(reference ?? 0, `n${Math.min(digits, 4)}`)} → {f(value, `n${Math.min(digits, 4)}`)})
         </span>
       )}
     </div>

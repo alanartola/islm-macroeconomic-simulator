@@ -44,6 +44,8 @@ export const es: Record<TranslationKey, string> = {
   'btn.resetShock': 'Restablecer E₁ = E₀',
   'btn.adopt': 'Adoptar E₁ como nuevo E₀',
   'btn.resetAll': 'Valores por defecto',
+  'tag.fiscal': 'fiscal',
+  'tag.monetary': 'monetaria',
   'unit.bn': 'mm',
   'unit.bnPerPp': 'mm / pp',
   'unit.ratio': 'razón',
@@ -232,7 +234,7 @@ export const es: Record<TranslationKey, string> = {
   'ins.move.alongIS': 'Solo se mueve la curva LM: el nuevo equilibrio se alcanza mediante un movimiento a lo largo de la IS sin cambios, por lo que el producto y la tasa de interés varían en direcciones opuestas.',
   'ins.move.both': 'Ambas curvas se mueven; el nuevo equilibrio combina los dos desplazamientos.',
 
-  'ins.tr.monetary': 'Canal de la tasa de interés: con el producto inicial, el cambio en M/P genera un {excess} de dinero a i₀. Por la recomposición de carteras entre dinero y bonos, la tasa de interés {rateDir} {di|pp}. A través de I = I₀ − b·i (b = {b|n1}), la inversión varía en {dIrate|sbn} y el multiplicador lo amplifica a ΔY = {dY|sbn}. La variación del ingreso {mdDir} la demanda de dinero en {kdY|bn} (k·ΔY), por lo que la tasa se mueve menos de lo que lo haría con producto constante.',
+  'ins.tr.monetary': 'Canal de la tasa de interés: con el producto inicial, el cambio en M/P genera un {excess} de dinero a i₀. Por la recomposición de carteras entre dinero y bonos, la tasa de interés {rateDir} {di|pp}. A través de I = I₀ − b·i (b = {b|n1}), la inversión varía en {dIrate|sbn} y el multiplicador lo amplifica a ΔY = {dY|sbn}. La variación del ingreso ({incomeDir}) {mdDir} la demanda de dinero en {kdY|bn} (k·ΔY), por lo que la tasa se mueve menos de lo que lo haría con producto constante.',
   'ins.tr.demand': 'Con la tasa de interés constante, el shock de demanda modificaría el producto en {isEffect|sbn} (multiplicador simple α = 1/(1−c) = {alpha|n2}). El cambio en el ingreso {mdDir} la demanda transaccional de dinero (k·ΔY); con M/P fija, la tasa de interés debe {rateDir} {di|pp} para mantener el equilibrio monetario. La inversión responde en {dIrate|sbn}, compensando {offset|bn} de producto ({share|pct} del efecto a tasa constante). Variación neta: ΔY = {dY|sbn}.',
   'ins.tr.crowdingOut': 'Efecto desplazamiento (crowding out): la mayor tasa de interés desplaza inversión privada ({dIrate|sbn}) y reduce la ganancia de producto en {crowd|bn}, es decir, el {share|pct} del efecto keynesiano (a tasa constante).',
   'ins.tr.crowdingIn': 'Efecto atracción (crowding in): la menor tasa de interés estimula la inversión privada y amortigua la caída del producto en {crowd|bn} ({share|pct} del efecto a tasa constante).',

@@ -35,7 +35,7 @@ export function Sidebar({ state, dispatch, sim, open, onClose }: Props) {
         max={m.max}
         step={m.step}
         digits={m.digits}
-        tag={m.instrument ? (m.instrument === 'fiscal' ? 'fiscal' : 'monetary') : undefined}
+        tag={m.instrument ? t(`tag.${m.instrument}`) : undefined}
         onChange={(v) => dispatch({ type: 'setParam', key: m.key, value: v })}
       />
     ));
@@ -113,7 +113,7 @@ export function Sidebar({ state, dispatch, sim, open, onClose }: Props) {
               max={TARGET_RATE_META.max}
               step={TARGET_RATE_META.step}
               digits={TARGET_RATE_META.digits}
-              tag="monetary"
+              tag={t('tag.monetary')}
               onChange={(v) => dispatch({ type: 'setTarget', value: v })}
             />
             <div className="param" title={t('target.endogM.hint')}>

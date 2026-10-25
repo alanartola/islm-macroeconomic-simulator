@@ -41,6 +41,7 @@ export function formatNumber(lang: Lang, x: number, digits = 2, signed = false):
  *  n0..n4 / sn2  plain numbers with the given decimals (signed)
  */
 export function formatAs(lang: Lang, x: number, fmt: string): string {
+  if (!Number.isFinite(x)) return '—';
   const bn = lang === 'es' ? 'mm' : 'bn';
   switch (fmt) {
     case 'bn':

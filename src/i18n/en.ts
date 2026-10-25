@@ -45,6 +45,8 @@ export const en = {
   'btn.resetShock': 'Reset E₁ = E₀',
   'btn.adopt': 'Adopt E₁ as new E₀',
   'btn.resetAll': 'Restore defaults',
+  'tag.fiscal': 'fiscal',
+  'tag.monetary': 'monetary',
   'unit.bn': 'bn',
   'unit.bnPerPp': 'bn / pp',
   'unit.ratio': 'ratio',
