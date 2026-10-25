@@ -22,7 +22,7 @@ describe('module navigation', () => {
   it('lists the laboratory modules in Spanish and opens Module A by default', () => {
     open('');
     const nav = screen.getByRole('navigation', { name: 'Módulos del laboratorio' });
-    expect(nav).toHaveTextContent('IS-LM básico');
+    expect(nav).toHaveTextContent('IS-LM tradicional');
     expect(nav).toHaveTextContent('IS-LM avanzado');
     expect(nav).toHaveTextContent('Construcción de curvas');
     expect(screen.getByRole('tab', { name: 'Simulador' })).toBeInTheDocument();
@@ -30,7 +30,7 @@ describe('module navigation', () => {
 
   it('remembers the last module', () => {
     const r = open('');
-    fireEvent.click(screen.getByRole('button', { name: 'IS-LM avanzado' }));
+    fireEvent.click(screen.getByRole('button', { name: /IS-LM avanzado/ }));
     expect(localStorage.getItem('islm.module')).toBe('advanced');
     r.unmount();
     open('');
@@ -105,7 +105,7 @@ describe('Module C (curve construction)', () => {
 describe('Module D (policy lab)', () => {
   it('runs the default fiscal experiment and reports crowding out from the solved equilibria', () => {
     open('?m=policy');
-    expect(screen.getByRole('heading', { name: 'Laboratorio de políticas', level: 2 })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Políticas económicas', level: 2 })).toBeInTheDocument();
     expect(screen.getByText('Multiplicador efectivo')).toBeInTheDocument();
     expect(screen.getByText('Efecto desplazamiento')).toBeInTheDocument();
   });
@@ -127,7 +127,7 @@ describe('Module D (policy lab)', () => {
 describe('Module E (Mundell-Fleming)', () => {
   it('starts at the hand-checked equilibrium with balanced trade', () => {
     open('?m=open');
-    expect(screen.getByRole('heading', { name: 'Economía abierta', level: 2 })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Mundell-Fleming', level: 2 })).toBeInTheDocument();
     expect(screen.getAllByText('2.000,0 mil M').length).toBeGreaterThan(0);
   });
 
@@ -141,5 +141,39 @@ describe('Module E (Mundell-Fleming)', () => {
     open('?m=open');
     fireEvent.click(screen.getByRole('button', { name: /Expansión monetaria \(fijo\)/ }));
     expect(screen.getByText(/el banco central vende reservas \(-100,0 mil M\)/)).toBeInTheDocument();
+  });
+});
+
+describe('Module F (AD-AS)', () => {
+  it('starts at the medium-run equilibrium P = 1, Y = Yₙ = 2000', () => {
+    open('?m=adas');
+    expect(screen.getByRole('heading', { name: 'Oferta y demanda agregada', level: 2 })).toBeInTheDocument();
+    expect(screen.getAllByText('2.000,0 mil M').length).toBeGreaterThan(0);
+  });
+
+  it('a negative supply shock raises prices and lowers output (explained from computed values)', () => {
+    open('?m=adas');
+    fireEvent.click(screen.getByRole('button', { name: /Shock negativo de oferta/ }));
+    expect(screen.getByText(/Precios y producto se mueven en direcciones opuestas/)).toBeInTheDocument();
+  });
+
+  it('a monetary expansion shows medium-run neutrality', () => {
+    open('?m=adas');
+    fireEvent.click(screen.getByRole('button', { name: /Expansión monetaria/ }));
+    expect(screen.getByText(/el dinero es neutral en el mediano plazo/)).toBeInTheDocument();
+  });
+});
+
+describe('Module G (IS-MP, Phillips, Taylor)', () => {
+  it('starts at x = 0, π = π* = 2 and i = 4', () => {
+    open('?m=ismp');
+    expect(screen.getByRole('heading', { name: 'IS-MP y política monetaria', level: 2 })).toBeInTheDocument();
+    expect(screen.getAllByText('4,00%').length).toBeGreaterThan(0);
+  });
+
+  it('the lower-bound scenario reports a binding bound', () => {
+    open('?m=ismp');
+    fireEvent.click(screen.getByRole('button', { name: /Cota inferior efectiva/ }));
+    expect(screen.getByText('Vinculante')).toBeInTheDocument();
   });
 });

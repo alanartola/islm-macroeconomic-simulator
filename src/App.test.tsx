@@ -65,11 +65,11 @@ describe('default language (Spanish first)', () => {
     localStorage.clear();
     window.history.replaceState(null, '', '/');
     render(<App />);
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Simulador de Política Macroeconómica');
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Laboratorio Avanzado de Macroeconomía');
     expect(screen.getByRole('tab', { name: 'Simulador' })).toBeInTheDocument();
     expect(screen.getByText('Análisis e interpretación económica')).toBeInTheDocument();
     expect(document.documentElement.lang).toBe('es');
-    expect(document.title).toBe('IS-LM | Simulador de Política Macroeconómica');
+    expect(document.title).toBe('IS-LM | Laboratorio Avanzado de Macroeconomía');
   });
 
   it('a shared scenario link without a language opens in Spanish', () => {

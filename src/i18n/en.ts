@@ -1,9 +1,9 @@
 /* English dictionary — the source of truth for translation keys. */
 export const en = {
   // ── App chrome ────────────────────────────────────────────────────────────
-  'app.title': 'IS-LM | Macroeconomic Policy Simulator',
-  'app.short': 'IS-LM Simulator',
-  'app.subtitle': 'Closed economy · fixed prices · short-run comparative statics',
+  'app.title': 'IS-LM | Advanced Macroeconomics Lab',
+  'app.short': 'IS-LM Lab',
+  'app.subtitle': 'IS-LM, open economy, aggregate supply and demand and monetary policy · static models with hypothetical calibrations',
   'app.disclaimer': 'Hypothetical calibration. An educational model of comparative statics — not a forecasting tool.',
   'app.source': 'Source code & documentation',
   'nav.simulator': 'Simulator',

@@ -13,12 +13,16 @@ import { AdvancedModule } from './modules/advanced/AdvancedModule';
 import { ConstructionModule } from './modules/construction/ConstructionModule';
 import { PolicyModule } from './modules/policy/PolicyModule';
 import { OpenModule } from './modules/open/OpenModule';
+import { ADASModule } from './modules/adas/ADASModule';
+import { ISMPModule } from './modules/ismp/ISMPModule';
 
 type Theme = 'light' | 'dark';
 const DEFAULT_THEME: Theme = 'dark';
 
 /** Laboratory modules, in navigation order. */
-export const MODULES = ['basic', 'advanced', 'construction', 'policy', 'open'] as const;
+export const MODULES = ['basic', 'advanced', 'construction', 'policy', 'open', 'adas', 'ismp'] as const;
+/** Navigation letters A–H. */
+const LETTER: Record<string, string> = { basic: 'A', advanced: 'B', construction: 'C', policy: 'D', open: 'E', adas: 'F', ismp: 'G', lab: 'H' };
 export type ModuleId = (typeof MODULES)[number];
 
 const REPO_URL = 'https://github.com/alanartola/islm-macroeconomic-simulator';
@@ -208,7 +212,7 @@ export default function App() {
         <nav className="module-nav" aria-label={t('nav.modules')}>
           {MODULES.map((m) => (
             <button key={m} aria-current={module === m ? 'page' : undefined} onClick={() => setModule(m)} title={t(`mod.${m}.desc`)}>
-              {t(`mod.${m}`)}
+              <span className="mod-letter">{LETTER[m]}</span> {t(`mod.${m}`)}
             </button>
           ))}
         </nav>
@@ -228,6 +232,8 @@ export default function App() {
         {module === 'advanced' && (
           <AdvancedModule state={adv} dispatch={advDispatch} sim={advSim} sidebarOpen={sidebarOpen} onCloseSidebar={() => setSidebarOpen(false)} />
         )}
+        {module === 'adas' && <ADASModule sidebarOpen={sidebarOpen} onCloseSidebar={() => setSidebarOpen(false)} />}
+        {module === 'ismp' && <ISMPModule sidebarOpen={sidebarOpen} onCloseSidebar={() => setSidebarOpen(false)} />}
         {module === 'open' && <OpenModule sidebarOpen={sidebarOpen} onCloseSidebar={() => setSidebarOpen(false)} />}
         {module === 'policy' && <PolicyModule state={adv} dispatch={advDispatch} sidebarOpen={sidebarOpen} onCloseSidebar={() => setSidebarOpen(false)} />}
         {module === 'construction' && (

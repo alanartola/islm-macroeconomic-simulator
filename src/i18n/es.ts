@@ -2,9 +2,9 @@ import type { TranslationKey } from './en';
 
 /* Diccionario en español. Debe contener exactamente las mismas claves que `en`. */
 export const es: Record<TranslationKey, string> = {
-  'app.title': 'IS-LM | Simulador de Política Macroeconómica',
-  'app.short': 'Simulador IS-LM',
-  'app.subtitle': 'Economía cerrada · precios fijos · estática comparativa de corto plazo',
+  'app.title': 'IS-LM | Laboratorio Avanzado de Macroeconomía',
+  'app.short': 'Laboratorio IS-LM',
+  'app.subtitle': 'IS-LM, economía abierta, oferta y demanda agregada y política monetaria · modelos estáticos con calibraciones hipotéticas',
   'app.disclaimer': 'Calibración hipotética. Modelo educativo de estática comparativa — no es una herramienta de predicción.',
   'app.source': 'Código fuente y documentación',
   'nav.simulator': 'Simulador',

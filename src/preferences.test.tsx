@@ -72,6 +72,6 @@ describe('default language and theme together', () => {
     render(<App />);
     expect(document.documentElement.lang).toBe('es');
     expect(theme()).toBe('dark');
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Simulador de Política Macroeconómica');
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Laboratorio Avanzado de Macroeconomía');
   });
 });
