@@ -17,6 +17,8 @@ export interface TimePanel {
   id: string;
   title: string;
   unit: string;
+  /** Vertical-axis title: variable and unit, e.g. "Tasa de interés (% TNA)". Defaults to the unit. */
+  yLabel?: string;
   lines: TimeLine[];
   /** Number format for axis and read-out (i18n format code). */
   fmt?: string;
@@ -41,10 +43,14 @@ interface Props {
   onMarker?: (id: string) => void;
   ariaLabel: string;
   panelHeight?: number;
+  /** Hides the per-panel title above the plot (single-variable charts already name it in the axis). */
+  hideTitles?: boolean;
+  /** 'all' draws a guide line for every event; 'active' only for the selected one (the rest stay as ticks on the date axis). */
+  markerLines?: 'all' | 'active';
 }
 
-const M = { top: 22, right: 18, bottom: 6, left: 64 };
-const AXIS_H = 24;
+const M = { top: 22, right: 18, bottom: 6, left: 84 };
+const AXIS_H = 40;
 
 /** Keeps the shape of dense series: first, min, max and last point of every pixel bucket. */
 function thin(points: Obs[], x: (d: string) => number, budget: number): Obs[] {
@@ -76,13 +82,19 @@ function thin(points: Obs[], x: (d: string) => number, budget: number): Obs[] {
   return out;
 }
 
+/** Shortens a rotated axis title that would not fit the panel height (the full text stays in <title>). */
+function fitLabel(text: string, length: number): string {
+  const max = Math.max(8, Math.floor(length / 6.2));
+  return text.length <= max ? text : `${text.slice(0, max - 1)}…`;
+}
+
 /**
  * Synchronised time-series panels: each indicator keeps its own vertical axis
  * (no misleading shared scale for different units) while all panels share the
  * date axis, the hover read-out, episode markers and the highlighted window.
  */
-export function TimeChart({ from, to, panels, markers = [], band, onMarker, ariaLabel, panelHeight = 132 }: Props) {
-  const { f, lang } = useI18n();
+export function TimeChart({ from, to, panels, markers = [], band, onMarker, ariaLabel, panelHeight = 132, hideTitles = false, markerLines = 'all' }: Props) {
+  const { t, f, lang } = useI18n();
   const [ref, width] = useWidth<HTMLDivElement>(720);
   const [hover, setHover] = useState<string | null>(null);
   const w = Math.max(120, width - M.left - M.right);
@@ -92,6 +104,8 @@ export function TimeChart({ from, to, panels, markers = [], band, onMarker, aria
   const dateFmt = new Intl.DateTimeFormat(lang === 'es' ? 'es-AR' : 'en-US', spanDays > 900 ? { year: 'numeric', timeZone: 'UTC' } : spanDays > 120 ? { month: 'short', year: '2-digit', timeZone: 'UTC' } : { day: 'numeric', month: 'short', timeZone: 'UTC' });
   const fullDate = new Intl.DateTimeFormat(lang === 'es' ? 'es-AR' : 'en-US', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
   const ticks = x.ticks(Math.max(3, Math.floor(w / 110)));
+  // The date axis says which calendar unit its ticks show.
+  const xLabel = t(spanDays > 900 ? 'chart.time.x.years' : spanDays > 120 ? 'chart.time.x.months' : 'chart.time.x.days');
   const height = panels.length * (panelHeight + M.top) + AXIS_H + M.bottom;
   const visibleMarkers = markers.filter((m) => m.date >= from && m.date <= to);
 
@@ -128,9 +142,15 @@ export function TimeChart({ from, to, panels, markers = [], band, onMarker, aria
           const barW = Math.max(1, (w / Math.max(1, spanDays / 30.4)) * 0.7);
           return (
             <g key={p.id} transform={`translate(${M.left},${top})`}>
-              <text x={-M.left + 2} y={-8} fontSize={12} fontWeight={600} fill="var(--text-primary)">
-                {p.title}
-                <tspan fill="var(--text-muted)" fontWeight={400}> · {p.unit}</tspan>
+              {!hideTitles && (
+                <text x={-M.left + 2} y={-8} fontSize={12} fontWeight={600} fill="var(--text-primary)">
+                  {p.title}
+                  {p.unit && <tspan fill="var(--text-muted)" fontWeight={400}> · {p.unit}</tspan>}
+                </text>
+              )}
+              <text className="axis-title" transform={`translate(${-M.left + 14},${panelHeight / 2}) rotate(-90)`} textAnchor="middle" fontSize={11} fill="var(--text-secondary)">
+                {fitLabel(p.yLabel ?? p.unit, panelHeight)}
+                <title>{p.yLabel ?? p.unit}</title>
               </text>
               {y.ticks(4).map((t) => (
                 <g key={t} transform={`translate(0,${y(t)})`}>
@@ -144,7 +164,12 @@ export function TimeChart({ from, to, panels, markers = [], band, onMarker, aria
               {band && band.to >= from && band.from <= to && (
                 <rect x={Math.max(0, xd(band.from))} y={0} width={Math.max(1, Math.min(w, xd(band.to)) - Math.max(0, xd(band.from)))} height={panelHeight} fill="var(--accent-soft)" />
               )}
-              {visibleMarkers.map((m) => (
+              {k === 0 && markerLines === 'active' && visibleMarkers.filter((m) => m.active).map((m) => (
+                <text key={`lbl-${m.id}`} x={xd(m.date) + (xd(m.date) > w - 260 ? -6 : 6)} y={12} textAnchor={xd(m.date) > w - 260 ? 'end' : 'start'} fontSize={11.5} fontWeight={600} fill="var(--accent)" paintOrder="stroke" stroke="var(--surface-1)" strokeWidth={3}>
+                  {m.label}
+                </text>
+              ))}
+              {visibleMarkers.filter((m) => markerLines === 'all' || m.active).map((m) => (
                 <line key={m.id} x1={xd(m.date)} x2={xd(m.date)} y1={0} y2={panelHeight} stroke={m.active ? 'var(--accent)' : 'var(--axis)'} strokeWidth={m.active ? 1.6 : 1} strokeDasharray={m.active ? undefined : '3 3'} />
               ))}
               {p.bars && p.lines[0]
@@ -175,14 +200,21 @@ export function TimeChart({ from, to, panels, markers = [], band, onMarker, aria
         })}
         <g transform={`translate(${M.left},${panels.length * (panelHeight + M.top) + M.top - 14})`}>
           <line x1={0} x2={w} stroke="var(--axis)" />
-          {ticks.map((t) => (
-            <text key={t.toISOString()} x={x(t)} y={15} textAnchor="middle" fontSize={10.5} fill="var(--text-muted)">
-              {dateFmt.format(t)}
-            </text>
+          {ticks.map((d) => (
+            <g key={d.toISOString()} transform={`translate(${x(d)},0)`}>
+              <line y1={0} y2={3} stroke="var(--axis)" />
+              <text y={15} textAnchor="middle" fontSize={10.5} fill="var(--text-muted)">
+                {dateFmt.format(d)}
+              </text>
+            </g>
           ))}
+          <text className="axis-title" x={w / 2} y={33} textAnchor="middle" fontSize={11} fill="var(--text-secondary)">
+            {xLabel}
+          </text>
           {visibleMarkers.map((m) => (
-            <g key={m.id} transform={`translate(${xd(m.date)},0)`} style={{ cursor: onMarker ? 'pointer' : undefined }} onClick={() => onMarker?.(m.id)}>
+            <g key={m.id} className="event-marker" transform={`translate(${xd(m.date)},0)`} style={{ cursor: onMarker ? 'pointer' : undefined }} onClick={() => onMarker?.(m.id)} data-event={m.id}>
               <title>{m.label}</title>
+              <rect x={-7} y={-12} width={14} height={14} fill="transparent" />
               <path d="M -5 -1 L 5 -1 L 0 -8 z" fill={m.active ? 'var(--accent)' : 'var(--text-muted)'} />
             </g>
           ))}

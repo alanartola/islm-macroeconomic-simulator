@@ -3,8 +3,8 @@ import type { Lang } from '../i18n';
 import { useMode } from '../state/mode';
 import { GROUPS, LETTER, type LabModuleId } from '../modules/catalog';
 
-type Screen = 'home' | LabModuleId | 'exercises' | 'observatory';
-const EXTRA = ['exercises', 'observatory'] as const;
+type Screen = 'home' | LabModuleId | 'transmission' | 'exercises' | 'observatory';
+const EXTRA = ['transmission', 'exercises', 'observatory'] as const;
 type T = (k: string, v?: Record<string, string | number>) => string;
 
 function ModeSwitch({ t }: { t: T }) {
@@ -47,7 +47,7 @@ export function Masthead({ t, module, onModule, lang, onLang, theme, onToggleThe
   const sheetRef = useRef<HTMLDivElement>(null);
   const [kicker, title] = t('app.title').split('|').map((s) => s.trim());
   const themeLabel = theme === 'dark' ? t('theme.toLight') : t('theme.toDark');
-  const hasPanel = module !== 'home' && module !== 'lab' && module !== 'exercises' && module !== 'observatory';
+  const hasPanel = module !== 'home' && module !== 'lab' && module !== 'transmission' && module !== 'exercises' && module !== 'observatory';
 
   useEffect(() => {
     if (!sheet) return;
@@ -67,7 +67,7 @@ export function Masthead({ t, module, onModule, lang, onLang, theme, onToggleThe
     setSheet(false);
     onModule(m);
   };
-  const currentLabel = module === 'home' || module === 'exercises' || module === 'observatory' ? t(module === 'home' ? 'mod.home' : `mod.${module}`) : `${LETTER[module]} · ${t(`mod.${module}`)}`;
+  const currentLabel = module === 'home' || module === 'transmission' || module === 'exercises' || module === 'observatory' ? t(module === 'home' ? 'mod.home' : `mod.${module}`) : `${LETTER[module]} · ${t(`mod.${module}`)}`;
 
   return (
     <div className="masthead">

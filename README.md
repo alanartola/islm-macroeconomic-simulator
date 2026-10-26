@@ -55,6 +55,9 @@ El laboratorio reúne en una sola aplicación web:
   demanda agregada, IS-MP con curva de Phillips y regla de Taylor, y un
   laboratorio para comparar escenarios. Cada número, gráfico y explicación se
   calcula con las ecuaciones del modelo elegido.
+- **Transmisión macroeconómica:** el mercado de bienes (DA–Y), el equilibrio
+  IS-LM (i–Y) y el mercado monetario (i–M/P) en un mismo diagrama de tres
+  cuadrantes, sincronizado y con una explicación paso a paso de cada política.
 - **Ejercicios y problemas** de nivel inicial, intermedio y avanzado, corregidos
   con los mismos motores de cálculo, con pistas, desarrollo matemático e
   interpretación económica.
@@ -91,6 +94,7 @@ teléfonos. Enlaces directos:
 |---|---|
 | Inicio | [`/`](https://alanartola.github.io/islm-macroeconomic-simulator/) |
 | A · IS-LM tradicional | [`?m=basic`](https://alanartola.github.io/islm-macroeconomic-simulator/?m=basic) |
+| Transmisión macroeconómica | [`?m=transmission`](https://alanartola.github.io/islm-macroeconomic-simulator/?m=transmission) |
 | Ejercicios | [`?m=exercises`](https://alanartola.github.io/islm-macroeconomic-simulator/?m=exercises) |
 | Observatorio | [`?m=observatory`](https://alanartola.github.io/islm-macroeconomic-simulator/?m=observatory) |
 | Interfaz en inglés | [`?lang=en`](https://alanartola.github.io/islm-macroeconomic-simulator/?lang=en) |
@@ -107,6 +111,7 @@ teléfonos. Enlaces directos:
 | F | **Oferta y demanda agregada** | DA derivada del IS-LM, OA de corto plazo, mediano plazo y trayectoria de ajuste | [oa-da](docs/modelos/oa-da.md) |
 | G | **IS-MP y política monetaria** | IS, curva de Phillips y regla de Taylor con cota inferior; tasa fija | [is-mp-taylor](docs/modelos/is-mp-taylor.md), [curva-de-phillips](docs/modelos/curva-de-phillips.md), [regla-de-taylor](docs/modelos/regla-de-taylor.md) |
 | H | **Laboratorio de escenarios** | Guardar y comparar hasta cuatro escenarios; CSV, JSON, informe imprimible y enlaces | [escenarios](docs/modelos/escenarios.md), [sensibilidad](docs/modelos/sensibilidad.md) |
+| — | **Transmisión macroeconómica** | Bienes (DA–Y), IS-LM (i–Y) y dinero (i–M/P) coordinados; 14 políticas y perturbaciones; modo paso a paso | [sección 8](#8-cómo-interpretar-los-gráficos) |
 | — | **Ejercicios y problemas** | 20 ejercicios en tres niveles, con corrección automática y progreso local | [sección 9](#9-cómo-resolver-ejercicios) |
 | — | **Observatorio macroeconómico** | Datos oficiales, historia económica, balanza comercial, noticias, fuentes | [secciones 10–15](#10-cómo-consultar-datos-históricos) |
 
@@ -114,7 +119,7 @@ teléfonos. Enlaces directos:
 
 - En pantallas anchas, la **barra de secciones** muestra los módulos agrupados
   por tema (economía cerrada, abierta, precios, comparación) y, al final,
-  **Ejercicios** y **Observatorio**.
+  **Transmisión**, **Ejercicios** y **Observatorio**.
 - En teléfonos, el botón **Módulo** abre la lista completa y **Parámetros**
   despliega el panel lateral.
 - La pantalla de **Inicio** presenta cada módulo con una descripción y las
@@ -157,9 +162,44 @@ un resultado:
   matemática, interpretación) distingue resultados del modelo, interpretaciones
   teóricas y advertencias.
 
-En el Observatorio, los gráficos temporales usan **paneles sincronizados por
-fecha**, uno por unidad: nunca se dibujan en un mismo eje variables con unidades
-distintas.
+### Transmisión macroeconómica: tres mercados en un diagrama
+
+![Transmisión macroeconómica: expansión monetaria](docs/screenshots/transmision-macro-oscuro.png)
+
+| | Izquierda | Derecha |
+|---|---|---|
+| **Arriba** | **Resumen**: política elegida, régimen monetario, E₀, E₁ y variaciones | **Mercado de bienes (DA–Y)**: recta de 45°, DA₀ y DA₁ |
+| **Abajo** | **Mercado monetario (i–M/P)**: demanda L(Y₀), L(Y₁) y oferta M/P | **Equilibrio IS-LM (i–Y)**: IS₀, IS₁, LM₀, LM₁ |
+
+- Los tres gráficos usan el **motor del Módulo A** y los mismos parámetros. Los
+  dos gráficos de la derecha comparten la escala del producto y los dos de abajo
+  la de la tasa: las líneas punteadas de **Y₀, Y₁** bajan del mercado de bienes al
+  IS-LM y las de **i₀, i₁** cruzan del mercado monetario al IS-LM.
+- **Seleccionar política o perturbación** ofrece 14 escenarios: equilibrio
+  inicial, expansión y contracción monetaria y fiscal, suba y baja de impuestos,
+  cambios de la inversión autónoma, mayor sensibilidad de la inversión (b) y de
+  la demanda de dinero (h), suba y baja de la tasa objetivo, y expansión fiscal
+  con acomodación monetaria. **Parámetros del modelo** permite editar cada valor
+  inicial y final.
+- **Régimen monetario:** con oferta exógena, la tasa es endógena (para moverla
+  hay que cambiar M, G u otro parámetro); con **tasa objetivo**, el banco
+  central fija ī y la cantidad de dinero se ajusta. No se pueden fijar las dos a
+  la vez.
+- **Explicar transmisión económica** recorre las etapas del ajuste resaltando el
+  mercado correspondiente. La secuencia depende del shock y del régimen (7 pasos
+  para una expansión monetaria, 6 para una fiscal). Los puntos auxiliares (Y_K:
+  producto en la nueva IS a la tasa inicial; i_L: tasa con el producto inicial;
+  DA′: demanda a la tasa inicial) **descomponen la comparación entre dos
+  equilibrios**; no son una trayectoria temporal.
+- En teléfonos, las pestañas Resumen · Bienes · IS-LM · Dinero muestran cada
+  mercado a tamaño completo, y «Diagrama completo» conserva la disposición.
+
+![Expansión fiscal, paso 5: efecto desplazamiento](docs/screenshots/transmision-fiscal-paso-oscuro.png)
+
+En el Observatorio, cada indicador se muestra **solo, en un gráfico grande** con
+el eje vertical identificado por variable y unidad (por ejemplo, «Tipo de cambio
+(ARS por USD)») y el eje horizontal como fecha. Las comparaciones usan el mismo
+eje solo si la unidad y la definición coinciden; si no, un panel sincronizado.
 
 ## 9. Cómo resolver ejercicios
 
@@ -193,17 +233,34 @@ escenario en el simulador** o **ver los datos en el observatorio**.
 
 ![Observatorio: tasa de 60% en agosto de 2018](docs/screenshots/observatorio-episodio-oscuro.png)
 
-En **Observatorio → Tasas, tipo de cambio y actividad**:
+En **Observatorio → Tasas, tipo de cambio y actividad** se estudia **un
+indicador por vez**, en un único gráfico grande:
 
-1. **Variables:** mostrar u ocultar tasas en pesos, tipo de cambio ARS/USD,
-   inflación interanual y esperada, inflación mensual, tasas de EE.UU., reservas,
-   actividad, tipo de cambio real y base monetaria.
-2. **Transformación:** valores originales, variación interanual, índice base 100
-   o diferencia (en puntos porcentuales para las tasas). Las tasas y los saldos
-   que cambian de signo no admiten variaciones porcentuales ni índices.
-3. **Ventana:** 1 mes, 3 meses, 6 meses, 1 año, 5 años, todo o fechas a elección.
-4. **Acontecimiento:** al elegir uno, el gráfico se centra en esa fecha, sombrea
-   el período posterior y abre la ficha del episodio.
+1. **Indicador:** tasa de política del BCRA, tasas de mercado (BADLAR y TAMAR),
+   pases entre terceros, tipo de cambio ARS/USD, tipo de cambio real, inflación
+   interanual y esperada, inflación mensual, reservas, actividad (EMAE),
+   desocupación, resultado primario, base monetaria, M2, bonos del Tesoro de
+   EE.UU. a 2 y 10 años y rango de la Reserva Federal.
+2. **Ejes:** el vertical indica variable y unidad (por ejemplo, «Reservas
+   (millones de USD)» o «Tasa de interés (% TNA)»); el horizontal, la fecha en
+   años, meses o días según el período.
+3. **Transformación:** valores originales, variación interanual, índice base 100
+   o diferencia (en puntos porcentuales para las tasas); el eje y una nota lo
+   indican. Las tasas y los saldos que cambian de signo no admiten variaciones
+   porcentuales ni índices.
+4. **Período:** 1 mes, 3 meses, 6 meses, 1 año, 5 años, todo o fechas a
+   elección, siempre dentro de la cobertura de la serie. Debajo del gráfico se
+   informa cuántas observaciones hay en el período y su frecuencia.
+5. **Acontecimientos económicos:** ocultarlos, mostrar los relevantes para el
+   indicador (triángulos sobre el eje de fechas, sin líneas que tapen la serie)
+   o **seleccionar uno**: el gráfico se centra en la fecha, sombrea la ventana
+   posterior, muestra el valor antes y después, una explicación breve, las
+   fuentes verificadas y, desplegable, la ficha histórica completa.
+6. **Comparar con otra variable** (desactivado por defecto): si la unidad y la
+   definición coinciden comparten eje; si no, la segunda variable aparece en un
+   panel sincronizado con su propio eje. Ninguna serie se normaliza sin avisarlo.
+
+![Comparación de tasas en pesos y rendimientos en dólares](docs/screenshots/observatorio-comparar-oscuro.png)
 
 En **Historia económica** cada episodio se presenta en cuatro partes:
 **① Contexto · ② Decisión o shock · ③ Evidencia · ④ Interpretación**. La
@@ -435,6 +492,7 @@ src/
 ├── engine/              motores económicos puros (sin React): A, B (advanced), E (open), F (adas), G (ismp), métodos numéricos
 ├── interpretation/      explicaciones en cinco niveles
 ├── lab/                 escenarios: validación, indicadores comparables, CSV/JSON, enlaces
+├── transmission/        diagrama de tres cuadrantes: geometría derivada del motor (model.ts), gráficos y pasos
 ├── exercises/           banco de ejercicios (respuestas calculadas con los motores), corrección y progreso
 ├── data/                tipos, validación, transformaciones e identidades (core.ts); lectores de cada fuente (parsers.ts); carga en el navegador (client.ts)
 ├── observatory/         vistas del observatorio y acontecimientos documentados con fuentes (episodes.ts)
@@ -461,7 +519,7 @@ public/data/             series validadas (JSON), manifest.json y noticias
 
 ## 19. Pruebas
 
-456 pruebas automáticas (Vitest), que se ejecutan en cada cambio y antes de cada
+497 pruebas automáticas (Vitest), que se ejecutan en cada cambio y antes de cada
 publicación:
 
 - **Modelos:** soluciones calculadas a mano, identidades contables, derivadas
@@ -490,6 +548,19 @@ publicación:
   corrección de un ejercicio de punta a punta, pestañas del observatorio con los
   datos publicados, aviso cuando falta una serie, español y modo oscuro por
   defecto.
+- **Transmisión macroeconómica:** en los 14 escenarios, E₀ y E₁ son los del
+  motor y equilibran los tres mercados (DA = Y, punto sobre IS y LM, M/P = kY −
+  h·i); direcciones de cada política (expansión monetaria: oferta y LM a la
+  derecha, i baja, I, DA e Y suben; expansión fiscal: DA arriba, IS a la derecha,
+  i sube, efecto desplazamiento de la mitad del efecto keynesiano; tasa objetivo
+  con dinero endógeno; acomodación sin desplazamiento); disposición de los
+  cuadrantes; Y₀, Y₁ en los mismos píxeles en bienes e IS-LM e i₀, i₁ en dinero e
+  IS-LM; pasos según el shock.
+- **Observatorio simplificado:** un solo indicador por defecto, ejes con nombre
+  y unidad, cambio de indicador, todas las observaciones del período,
+  cobertura de cada serie, acontecimientos ocultos, relevantes o uno
+  seleccionado (con valores antes y después y fuentes), comparación con panel
+  sincronizado cuando las unidades difieren.
 
 ## 20. Bibliografía
 

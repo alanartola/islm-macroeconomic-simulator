@@ -63,7 +63,9 @@ const nav = (text) => `await __nav(${JSON.stringify(text)});`;
 const scrollTo = (selector) => `document.querySelector(${JSON.stringify(selector)})?.scrollIntoView({ block: 'start' }); window.scrollBy(0, -112); await __wait(300);`;
 const SAVE = click('Guardar experimento');
 const fill = (label, value) => `await __fill(${JSON.stringify(label)}, ${JSON.stringify(value)});`;
-const episode = (id) => `await __set(document.querySelector('.obs-controls select'), ${JSON.stringify(id)}); await __wait(900);`;
+const pick = (label, value) => `await __set(document.querySelector('select[aria-label="${label}"]'), ${JSON.stringify(value)}); await __wait(500);`;
+const episode = (id) => `${pick('Acontecimientos económicos', 'one')} ${pick('Acontecimiento', id)} await __wait(600);`;
+const openDetails = (selector) => `document.querySelector(${JSON.stringify(selector)}).open = true; document.querySelector(${JSON.stringify(selector)}).dispatchEvent(new Event('toggle')); await __wait(400);`;
 const SOLVE_FISCAL = [
   click('Nuevo equilibrio tras una expansión fiscal'),
   fill('Producto de equilibrio Y₁', '1980'),
@@ -119,8 +121,13 @@ const SHOTS = [
   { file: 'ejercicios-oscuro.png', query: '?m=exercises', actions: SOLVE_FISCAL, w: 1440, h: 1250 },
   { file: 'ejercicio-datos-oscuro.png', query: '?m=exercises', actions: [click('Argentina, agosto de 2018'), click('Ver solución'), scrollTo('.ex-detail')], w: 1440, h: 1400 },
   { file: 'observatorio-oscuro.png', query: '?m=observatory', w: 1440, h: 1500 },
-  { file: 'observatorio-episodio-oscuro.png', query: '?m=observatory', actions: [episode('2018-08-tasa-60'), scrollTo('.chart-card')], w: 1440, h: 1500 },
-  { file: 'observatorio-comparacion-claro.png', query: '?m=observatory&theme=light', actions: [scrollTo('.cmp-explain'), 'window.scrollBy(0, -620); await __wait(300);'], w: 1440, h: 1100 },
+  { file: 'observatorio-episodio-oscuro.png', query: '?m=observatory', actions: [episode('2018-08-tasa-60'), scrollTo('.obs-controls')], w: 1440, h: 1500 },
+  { file: 'observatorio-comparacion-claro.png', query: '?m=observatory&theme=light', actions: [openDetails('.us-compare'), scrollTo('.us-compare')], w: 1440, h: 1200 },
+  { file: 'observatorio-comparar-oscuro.png', query: '?m=observatory', actions: [pick('Indicador', 'market'), openDetails('.compare-panel'), pick('Segunda variable', 't10y'), scrollTo('.obs-controls')], w: 1440, h: 1150 },
+  { file: 'transmision-macro-oscuro.png', query: '?m=transmission', actions: [scrollTo('.tq-grid')], w: 1440, h: 1180 },
+  { file: 'transmision-fiscal-paso-oscuro.png', query: '?m=transmission', actions: [pick('Seleccionar política o perturbación', 'fiscalExpansion'), click('Explicar transmisión económica'), ...Array(4).fill("await __click('Siguiente', document.querySelector('.tq-steps'));"), 'await __wait(1200);', scrollTo('.tq-grid')], w: 1440, h: 1180 },
+  { file: 'transmision-tasa-claro.png', query: '?m=transmission&theme=light', actions: [pick('Seleccionar política o perturbación', 'rateCut'), scrollTo('.tq-grid')], w: 1440, h: 1180 },
+  { file: 'transmision-movil-oscuro.png', query: '?m=transmission', actions: ["await __click('IS-LM', document.querySelector('.tq-tabs'));", scrollTo('.tq-tabs')], w: 390, h: 1100, mobile: true, scale: 2 },
   { file: 'historia-oscuro.png', query: '?m=observatory', actions: [click('Historia económica')], w: 1440, h: 1400 },
   { file: 'balanza-comercial-oscuro.png', query: '?m=observatory', actions: [click('Balanza comercial')], w: 1440, h: 1500 },
   { file: 'noticias-oscuro.png', query: '?m=observatory', actions: [click('Noticias y acontecimientos')], w: 1440, h: 1100 },

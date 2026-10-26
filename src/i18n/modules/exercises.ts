@@ -96,7 +96,7 @@ export const exEs = {
     'El gráfico muestra las curvas iniciales en trazo discontinuo y las finales en trazo continuo. El cuadro de resultados informa los valores de equilibrio y sus variaciones con unidades.',
   'guide.5.t': 'Interpretá los desplazamientos',
   'guide.5.d':
-    'Un cambio de política desplaza una curva; el nuevo equilibrio surge del movimiento a lo largo de la otra. La sección de transmisión explica paso a paso por qué cambian el producto y la tasa.',
+    'Un cambio de política desplaza una curva; el nuevo equilibrio surge del movimiento a lo largo de la otra. «Transmisión» muestra juntos el mercado de bienes, el IS-LM y el mercado monetario, y recorre cada política paso a paso.',
   'guide.6.t': 'Compará escenarios',
   'guide.6.d': 'Guardá configuraciones y comparalas en H · Escenarios. El botón «Compartir enlace» copia una dirección que reproduce exactamente el escenario.',
   'guide.7.t': 'Resolvé ejercicios',
@@ -203,7 +203,7 @@ export const exEn: Record<keyof typeof exEs, string> = {
   'guide.4.d': 'The chart shows initial curves dashed and final curves solid. The results table reports equilibrium values and their changes, with units.',
   'guide.5.t': 'Interpret the shifts',
   'guide.5.d':
-    'A policy change shifts one curve; the new equilibrium comes from a movement along the other. The transmission section explains step by step why output and the rate change.',
+    'A policy change shifts one curve; the new equilibrium comes from a movement along the other. “Transmission” shows the goods market, IS-LM and the money market together and walks through each policy step by step.',
   'guide.6.t': 'Compare scenarios',
   'guide.6.d': 'Save configurations and compare them in H · Scenarios. The “Share link” button copies an address that reproduces the scenario exactly.',
   'guide.7.t': 'Solve exercises',
