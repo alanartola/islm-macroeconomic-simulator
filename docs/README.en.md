@@ -55,6 +55,15 @@ compared across models.
   milestones, each in four parts (context, decision or shock, evidence,
   interpretation) with verified sources; Argentina's trade balance (INDEC) with
   identity checks; curated news and official notices.
+- **Macroeconomic transmission:** the goods market (AD–Y, top right), the
+  IS-LM equilibrium (i–Y, bottom right) and the money market (i–M/P, bottom
+  left) in one synchronised three-quadrant diagram computed with the Module A
+  engine, with 14 policies and shocks, both monetary regimes and a step-by-step
+  explanation of each transmission mechanism.
+- **One indicator at a time:** the Argentina chart of the observatory shows a
+  single indicator chosen from a menu, with both axes named (variable and unit;
+  date), events hidden, shown as ticks or studied one at a time, and an optional
+  comparison that never puts different units on one axis.
 - **Updates:** GitHub Actions downloads and validates the data every business
   day and on every change to `main`; a failing source keeps the last validated
   version, and the site is only deployed when every test passes.
@@ -87,7 +96,7 @@ npm run dev
 
 ## Validation
 
-456 automated tests (Vitest) check the engines against hand-derived solutions,
+497 automated tests (Vitest) check the engines against hand-derived solutions,
 residuals and finite-difference derivatives, the Brent solver, the generated
 explanations in both languages, the scenario lab, the exercise answers, the
 data pipeline (parsers, validation, fallback, transformations) and the published
