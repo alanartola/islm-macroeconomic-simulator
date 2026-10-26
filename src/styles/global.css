@@ -3041,3 +3041,281 @@ pre.equations {
   min-width: 0;
   text-overflow: ellipsis;
 }
+
+/* ════════════════════════════════════════════════════════════════════════════
+   Observatory: one indicator at a time
+   ════════════════════════════════════════════════════════════════════════════ */
+.obs-control-grid {
+  display: grid;
+  grid-template-columns: minmax(240px, 2fr) minmax(170px, 1fr) minmax(220px, 1.2fr);
+  gap: var(--s3) var(--s4);
+  align-items: end;
+}
+.obs-control-grid .field-wide {
+  grid-column: 1 / -1;
+}
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.field .kicker {
+  margin: 0;
+}
+.field .select {
+  width: 100%;
+  min-width: 0;
+}
+.compare-panel {
+  border-top: 1px solid var(--border);
+  padding-top: var(--s2);
+}
+.compare-panel > summary,
+.meta-card > summary,
+.us-compare > summary,
+.episode-more > summary,
+.tq-details > summary {
+  cursor: pointer;
+  font-weight: 600;
+  font-size: var(--fs-sm);
+  padding: 6px 0;
+}
+.compare-panel[open] > summary {
+  margin-bottom: var(--s2);
+}
+.compare-panel .note {
+  flex: 1;
+  min-width: 220px;
+}
+.main-series .card-head p {
+  max-width: 90ch;
+}
+.chart-foot {
+  margin: var(--s2) 0 var(--s2);
+}
+.meta-card,
+.us-compare {
+  padding-top: var(--s3);
+  padding-bottom: var(--s3);
+}
+.us-compare > summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px var(--s3);
+  align-items: baseline;
+  font-size: var(--fs-md);
+}
+.us-compare[open] > summary {
+  margin-bottom: var(--s3);
+}
+.event-focus .lede-sm {
+  margin: 0 0 var(--s3);
+  max-width: 90ch;
+  line-height: 1.55;
+}
+.before-after {
+  display: grid;
+  gap: var(--s2);
+  margin: 0 0 var(--s3);
+}
+.before-after > div {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+}
+.before-after dt {
+  font-weight: 600;
+  font-size: var(--fs-sm);
+  margin-bottom: 4px;
+}
+.before-after dd {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px var(--s5);
+  font-size: var(--fs-sm);
+  color: var(--text-secondary);
+}
+.before-after b {
+  color: var(--text-primary);
+}
+.event-focus h4 {
+  margin: var(--s3) 0 var(--s2);
+  font-size: var(--fs-sm);
+}
+.episode-more {
+  margin-top: var(--s3);
+}
+.episode-more[open] > summary {
+  margin-bottom: var(--s3);
+}
+.event-marker:hover path {
+  fill: var(--accent);
+}
+.axis-title {
+  letter-spacing: 0.01em;
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   Macroeconomic transmission: summary | goods  /  money | IS-LM
+   Cells touch (no gap) so that the dotted reference lines of Y₀, Y₁ and of
+   i₀, i₁ run continuously from one market into the next.
+   ════════════════════════════════════════════════════════════════════════════ */
+.tq-main {
+  max-width: 1320px;
+  width: 100%;
+  margin: 0 auto;
+}
+.tq-wrap {
+  min-width: 0;
+}
+.tq-grid {
+  display: grid;
+  gap: 0;
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.tq-grid-scroll {
+  overflow-x: auto;
+  width: 100%;
+}
+.tq-cell {
+  min-width: 0;
+  position: relative;
+}
+.tq-summary {
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  overflow: auto;
+}
+.tq-summary-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px 20px;
+}
+.tq-summary-inner .muted.small {
+  margin: -4px 0 0;
+  line-height: 1.45;
+}
+.tq-values th,
+.tq-values td {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+.tq-chart {
+  margin: 0;
+  transition: opacity 0.35s ease;
+}
+.tq-chart svg {
+  display: block;
+  overflow: visible;
+}
+.tq-dim {
+  opacity: 0.42;
+}
+.tq-focus {
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+.tq-fresh {
+  animation: tq-enter 0.9s ease both;
+}
+@keyframes tq-enter {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.tq-values td:first-child {
+  white-space: nowrap;
+}
+.tq-oneline {
+  margin: 0;
+  font-size: var(--fs-sm);
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+.tq-steps {
+  border-top: 1px solid var(--border);
+  padding-top: var(--s3);
+}
+.tq-step {
+  padding: 10px 12px;
+  border-left: 2px solid var(--accent);
+  background: var(--info-bg);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+.tq-step p {
+  margin: 4px 0 0;
+  font-size: var(--fs-sm);
+  line-height: 1.55;
+}
+.tq-step-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: var(--s2);
+}
+.tq-tabs {
+  margin-bottom: var(--s3);
+  overflow-x: auto;
+  white-space: nowrap;
+  scrollbar-width: thin;
+}
+.tq-single {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface-1);
+  overflow: hidden;
+}
+.tq-wrap > .tq-step {
+  margin-top: var(--s3);
+}
+.tq-details {
+  padding-top: var(--s3);
+  padding-bottom: var(--s3);
+}
+.tq-details[open] > summary {
+  margin-bottom: var(--s3);
+}
+.tq-details ul {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 6px;
+  font-size: var(--fs-sm);
+  line-height: 1.5;
+}
+.tq-input {
+  width: 96px;
+  min-width: 0;
+  text-align: right;
+}
+.tq-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s2);
+}
+@media (max-width: 860px) {
+  .obs-control-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .tq-summary {
+    border-right: 0;
+  }
+  .tq-summary-inner {
+    padding: var(--s3) var(--s4);
+  }
+}
+@media print {
+  .tq-steps,
+  .tq-tabs {
+    display: none;
+  }
+}

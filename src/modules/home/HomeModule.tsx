@@ -125,10 +125,10 @@ export function HomeModule({ onOpen, onGuide }: { onOpen: (m: string) => void; o
               <h4>{t('group.learn')}</h4>
             </header>
             <ul className="toc-list">
-              {(['exercises', 'observatory'] as const).map((m) => (
+              {(['transmission', 'exercises', 'observatory'] as const).map((m) => (
                 <li key={m}>
                   <button className="toc-entry" onClick={() => onOpen(m)}>
-                    <span className="mod-letter" aria-hidden="true">{m === 'exercises' ? '§' : '◆'}</span>
+                    <span className="mod-letter" aria-hidden="true">{m === 'transmission' ? '↔' : m === 'exercises' ? '§' : '◆'}</span>
                     <span className="toc-name">{t(`mod.${m}`)}</span>
                     <span className="toc-open" aria-hidden="true">
                       {t('home.open')} →

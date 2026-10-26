@@ -22,6 +22,7 @@ import { HomeModule } from './modules/home/HomeModule';
 import { LabProvider } from './state/lab';
 import { getCurrentConfig } from './state/currentConfig';
 import { ExercisesModule } from './exercises/ExercisesModule';
+import { TransmissionModule } from './transmission/TransmissionModule';
 import { ObservatoryModule } from './observatory/ObservatoryModule';
 import { GuideDialog, guideUnseen } from './components/GuideDialog';
 import { MODULE_OF, decodeConfigHash, encodeConfigHash, type LabConfig } from './lab/scenario';
@@ -30,8 +31,8 @@ type Theme = 'light' | 'dark';
 const DEFAULT_THEME: Theme = 'dark';
 
 /** Screens: the introductory home screen, the lettered modules, exercises and the data observatory. */
-export type ModuleId = 'home' | (typeof MODULES)[number] | 'exercises' | 'observatory';
-const SCREENS: readonly string[] = ['home', ...MODULES, 'exercises', 'observatory'];
+export type ModuleId = 'home' | (typeof MODULES)[number] | 'transmission' | 'exercises' | 'observatory';
+const SCREENS: readonly string[] = ['home', ...MODULES, 'transmission', 'exercises', 'observatory'];
 
 const REPO_URL = 'https://github.com/alanartola/islm-macroeconomic-simulator';
 
@@ -243,6 +244,7 @@ export default function App() {
         {module === 'open' && <OpenModule key={opened.nonce} initial={initialFor('open')} sidebarOpen={sidebarOpen} onCloseSidebar={() => setSidebarOpen(false)} />}
         {module === 'lab' && <LabModule onOpen={openConfig} />}
         {module === 'home' && <HomeModule onOpen={(m) => setModule(m as ModuleId)} onGuide={() => setGuide(true)} />}
+        {module === 'transmission' && <TransmissionModule onOpenConfig={openConfig} />}
         {module === 'exercises' && <ExercisesModule onOpenConfig={openConfig} onOpenObservatory={openObservatory} />}
         {module === 'observatory' && <ObservatoryModule key={obsFocus?.nonce ?? 0} initialFocus={obsFocus} />}
         {module === 'policy' && <PolicyModule state={adv} dispatch={advDispatch} sidebarOpen={sidebarOpen} onCloseSidebar={() => setSidebarOpen(false)} />}
