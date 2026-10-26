@@ -6,6 +6,7 @@ import { PRESETS } from '../state/scenarios';
 import type { Action, SimState } from '../state/store';
 import type { Simulation } from '../state/simulation';
 import { ParamControl } from './ParamControl';
+import { SidePanel } from './ui/SidePanel';
 
 interface Props {
   state: SimState;
@@ -51,8 +52,7 @@ export function Sidebar({ state, dispatch, sim, open, onClose }: Props) {
         <button className="btn small" onClick={onClose}>{t('btn.close')}</button>
       </div>
 
-      <section>
-        <h2 className="section-title">{t('regime.label')}</h2>
+      <SidePanel title={t('regime.label')}>
         <div className="segmented" role="group" aria-label={t('regime.label')}>
           <button aria-pressed={state.regime === 'money-supply'} onClick={() => setRegime('money-supply')}>
             {t('regime.ms')}
@@ -64,10 +64,9 @@ export function Sidebar({ state, dispatch, sim, open, onClose }: Props) {
           </button>
         </div>
         <p className="note" style={{ marginTop: 8 }}>{targeting ? t('regime.it.note') : t('regime.ms.note')}</p>
-      </section>
+      </SidePanel>
 
-      <section>
-        <h2 className="section-title">{t('presets.title')}</h2>
+      <SidePanel title={t('presets.title')} defaultOpen={false}>
         <div className="presets">
           {PRESETS.map((p) => (
             <button
@@ -85,10 +84,9 @@ export function Sidebar({ state, dispatch, sim, open, onClose }: Props) {
           ))}
         </div>
         <p className="note" style={{ marginTop: 8 }}>{t('presets.hint')}</p>
-      </section>
+      </SidePanel>
 
-      <section>
-        <h2 className="section-title">{t('panel.params')}</h2>
+      <SidePanel title={t('panel.params')}>
         <div className="segmented" role="group" aria-label={t('panel.params')}>
           <button aria-pressed={editingShock} onClick={() => dispatch({ type: 'setEditing', side: 'shocked' })}>
             {t('edit.shocked')}
@@ -134,7 +132,7 @@ export function Sidebar({ state, dispatch, sim, open, onClose }: Props) {
           <h3 className="section-title">{t('group.money')}</h3>
           {group('money')}
         </div>
-      </section>
+      </SidePanel>
 
       <section style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
         <button className="btn small" onClick={() => dispatch({ type: 'resetShock' })}>{t('btn.resetShock')}</button>

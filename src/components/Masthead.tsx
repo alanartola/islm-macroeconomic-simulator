@@ -3,7 +3,8 @@ import type { Lang } from '../i18n';
 import { useMode } from '../state/mode';
 import { GROUPS, LETTER, type LabModuleId } from '../modules/catalog';
 
-type Screen = 'home' | LabModuleId;
+type Screen = 'home' | LabModuleId | 'exercises' | 'observatory';
+const EXTRA = ['exercises', 'observatory'] as const;
 type T = (k: string, v?: Record<string, string | number>) => string;
 
 function ModeSwitch({ t }: { t: T }) {
@@ -32,6 +33,8 @@ interface Props {
   copied: boolean;
   /** Opens the parameter drawer on narrow screens (modules with a parameter panel). */
   onOpenParams: () => void;
+  /** Reopens the usage guide. */
+  onGuide: () => void;
 }
 
 /**
@@ -39,12 +42,12 @@ interface Props {
  * Wide screens show the modules as text sections separated by theme; narrow
  * screens replace them with a module switcher and a parameters button.
  */
-export function Masthead({ t, module, onModule, lang, onLang, theme, onToggleTheme, onShare, copied, onOpenParams }: Props) {
+export function Masthead({ t, module, onModule, lang, onLang, theme, onToggleTheme, onShare, copied, onOpenParams, onGuide }: Props) {
   const [sheet, setSheet] = useState(false);
   const sheetRef = useRef<HTMLDivElement>(null);
   const [kicker, title] = t('app.title').split('|').map((s) => s.trim());
   const themeLabel = theme === 'dark' ? t('theme.toLight') : t('theme.toDark');
-  const hasPanel = module !== 'home' && module !== 'lab';
+  const hasPanel = module !== 'home' && module !== 'lab' && module !== 'exercises' && module !== 'observatory';
 
   useEffect(() => {
     if (!sheet) return;
@@ -64,7 +67,7 @@ export function Masthead({ t, module, onModule, lang, onLang, theme, onToggleThe
     setSheet(false);
     onModule(m);
   };
-  const currentLabel = module === 'home' ? t('mod.home') : `${LETTER[module]} · ${t(`mod.${module}`)}`;
+  const currentLabel = module === 'home' || module === 'exercises' || module === 'observatory' ? t(module === 'home' ? 'mod.home' : `mod.${module}`) : `${LETTER[module]} · ${t(`mod.${module}`)}`;
 
   return (
     <div className="masthead">
@@ -86,6 +89,9 @@ export function Masthead({ t, module, onModule, lang, onLang, theme, onToggleThe
             <ModeSwitch t={t} />
           </span>
           <span className="tool-sep hide-sm" aria-hidden="true" />
+          <button className="btn link small" onClick={onGuide}>
+            {t('nav.guide')}
+          </button>
           <button className="btn link small hide-sm" onClick={onShare}>
             {copied ? t('btn.copied') : t('btn.share')}
           </button>
@@ -131,6 +137,12 @@ export function Masthead({ t, module, onModule, lang, onLang, theme, onToggleThe
             ))}
           </Fragment>
         ))}
+        <span className="nav-sep" aria-hidden="true" title={t('group.learn')} />
+        {EXTRA.map((m) => (
+          <button key={m} className="nav-extra" aria-current={module === m ? 'page' : undefined} onClick={() => go(m)} title={`${t(`mod.${m}`)}: ${t(`mod.${m}.desc`)}`}>
+            {t(`nav.short.${m}`)}
+          </button>
+        ))}
       </nav>
 
       <div className="section-bar" ref={sheetRef}>
@@ -162,6 +174,14 @@ export function Masthead({ t, module, onModule, lang, onLang, theme, onToggleThe
                 ))}
               </div>
             ))}
+            <div className="sheet-group">
+              <div className="kicker">{t('group.learn')}</div>
+              {EXTRA.map((m) => (
+                <button role="menuitem" key={m} aria-current={module === m ? 'page' : undefined} onClick={() => go(m)}>
+                  {t(`mod.${m}`)}
+                </button>
+              ))}
+            </div>
           </div>
         )}
       </div>

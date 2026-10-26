@@ -137,7 +137,7 @@ export function XYChart(props: XYChartProps) {
     while (placed.some((p) => Math.abs(p.x - lx) < 40 && Math.abs(p.y - ly) < 13)) ly += 13;
     placed.push({ x: lx, y: ly });
     return (
-      <text key={`${s.id}-lbl`} x={lx} y={ly} dy="0.32em" textAnchor={overflow ? 'end' : 'start'} fontFamily="var(--font-serif)" fontStyle="italic" fontSize={13.5} fontWeight={500} fill="var(--text-primary)">
+      <text key={`${s.id}-lbl`} x={lx} y={ly} dy="0.32em" textAnchor={overflow ? 'end' : 'start'} fontFamily="var(--font-sans)" fontStyle="italic" fontSize={13.5} fontWeight={500} fill="var(--text-primary)">
         {s.label}
       </text>
     );
@@ -263,7 +263,7 @@ export function XYChart(props: XYChartProps) {
                 <g key={m.id}>
                   <circle cx={cx} cy={cy} r={4.5} fill={m.color ?? 'var(--series-3)'} stroke="var(--page)" strokeWidth={1.5} />
                   {m.label && (
-                    <text x={cx + 7} y={cy - 7} fontFamily="var(--font-serif)" fontStyle="italic" fontSize={13} fontWeight={500} fill="var(--text-primary)">
+                    <text x={cx + 7} y={cy - 7} fontFamily="var(--font-sans)" fontStyle="italic" fontSize={13} fontWeight={500} fill="var(--text-primary)">
                       {m.label}
                     </text>
                   )}
@@ -275,7 +275,7 @@ export function XYChart(props: XYChartProps) {
               <g key={m.id}>
                 <circle cx={cx} cy={cy} r={filled ? 5.5 : 5} fill={filled ? 'var(--eq1)' : 'var(--page)'} stroke={filled ? 'var(--page)' : 'var(--eq0)'} strokeWidth={filled ? 2 : 1.6} />
                 {m.label && (
-                  <text x={filled ? cx + 9 : cx - 9} y={cy - 9} textAnchor={filled ? 'start' : 'end'} fontFamily="var(--font-serif)" fontStyle="italic" fontSize={14} fontWeight={filled ? 600 : 500} fill={filled ? 'var(--text-primary)' : 'var(--text-secondary)'}>
+                  <text x={filled ? cx + 9 : cx - 9} y={cy - 9} textAnchor={filled ? 'start' : 'end'} fontFamily="var(--font-sans)" fontStyle="italic" fontSize={14} fontWeight={filled ? 600 : 500} fill={filled ? 'var(--text-primary)' : 'var(--text-secondary)'}>
                     {m.label}
                   </text>
                 )}

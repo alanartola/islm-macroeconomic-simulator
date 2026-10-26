@@ -5,6 +5,7 @@ import { EditToggle, ParamPanel } from '../../components/ui/ParamPanel';
 import { ParamControl } from '../../components/ParamControl';
 import type { AdvAction, AdvSim, AdvState } from '../../state/advancedState';
 import { advFields } from './fields';
+import { SidePanel } from '../../components/ui/SidePanel';
 
 interface Props {
   state: AdvState;
@@ -23,8 +24,7 @@ export function AdvSidebar({ state, dispatch, sim, showPresets = true, onPick }:
   const specs: LMSpec[] = ['linear', 'nonlinear', 'floor'];
   return (
     <>
-      <section>
-        <h2 className="section-title">{t('adv.lm.label')}</h2>
+      <SidePanel title={t('adv.lm.label')}>
         <div className="segmented three" role="group" aria-label={t('adv.lm.label')}>
           {specs.map((s) => (
             <button key={s} aria-pressed={state.lm === s} onClick={() => dispatch({ type: 'lm', lm: s })}>
@@ -39,10 +39,9 @@ export function AdvSidebar({ state, dispatch, sim, showPresets = true, onPick }:
             {t('adv.compare.toggle')}
           </label>
         )}
-      </section>
+      </SidePanel>
 
-      <section>
-        <h2 className="section-title">{t('regime.label')}</h2>
+      <SidePanel title={t('regime.label')}>
         <div className="segmented" role="group" aria-label={t('regime.label')}>
           <button aria-pressed={state.regime === 'money'} onClick={() => dispatch({ type: 'regime', regime: 'money' })}>
             {t('regime.ms')}
@@ -53,11 +52,10 @@ export function AdvSidebar({ state, dispatch, sim, showPresets = true, onPick }:
             <span className="sub">{t('regime.it.short')}</span>
           </button>
         </div>
-      </section>
+      </SidePanel>
 
       {showPresets && (
-        <section>
-          <h2 className="section-title">{t('presets.title')}</h2>
+        <SidePanel title={t('presets.title')} defaultOpen={false}>
           <div className="presets">
             {ADV_PRESETS.map((p) => (
               <button
@@ -74,11 +72,10 @@ export function AdvSidebar({ state, dispatch, sim, showPresets = true, onPick }:
               </button>
             ))}
           </div>
-        </section>
+        </SidePanel>
       )}
 
-      <section>
-        <h2 className="section-title">{t('panel.params')}</h2>
+      <SidePanel title={t('panel.params')}>
         <EditToggle editing={state.editing} onChange={(side) => dispatch({ type: 'editing', side })} />
         {state.regime === 'rate' && (
           <div style={{ marginTop: 12 }}>
@@ -112,7 +109,7 @@ export function AdvSidebar({ state, dispatch, sim, showPresets = true, onPick }:
           reference={shock ? state.baseline : null}
           onChange={(key, value) => dispatch({ type: 'set', key, value })}
         />
-      </section>
+      </SidePanel>
 
       <section style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
         <button className="btn small" onClick={() => dispatch({ type: 'reset' })}>{t('btn.resetShock')}</button>

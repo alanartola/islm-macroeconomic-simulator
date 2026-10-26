@@ -1,0 +1,900 @@
+{
+ "generatedAt": "2026-10-25T20:25:27.898Z",
+ "series": [
+  {
+   "id": "ar_tasa_politica",
+   "topic": "monetary",
+   "country": "AR",
+   "name": {
+    "es": "Tasa de política monetaria (BCRA)",
+    "en": "Monetary-policy rate (BCRA)"
+   },
+   "frequency": "D",
+   "fetchedAt": "2026-10-25T20:25:28.223Z",
+   "firstObservation": "2016-01-04",
+   "lastObservation": "2025-07-10",
+   "count": 2318,
+   "state": "stale",
+   "revisions": 0,
+   "duplicatesRemoved": 0,
+   "missingDropped": 0
+  },
+  {
+   "id": "ar_badlar",
+   "topic": "monetary",
+   "country": "AR",
+   "name": {
+    "es": "Tasa BADLAR, bancos privados",
+    "en": "BADLAR rate, private banks"
+   },
+   "frequency": "D",
+   "fetchedAt": "2026-10-25T20:25:28.447Z",
+   "firstObservation": "2016-01-04",
+   "lastObservation": "2026-10-22",
+   "count": 2630,
+   "state": "fresh",
+   "revisions": 0,
+   "duplicatesRemoved": 0,
+   "missingDropped": 0
+  },
+  {
+   "id": "ar_tamar",
+   "topic": "monetary",
+   "country": "AR",
+   "name": {
+    "es": "Tasa TAMAR, bancos privados",
+    "en": "TAMAR rate, private banks"
+   },
+   "frequency": "D",
+   "fetchedAt": "2026-10-25T20:25:28.562Z",
+   "firstObservation": "2024-10-01",
+   "lastObservation": "2026-10-22",
+   "count": 497,
+   "state": "fresh",
+   "revisions": 0,
+   "duplicatesRemoved": 0,
+   "missingDropped": 0
+  },
+  {
+   "id": "ar_pases_terceros",
+   "topic": "monetary",
+   "country": "AR",
+   "name": {
+    "es": "Tasa de pases entre terceros a 1 día",
+    "en": "Overnight third-party repo rate"
+   },
+   "frequency": "D",
+   "fetchedAt": "2026-10-25T20:25:28.757Z",
+   "firstObservation": "2016-01-04",
+   "lastObservation": "2026-10-22",
+   "count": 2629,
+   "state": "fresh",
+   "revisions": 0,
+   "duplicatesRemoved": 0,
+   "missingDropped": 0
+  },
+  {
+   "id": "ar_tc_mayorista",
+   "topic": "fx",
+   "country": "AR",
+   "name": {
+    "es": "Tipo de cambio mayorista de referencia (Com. A 3500)",
+    "en": "Wholesale reference exchange rate (Com. A 3500)"
+   },
+   "frequency": "D",
+   "fetchedAt": "2026-10-25T20:25:28.971Z",
+   "firstObservation": "2016-01-04",
+   "lastObservation": "2026-10-23",
+   "count": 2631,
+   "state": "fresh",
+   "revisions": 0,
+   "duplicatesRemoved": 0,
+   "missingDropped": 0
+  },
+  {
+   "id": "ar_itcrm",
+   "topic": "fx",
+   "country": "AR",
+   "name": {
+    "es": "Índice de tipo de cambio real multilateral (ITCRM)",
+    "en": "Multilateral real exchange-rate index (ITCRM)"
+   },
+   "frequency": "D",
+   "fetchedAt": "2026-10-25T20:25:29.099Z",
+   "firstObservation": "2016-01-01",
+   "lastObservation": "2026-01-28",
+   "count": 3681,
+   "state": "stale",
+   "revisions": 0,
+   "duplicatesRemoved": 0,
+   "missingDropped": 0
+  },
+  {
+   "id": "ar_reservas",
+   "topic": "external",
+   "country": "AR",
+   "name": {
+    "es": "Reservas internacionales del BCRA",
+    "en": "BCRA international reserves"
+   },
+   "frequency": "D",
+   "fetchedAt": "2026-10-25T20:25:29.303Z",
+   "firstObservation": "2016-01-04",
+   "lastObservation": "2026-10-21",
+   "count": 2629,
+   "state": "fresh",
+   "revisions": 0,
+   "duplicatesRemoved": 0,
+   "missingDropped": 0
+  },
+  {
+   "id": "ar_base_monetaria",
+   "topic": "monetary",
+   "country": "AR",
+   "name": {
+    "es": "Base monetaria",
+    "en": "Monetary base"
+   },
+   "frequency": "D",
+   "fetchedAt": "2026-10-25T20:25:29.510Z",
+   "firstObservation": "2016-01-04",
+   "lastObservation": "2026-10-21",
+   "count": 2629,
+   "state": "fresh",
+   "revisions": 0,
+   "duplicatesRemoved": 0,
+   "missingDropped": 0
+  },
+  {
+   "id": "ar_m2",
+   "topic": "monetary",
+   "country": "AR",
+   "name": {
+    "es": "Agregado monetario M2",
+    "en": "Monetary aggregate M2"
+   },
+   "frequency": "D",
+   "fetchedAt": "2026-10-25T20:25:29.717Z",
+   "firstObservation": "2016-01-04",
+   "lastObservation": "2026-10-20",
+   "count": 2628,
+   "state": "fresh",
+   "revisions": 0,
+   "duplicatesRemoved": 0,
+   "missingDropped": 0
+  },
+  {
+   "id": "ar_inflacion_mensual",
+   "topic": "prices",
+   "country": "AR",
+   "name": {
+    "es": "Inflación mensual (IPC)",
+    "en": "Monthly inflation (CPI)"
+   },
+   "frequency": "M",
+   "fetchedAt": "2026-10-25T20:25:29.802Z",
+   "firstObservation": "2016-01-01",
+   "lastObservation": "2026-09-01",
+   "count": 129,
+   "state": "fresh",
+   "revisions": 0,
+   "duplicatesRemoved": 0,
+   "missingDropped": 0
+  },
+  {
+   "id": "ar_inflacion_interanual",
+   "topic": "prices",
+   "country": "AR",
+   "name": {
+    "es": "Inflación interanual (IPC)",
+    "en": "Year-on-year inflation (CPI)"
+   },
+   "frequency": "M",
+   "fetchedAt": "2026-10-25T20:25:29.883Z",
+   "firstObservation": "2016-01-01",
+   "lastObservation": "2026-09-01",
+   "count": 129,
+   "state": "fresh",
+   "revisions": 0,
+   "duplicatesRemoved": 0,
+   "missingDropped": 0
+  },
+  {
+   "id": "ar_inflacion_esperada",
+   "topic": "prices",
+   "country": "AR",
+   "name": {
+    "es": "Inflación esperada a 12 meses (REM)",
+    "en": "Expected inflation, next 12 months (REM)"
+   },
+   "frequency": "M",
+   "fetchedAt": "2026-10-25T20:25:29.963Z",
+   "firstObservation": "2016-06-01",
+   "lastObservation": "2026-09-01",
+   "count": 124,
+   "state": "fresh",
+   "revisions": 0,
+   "duplicatesRemoved": 0,
+   "missingDropped": 0
+  },
+  {
+   "id": "ar_ipc",
+   "topic": "prices",
+   "country": "AR",
+   "name": {
+    "es": "Índice de precios al consumidor, nivel general nacional",
+    "en": "Consumer price index, national headline"
+   },
+   "frequency": "M",
+   "fetchedAt": "2026-10-25T20:25:29.989Z",
+   "firstObservation": "2016-12-01",
+   "lastObservation": "2026-08-01",
+   "count": 117,
+   "state": "fresh",
+   "revisions": 0,
+   "duplicatesRemoved": 0,
+   "missingDropped": 0
+  },
+  {
+   "id": "ar_emae",
+   "topic": "activity",
+   "country": "AR",
+   "name": {
+    "es": "Actividad económica (EMAE, desestacionalizado)",
+    "en": "Economic activity (EMAE, seasonally adjusted)"
+   },
+   "frequency": "M",
+   "fetchedAt": "2026-10-25T20:25:30.019Z",
+   "firstObservation": "2016-01-01",
+   "lastObservation": "2026-07-01",
+   "count": 127,
+   "state": "fresh",
+   "revisions": 0,
+   "duplicatesRemoved": 0,
+   "missingDropped": 0
+  },
+  {
+   "id": "ar_emae_original",
+   "topic": "activity",
+   "country": "AR",
+   "name": {
+    "es": "Actividad económica (EMAE, serie original)",
+    "en": "Economic activity (EMAE, original series)"
+   },
+   "frequency": "M",
+   "fetchedAt": "2026-10-25T20:25:30.044Z",
+   "firstObservation": "2016-01-01",
+   "lastObservation": "2026-07-01",
+   "count": 127,
+   "state": "fresh",
+   "revisions": 0,
+   "duplicatesRemoved": 0,
+   "missingDropped": 0
+  },
+  {
+   "id": "ar_desocupacion",
+   "topic": "labour",
+   "country": "AR",
+   "name": {
+    "es": "Tasa de desocupación (EPH)",
+    "en": "Unemployment rate (EPH)"
+   },
+   "frequency": "Q",
+   "fetchedAt": "2026-10-25T20:25:30.069Z",
+   "firstObservation": "2016-04-01",
+   "lastObservation": "2026-04-01",
+   "count": 41,
+   "state": "fresh",
+   "revisions": 0,
+   "duplicatesRemoved": 0,
+   "missingDropped": 0
+  },
+  {
+   "id": "ar_resultado_primario",
+   "topic": "fiscal",
+   "country": "AR",
+   "name": {
+    "es": "Resultado primario del Sector Público Nacional (IMIG)",
+    "en": "Primary balance of the national public sector (IMIG)"
+   },
+   "frequency": "M",
+   "fetchedAt": "2026-10-25T20:25:30.100Z",
+   "firstObservation": "2016-01-01",
+   "lastObservation": "2026-08-01",
+   "count": 128,
+   "state": "fresh",
+   "revisions": 0,
+   "duplicatesRemoved": 0,
+   "missingDropped": 0
+  },
+  {
+   "id": "ar_pib_crecimiento",
+   "topic": "activity",
+   "country": "AR",
+   "name": {
+    "es": "Crecimiento del PIB real",
+    "en": "Real GDP growth"
+   },
+   "frequency": "A",
+   "fetchedAt": "2026-10-25T20:25:30.256Z",
+   "firstObservation": "2000-01-01",
+   "lastObservation": "2025-01-01",
+   "count": 26,
+   "state": "fresh",
+   "revisions": 0,
+   "duplicatesRemoved": 0,
+   "missingDropped": 0
+  },
+  {
+   "id": "ar_x",
+   "topic": "external",
+   "country": "AR",
+   "name": {
+    "es": "Exportaciones totales",
+    "en": "Total exports"
+   },
+   "frequency": "M",
+   "fetchedAt": "2026-10-25T20:25:30.282Z",
+   "firstObservation": "2016-01-01",
+   "lastObservation": "2026-08-01",
+   "count": 128,
+   "state": "fresh",
+   "revisions": 0,
+   "duplicatesRemoved": 0,
+   "missingDropped": 0
+  },
+  {
+   "id": "ar_m",
+   "topic": "external",
+   "country": "AR",
+   "name": {
+    "es": "Importaciones totales",
+    "en": "Total imports"
+   },
+   "frequency": "M",
+   "fetchedAt": "2026-10-25T20:25:30.307Z",
+   "firstObservation": "2016-01-01",
+   "lastObservation": "2026-08-01",
+   "count": 128,
+   "state": "fresh",
+   "revisions": 0,
+   "duplicatesRemoved": 0,
+   "missingDropped": 0
+  },
+  {
+   "id": "ar_saldo",
+   "topic": "external",
+   "country": "AR",
+   "name": {
+    "es": "Saldo comercial (publicado)",
+    "en": "Trade balance (published)"
+   },
+   "frequency": "M",
+   "fetchedAt": "2026-10-25T20:25:30.335Z",
+   "firstObservation": "2016-01-01",
+   "lastObservation": "2026-08-01",
+   "count": 128,
+   "state": "fresh",
+   "revisions": 0,
+   "duplicatesRemoved": 0,
+   "missingDropped": 0
+  },
+  {
+   "id": "ar_x_pp",
+   "topic": "external",
+   "country": "AR",
+   "name": {
+    "es": "Exportaciones: productos primarios",
+    "en": "Exports: primary products"
+   },
+   "frequency": "M",
+   "fetchedAt": "2026-10-25T20:25:30.368Z",
+   "firstObservation": "2016-01-01",
+   "lastObservation": "2026-08-01",
+   "count": 128,
+   "state": "fresh",
+   "revisions": 0,
+   "duplicatesRemoved": 0,
+   "missingDropped": 0
+  },
+  {
+   "id": "ar_x_moa",
+   "topic": "external",
+   "country": "AR",
+   "name": {
+    "es": "Exportaciones: manufacturas de origen agropecuario",
+    "en": "Exports: agricultural manufactures"
+   },
+   "frequency": "M",
+   "fetchedAt": "2026-10-25T20:25:30.397Z",
+   "firstObservation": "2016-01-01",
+   "lastObservation": "2026-08-01",
+   "count": 128,
+   "state": "fresh",
+   "revisions": 0,
+   "duplicatesRemoved": 0,
+   "missingDropped": 0
+  },
+  {
+   "id": "ar_m_bk",
+   "topic": "external",
+   "country": "AR",
+   "name": {
+    "es": "Importaciones: bienes de capital",
+    "en": "Imports: capital goods"
+   },
+   "frequency": "M",
+   "fetchedAt": "2026-10-25T20:25:30.424Z",
+   "firstObservation": "2016-01-01",
+   "lastObservation": "2026-08-01",
+   "count": 128,
+   "state": "fresh",
+   "revisions": 0,
+   "duplicatesRemoved": 0,
+   "missingDropped": 0
+  },
+  {
+   "id": "ar_m_bi",
+   "topic": "external",
+   "country": "AR",
+   "name": {
+    "es": "Importaciones: bienes intermedios",
+    "en": "Imports: intermediate goods"
+   },
+   "frequency": "M",
+   "fetchedAt": "2026-10-25T20:25:30.458Z",
+   "firstObservation": "2016-01-01",
+   "lastObservation": "2026-08-01",
+   "count": 128,
+   "state": "fresh",
+   "revisions": 0,
+   "duplicatesRemoved": 0,
+   "missingDropped": 0
+  },
+  {
+   "id": "ar_m_bc",
+   "topic": "external",
+   "country": "AR",
+   "name": {
+    "es": "Importaciones: bienes de consumo",
+    "en": "Imports: consumer goods"
+   },
+   "frequency": "M",
+   "fetchedAt": "2026-10-25T20:25:30.479Z",
+   "firstObservation": "2016-01-01",
+   "lastObservation": "2026-08-01",
+   "count": 128,
+   "state": "fresh",
+   "revisions": 0,
+   "duplicatesRemoved": 0,
+   "missingDropped": 0
+  },
+  {
+   "id": "ar_m_vap",
+   "topic": "external",
+   "country": "AR",
+   "name": {
+    "es": "Importaciones: vehículos automotores de pasajeros",
+    "en": "Imports: passenger vehicles"
+   },
+   "frequency": "M",
+   "fetchedAt": "2026-10-25T20:25:30.519Z",
+   "firstObservation": "2016-01-01",
+   "lastObservation": "2026-08-01",
+   "count": 128,
+   "state": "fresh",
+   "revisions": 0,
+   "duplicatesRemoved": 0,
+   "missingDropped": 0
+  },
+  {
+   "id": "ar_m_resto",
+   "topic": "external",
+   "country": "AR",
+   "name": {
+    "es": "Importaciones: resto",
+    "en": "Imports: other"
+   },
+   "frequency": "M",
+   "fetchedAt": "2026-10-25T20:25:30.555Z",
+   "firstObservation": "2016-01-01",
+   "lastObservation": "2026-08-01",
+   "count": 128,
+   "state": "fresh",
+   "revisions": 0,
+   "duplicatesRemoved": 0,
+   "missingDropped": 0
+  },
+  {
+   "id": "ar_m_bk_pya",
+   "topic": "external",
+   "country": "AR",
+   "name": {
+    "es": "Importaciones: bienes de capital más piezas y accesorios",
+    "en": "Imports: capital goods plus parts"
+   },
+   "frequency": "M",
+   "fetchedAt": "2026-10-25T20:25:31.054Z",
+   "firstObservation": "2016-01-01",
+   "lastObservation": "2026-08-01",
+   "count": 128,
+   "state": "fresh",
+   "revisions": 0,
+   "duplicatesRemoved": 0,
+   "missingDropped": 0
+  },
+  {
+   "id": "ar_x_moi",
+   "topic": "external",
+   "country": "AR",
+   "name": {
+    "es": "Exportaciones: manufacturas de origen industrial",
+    "en": "Exports: industrial manufactures"
+   },
+   "frequency": "M",
+   "fetchedAt": "2026-10-25T20:25:31.551Z",
+   "firstObservation": "2016-01-01",
+   "lastObservation": "2026-08-01",
+   "count": 128,
+   "state": "fresh",
+   "revisions": 0,
+   "duplicatesRemoved": 0,
+   "missingDropped": 0
+  },
+  {
+   "id": "ar_x_brasil",
+   "topic": "external",
+   "country": "AR",
+   "name": {
+    "es": "Exportaciones a Brasil",
+    "en": "Exports to Brazil"
+   },
+   "frequency": "M",
+   "fetchedAt": "2026-10-25T20:25:31.578Z",
+   "firstObservation": "2016-01-01",
+   "lastObservation": "2026-08-01",
+   "count": 128,
+   "state": "fresh",
+   "revisions": 0,
+   "duplicatesRemoved": 0,
+   "missingDropped": 0
+  },
+  {
+   "id": "ar_x_china",
+   "topic": "external",
+   "country": "AR",
+   "name": {
+    "es": "Exportaciones a China",
+    "en": "Exports to China"
+   },
+   "frequency": "M",
+   "fetchedAt": "2026-10-25T20:25:31.603Z",
+   "firstObservation": "2016-01-01",
+   "lastObservation": "2026-08-01",
+   "count": 128,
+   "state": "fresh",
+   "revisions": 0,
+   "duplicatesRemoved": 0,
+   "missingDropped": 0
+  },
+  {
+   "id": "ar_x_eeuu",
+   "topic": "external",
+   "country": "AR",
+   "name": {
+    "es": "Exportaciones a Estados Unidos",
+    "en": "Exports to the United States"
+   },
+   "frequency": "M",
+   "fetchedAt": "2026-10-25T20:25:31.629Z",
+   "firstObservation": "2016-01-01",
+   "lastObservation": "2026-08-01",
+   "count": 128,
+   "state": "fresh",
+   "revisions": 0,
+   "duplicatesRemoved": 0,
+   "missingDropped": 0
+  },
+  {
+   "id": "ar_x_chile",
+   "topic": "external",
+   "country": "AR",
+   "name": {
+    "es": "Exportaciones a Chile",
+    "en": "Exports to Chile"
+   },
+   "frequency": "M",
+   "fetchedAt": "2026-10-25T20:25:31.658Z",
+   "firstObservation": "2016-01-01",
+   "lastObservation": "2026-08-01",
+   "count": 128,
+   "state": "fresh",
+   "revisions": 0,
+   "duplicatesRemoved": 0,
+   "missingDropped": 0
+  },
+  {
+   "id": "ar_x_india",
+   "topic": "external",
+   "country": "AR",
+   "name": {
+    "es": "Exportaciones a India",
+    "en": "Exports to India"
+   },
+   "frequency": "M",
+   "fetchedAt": "2026-10-25T20:25:31.685Z",
+   "firstObservation": "2016-01-01",
+   "lastObservation": "2026-08-01",
+   "count": 128,
+   "state": "fresh",
+   "revisions": 0,
+   "duplicatesRemoved": 0,
+   "missingDropped": 0
+  },
+  {
+   "id": "ar_m_brasil",
+   "topic": "external",
+   "country": "AR",
+   "name": {
+    "es": "Importaciones desde Brasil",
+    "en": "Imports from Brazil"
+   },
+   "frequency": "M",
+   "fetchedAt": "2026-10-25T20:25:31.710Z",
+   "firstObservation": "2016-01-01",
+   "lastObservation": "2026-08-01",
+   "count": 128,
+   "state": "fresh",
+   "revisions": 0,
+   "duplicatesRemoved": 0,
+   "missingDropped": 0
+  },
+  {
+   "id": "ar_m_india",
+   "topic": "external",
+   "country": "AR",
+   "name": {
+    "es": "Importaciones desde India",
+    "en": "Imports from India"
+   },
+   "frequency": "M",
+   "fetchedAt": "2026-10-25T20:25:31.740Z",
+   "firstObservation": "2016-01-01",
+   "lastObservation": "2026-08-01",
+   "count": 128,
+   "state": "fresh",
+   "revisions": 0,
+   "duplicatesRemoved": 0,
+   "missingDropped": 0
+  },
+  {
+   "id": "ar_saldo_eeuu",
+   "topic": "external",
+   "country": "AR",
+   "name": {
+    "es": "Saldo comercial con Estados Unidos",
+    "en": "Trade balance with the United States"
+   },
+   "frequency": "M",
+   "fetchedAt": "2026-10-25T20:25:32.227Z",
+   "firstObservation": "2016-01-01",
+   "lastObservation": "2026-08-01",
+   "count": 128,
+   "state": "fresh",
+   "revisions": 0,
+   "duplicatesRemoved": 0,
+   "missingDropped": 0
+  },
+  {
+   "id": "us_t3m",
+   "topic": "international",
+   "country": "US",
+   "name": {
+    "es": "Bono del Tesoro de EE.UU. a 3 meses (rendimiento)",
+    "en": "U.S. Treasury 3-month yield"
+   },
+   "frequency": "D",
+   "fetchedAt": "2026-10-25T20:29:01.957Z",
+   "firstObservation": "2016-01-04",
+   "lastObservation": "2026-10-23",
+   "count": 2703,
+   "state": "fresh",
+   "revisions": 0,
+   "duplicatesRemoved": 0,
+   "missingDropped": 0
+  },
+  {
+   "id": "us_t2y",
+   "topic": "international",
+   "country": "US",
+   "name": {
+    "es": "Bono del Tesoro de EE.UU. a 2 años (rendimiento)",
+    "en": "U.S. Treasury 2-year yield"
+   },
+   "frequency": "D",
+   "fetchedAt": "2026-10-25T20:29:01.977Z",
+   "firstObservation": "2016-01-04",
+   "lastObservation": "2026-10-23",
+   "count": 2703,
+   "state": "fresh",
+   "revisions": 0,
+   "duplicatesRemoved": 0,
+   "missingDropped": 0
+  },
+  {
+   "id": "us_t10y",
+   "topic": "international",
+   "country": "US",
+   "name": {
+    "es": "Bono del Tesoro de EE.UU. a 10 años (rendimiento)",
+    "en": "U.S. Treasury 10-year yield"
+   },
+   "frequency": "D",
+   "fetchedAt": "2026-10-25T20:29:01.996Z",
+   "firstObservation": "2016-01-04",
+   "lastObservation": "2026-10-23",
+   "count": 2703,
+   "state": "fresh",
+   "revisions": 0,
+   "duplicatesRemoved": 0,
+   "missingDropped": 0
+  },
+  {
+   "id": "us_fed_upper",
+   "topic": "international",
+   "country": "US",
+   "name": {
+    "es": "Rango objetivo de la tasa de fondos federales: límite superior",
+    "en": "Federal funds target range: upper limit"
+   },
+   "frequency": "D",
+   "fetchedAt": "2026-10-25T20:29:02.311Z",
+   "firstObservation": "2016-01-01",
+   "lastObservation": "2026-10-25",
+   "count": 3951,
+   "state": "fresh",
+   "revisions": 0,
+   "duplicatesRemoved": 0,
+   "missingDropped": 0
+  },
+  {
+   "id": "us_fed_lower",
+   "topic": "international",
+   "country": "US",
+   "name": {
+    "es": "Rango objetivo de la tasa de fondos federales: límite inferior",
+    "en": "Federal funds target range: lower limit"
+   },
+   "frequency": "D",
+   "fetchedAt": "2026-10-25T20:29:02.353Z",
+   "firstObservation": "2016-01-01",
+   "lastObservation": "2026-10-25",
+   "count": 3951,
+   "state": "fresh",
+   "revisions": 0,
+   "duplicatesRemoved": 0,
+   "missingDropped": 0
+  },
+  {
+   "id": "us_ipc",
+   "topic": "international",
+   "country": "US",
+   "name": {
+    "es": "Índice de precios al consumidor de EE.UU. (CPI-U)",
+    "en": "U.S. consumer price index (CPI-U)"
+   },
+   "frequency": "M",
+   "fetchedAt": "2026-10-25T20:29:02.790Z",
+   "firstObservation": "2016-01-01",
+   "lastObservation": "2026-09-01",
+   "count": 128,
+   "state": "fresh",
+   "revisions": 0,
+   "duplicatesRemoved": 0,
+   "missingDropped": 1
+  },
+  {
+   "id": "us_desempleo",
+   "topic": "international",
+   "country": "US",
+   "name": {
+    "es": "Tasa de desempleo de EE.UU.",
+    "en": "U.S. unemployment rate"
+   },
+   "frequency": "M",
+   "fetchedAt": "2026-10-25T20:29:03.158Z",
+   "firstObservation": "2016-01-01",
+   "lastObservation": "2026-09-01",
+   "count": 128,
+   "state": "fresh",
+   "revisions": 0,
+   "duplicatesRemoved": 0,
+   "missingDropped": 1
+  },
+  {
+   "id": "us_pib_crecimiento",
+   "topic": "international",
+   "country": "US",
+   "name": {
+    "es": "Crecimiento del PIB real de EE.UU.",
+    "en": "U.S. real GDP growth"
+   },
+   "frequency": "A",
+   "fetchedAt": "2026-10-25T20:29:03.258Z",
+   "firstObservation": "2000-01-01",
+   "lastObservation": "2025-01-01",
+   "count": 26,
+   "state": "fresh",
+   "revisions": 0,
+   "duplicatesRemoved": 0,
+   "missingDropped": 0
+  },
+  {
+   "id": "ar_x_cye",
+   "topic": "external",
+   "country": "AR",
+   "name": {
+    "es": "Exportaciones: combustibles y energía (derivado)",
+    "en": "Exports: fuels and energy (derived)"
+   },
+   "frequency": "M",
+   "derived": true,
+   "fetchedAt": "2026-10-25T20:29:03.260Z",
+   "firstObservation": "2016-01-01",
+   "lastObservation": "2026-08-01",
+   "count": 128,
+   "state": "fresh"
+  },
+  {
+   "id": "ar_m_pya",
+   "topic": "external",
+   "country": "AR",
+   "name": {
+    "es": "Importaciones: piezas y accesorios para bienes de capital (derivado)",
+    "en": "Imports: parts for capital goods (derived)"
+   },
+   "frequency": "M",
+   "derived": true,
+   "fetchedAt": "2026-10-25T20:29:03.263Z",
+   "firstObservation": "2016-01-01",
+   "lastObservation": "2026-08-01",
+   "count": 128,
+   "state": "fresh"
+  },
+  {
+   "id": "ar_m_cyl",
+   "topic": "external",
+   "country": "AR",
+   "name": {
+    "es": "Importaciones: combustibles y lubricantes (derivado)",
+    "en": "Imports: fuels and lubricants (derived)"
+   },
+   "frequency": "M",
+   "derived": true,
+   "fetchedAt": "2026-10-25T20:29:03.264Z",
+   "firstObservation": "2016-01-01",
+   "lastObservation": "2026-08-01",
+   "count": 128,
+   "state": "fresh"
+  },
+  {
+   "id": "ar_m_eeuu",
+   "topic": "external",
+   "country": "AR",
+   "name": {
+    "es": "Importaciones desde Estados Unidos (derivado)",
+    "en": "Imports from the United States (derived)"
+   },
+   "frequency": "M",
+   "derived": true,
+   "fetchedAt": "2026-10-25T20:29:03.265Z",
+   "firstObservation": "2016-01-01",
+   "lastObservation": "2026-08-01",
+   "count": 128,
+   "state": "fresh"
+  }
+ ],
+ "checks": [
+  "trade: 128 months; max |published balance − (X − M)| = 0.000 US$ millions"
+ ]
+}

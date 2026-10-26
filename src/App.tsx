@@ -21,14 +21,17 @@ import { LabModule } from './modules/lab/LabModule';
 import { HomeModule } from './modules/home/HomeModule';
 import { LabProvider } from './state/lab';
 import { getCurrentConfig } from './state/currentConfig';
+import { ExercisesModule } from './exercises/ExercisesModule';
+import { ObservatoryModule } from './observatory/ObservatoryModule';
+import { GuideDialog, guideUnseen } from './components/GuideDialog';
 import { MODULE_OF, decodeConfigHash, encodeConfigHash, type LabConfig } from './lab/scenario';
 
 type Theme = 'light' | 'dark';
 const DEFAULT_THEME: Theme = 'dark';
 
-/** Screens: the introductory home screen plus the lettered modules. */
-export type ModuleId = 'home' | (typeof MODULES)[number];
-const SCREENS: readonly string[] = ['home', ...MODULES];
+/** Screens: the introductory home screen, the lettered modules, exercises and the data observatory. */
+export type ModuleId = 'home' | (typeof MODULES)[number] | 'exercises' | 'observatory';
+const SCREENS: readonly string[] = ['home', ...MODULES, 'exercises', 'observatory'];
 
 const REPO_URL = 'https://github.com/alanartola/islm-macroeconomic-simulator';
 
@@ -100,6 +103,9 @@ export default function App() {
   const [opened, setOpened] = useState<{ cfg: LabConfig | null; nonce: number }>(() => ({ cfg: linkedConfig(), nonce: 0 }));
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [guide, setGuide] = useState(() => queryParam('guide') !== '0' && guideUnseen());
+  /** Date or episode the observatory opens on (from an exercise). */
+  const [obsFocus, setObsFocus] = useState<{ date: string; episode?: string; nonce: number } | null>(null);
   const { t } = useMemo(() => makeI18n(lang), [lang]);
 
   useEffect(() => {
@@ -142,6 +148,10 @@ export default function App() {
       setOpened((o) => ({ cfg, nonce: o.nonce + 1 }));
     }
     setModule(MODULE_OF[cfg.model] as ModuleId);
+  };
+  const openObservatory = (date: string, episode?: string) => {
+    setObsFocus((f) => ({ date, episode, nonce: (f?.nonce ?? 0) + 1 }));
+    setModule('observatory');
   };
   const initialFor = <M extends LabConfig['model']>(model: M) =>
     opened.cfg?.model === model ? (opened.cfg as Extract<LabConfig, { model: M }>) : undefined;
@@ -209,7 +219,9 @@ export default function App() {
           onShare={share}
           copied={copied}
           onOpenParams={() => setSidebarOpen(true)}
+          onGuide={() => setGuide(true)}
         />
+        <GuideDialog open={guide} onClose={() => setGuide(false)} />
 
         {module === 'basic' && (
           <BasicModule
@@ -230,7 +242,9 @@ export default function App() {
         {module === 'ismp' && <ISMPModule key={opened.nonce} initial={initialFor('ismp')} sidebarOpen={sidebarOpen} onCloseSidebar={() => setSidebarOpen(false)} />}
         {module === 'open' && <OpenModule key={opened.nonce} initial={initialFor('open')} sidebarOpen={sidebarOpen} onCloseSidebar={() => setSidebarOpen(false)} />}
         {module === 'lab' && <LabModule onOpen={openConfig} />}
-        {module === 'home' && <HomeModule onOpen={(m) => setModule(m as ModuleId)} />}
+        {module === 'home' && <HomeModule onOpen={(m) => setModule(m as ModuleId)} onGuide={() => setGuide(true)} />}
+        {module === 'exercises' && <ExercisesModule onOpenConfig={openConfig} onOpenObservatory={openObservatory} />}
+        {module === 'observatory' && <ObservatoryModule key={obsFocus?.nonce ?? 0} initialFocus={obsFocus} />}
         {module === 'policy' && <PolicyModule state={adv} dispatch={advDispatch} sidebarOpen={sidebarOpen} onCloseSidebar={() => setSidebarOpen(false)} />}
         {module === 'construction' && (
           <ConstructionModule state={adv} dispatch={advDispatch} sim={advSim} sidebarOpen={sidebarOpen} onCloseSidebar={() => setSidebarOpen(false)} />

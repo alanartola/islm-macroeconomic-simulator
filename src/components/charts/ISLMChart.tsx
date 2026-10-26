@@ -94,7 +94,7 @@ export function ISLMChart({ e0, e1, showInitial, showShifted, showGuides, saved 
       <g key={key} opacity={opacity}>
         <line x1={ax} y1={ay} x2={bx} y2={by} stroke={color} strokeWidth={dashed ? 1.4 : 2} strokeDasharray={dashed ? '5 4' : undefined} strokeLinecap="round" />
         {label && (
-          <text x={lx} y={ly} dy="0.32em" fontFamily="var(--font-serif)" fontStyle="italic" fontSize={14} fontWeight={500} fill="var(--text-primary)">
+          <text x={lx} y={ly} dy="0.32em" fontFamily="var(--font-sans)" fontStyle="italic" fontSize={14} fontWeight={500} fill="var(--text-primary)">
             {label}
           </text>
         )}
@@ -260,11 +260,11 @@ export function ISLMChart({ e0, e1, showInitial, showShifted, showGuides, saved 
           {/* Equilibria */}
           <g>
             <circle cx={pxE0.x} cy={pxE0.y} r={5} fill="var(--page)" stroke="var(--eq0)" strokeWidth={1.6} />
-            <text x={pxE0.x - 10} y={pxE0.y - 10} textAnchor="end" fontFamily="var(--font-serif)" fontStyle="italic" fontSize={14.5} fontWeight={500} fill="var(--text-secondary)">E₀</text>
+            <text x={pxE0.x - 10} y={pxE0.y - 10} textAnchor="end" fontFamily="var(--font-sans)" fontStyle="italic" fontSize={14.5} fontWeight={500} fill="var(--text-secondary)">E₀</text>
             {moved && (
               <>
                 <circle cx={pxE1.x} cy={pxE1.y} r={5.5} fill="var(--eq1)" stroke="var(--page)" strokeWidth={2} />
-                <text x={pxE1.x + 10} y={pxE1.y - 10} fontFamily="var(--font-serif)" fontStyle="italic" fontSize={14.5} fontWeight={600} fill="var(--text-primary)">E₁</text>
+                <text x={pxE1.x + 10} y={pxE1.y - 10} fontFamily="var(--font-sans)" fontStyle="italic" fontSize={14.5} fontWeight={600} fill="var(--text-primary)">E₁</text>
               </>
             )}
           </g>
