@@ -14,7 +14,7 @@ const COVER_SHOCK = { G: DEFAULT_PARAMS.G + 50 };
  * the model, a thematic table of contents of the eight modules and the chart
  * conventions shared by every module.
  */
-export function HomeModule({ onOpen }: { onOpen: (m: string) => void }) {
+export function HomeModule({ onOpen, onGuide }: { onOpen: (m: string) => void; onGuide?: () => void }) {
   const { t, f } = useI18n();
   const cover = useMemo(() => {
     const r0 = solve({ params: DEFAULT_PARAMS, regime: 'money-supply', targetRate: 5 });
@@ -34,6 +34,11 @@ export function HomeModule({ onOpen }: { onOpen: (m: string) => void }) {
             <button className="btn primary" onClick={() => onOpen('basic')}>
               {t('home.start')}
             </button>
+            {onGuide && (
+              <button className="btn" onClick={onGuide}>
+                {t('nav.guide')}
+              </button>
+            )}
             <a className="btn link" href={DOCS_URL} target="_blank" rel="noreferrer">
               {t('home.docs')}
             </a>
@@ -115,6 +120,26 @@ export function HomeModule({ onOpen }: { onOpen: (m: string) => void }) {
               </ul>
             </div>
           ))}
+          <div className="toc-group">
+            <header>
+              <h4>{t('group.learn')}</h4>
+            </header>
+            <ul className="toc-list">
+              {(['exercises', 'observatory'] as const).map((m) => (
+                <li key={m}>
+                  <button className="toc-entry" onClick={() => onOpen(m)}>
+                    <span className="mod-letter" aria-hidden="true">{m === 'exercises' ? '§' : '◆'}</span>
+                    <span className="toc-name">{t(`mod.${m}`)}</span>
+                    <span className="toc-open" aria-hidden="true">
+                      {t('home.open')} →
+                    </span>
+                    <span className="toc-desc">{t(`mod.${m}.desc`)}</span>
+                    <span className="toc-vars">{t(`home.vars.${m}`)}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </section>
 

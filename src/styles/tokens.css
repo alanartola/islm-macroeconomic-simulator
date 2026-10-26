@@ -1,7 +1,8 @@
 /* ────────────────────────────────────────────────────────────────────────────
    Design tokens of the laboratory.
 
-   Identity: a research instrument rather than a dashboard. Graphite surfaces,
+   Identity: a research instrument rather than a dashboard: well-delimited
+   panels, one sans family (Aptos / Calibri), Graphite surfaces,
    warm neutral text, a single brass accent for interface state, and chart
    colours that carry ECONOMIC meaning and are the same in every module:
 
@@ -20,16 +21,17 @@
   color-scheme: dark;
 
   /* Type */
-  --font-serif: 'Source Serif 4 Variable', 'Source Serif 4', Georgia, 'Times New Roman', serif;
-  --font-sans: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  /* Aptos (Windows 11 / Microsoft 365) or Calibri, installed fonts; no serif anywhere.
+     The monospace is used only inside formula blocks. */
+  --font-sans: Aptos, Calibri, 'Segoe UI', Arial, sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, 'Cascadia Mono', Consolas, monospace;
-  --fs-xxs: 10.5px; /* kickers, axis captions */
-  --fs-xs: 11.5px; /* labels, notes */
-  --fs-sm: 12.5px; /* controls, tables */
-  --fs-md: 14px; /* body */
-  --fs-lg: 17px; /* figure titles, lede */
-  --fs-xl: 26px; /* module titles */
-  --fs-xxl: 40px; /* home title */
+  --fs-xxs: 11px; /* kickers, axis captions */
+  --fs-xs: 12px; /* labels, notes */
+  --fs-sm: 13px; /* controls, tables */
+  --fs-md: 14.5px; /* body */
+  --fs-lg: 17px; /* panel titles, lede */
+  --fs-xl: 27px; /* module titles */
+  --fs-xxl: 38px; /* home title */
 
   /* Space: a 4-px base, used unevenly on purpose (content groups breathe more than rows). */
   --s1: 4px;
@@ -40,8 +42,8 @@
   --s6: 32px;
   --s7: 48px;
 
-  --radius: 3px;
-  --radius-sm: 2px;
+  --radius: 6px;
+  --radius-sm: 4px;
   --sidebar-w: 316px;
   --mast-h: 52px;
   --nav-h: 40px;

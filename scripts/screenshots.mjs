@@ -49,11 +49,31 @@ const HELPERS = `
     await window.__wait(350);
   };
   window.__nav = (text) => window.__click(text, document.querySelector('.module-nav'));
+  /** Sets a React-controlled field through the native setter so that onChange fires. */
+  window.__set = async (el, value) => {
+    const proto = el instanceof HTMLSelectElement ? HTMLSelectElement.prototype : HTMLInputElement.prototype;
+    Object.getOwnPropertyDescriptor(proto, 'value').set.call(el, value);
+    el.dispatchEvent(new Event(el instanceof HTMLSelectElement ? 'change' : 'input', { bubbles: true }));
+    await window.__wait(250);
+  };
+  window.__fill = (label, value) => window.__set(document.querySelector('input[aria-label="' + label + '"]'), value);
 `;
 const click = (text) => `await __click(${JSON.stringify(text)});`;
 const nav = (text) => `await __nav(${JSON.stringify(text)});`;
 const scrollTo = (selector) => `document.querySelector(${JSON.stringify(selector)})?.scrollIntoView({ block: 'start' }); window.scrollBy(0, -112); await __wait(300);`;
 const SAVE = click('Guardar experimento');
+const fill = (label, value) => `await __fill(${JSON.stringify(label)}, ${JSON.stringify(value)});`;
+const episode = (id) => `await __set(document.querySelector('.obs-controls select'), ${JSON.stringify(id)}); await __wait(900);`;
+const SOLVE_FISCAL = [
+  click('Nuevo equilibrio tras una expansión fiscal'),
+  fill('Producto de equilibrio Y₁', '1980'),
+  fill('Variación del producto ΔY', '80'),
+  fill('Variación de la tasa Δi', '0,8'),
+  fill('Multiplicador fiscal dY/dG', '2'),
+  fill('Variación de la inversión privada ΔI', '-25'),
+  click('Verificar'),
+  scrollTo('.ex-detail'),
+];
 
 /** Saves four experiments from different modules and opens the lab (all through the interface). */
 const FILL_LAB = [
@@ -94,6 +114,18 @@ const SHOTS = [
   { file: 'inicio-movil-oscuro.png', query: '', w: 390, h: 1500, mobile: true, scale: 2 },
   { file: 'notebook-1024-oscuro.png', query: '?m=advanced', actions: [click('Expansión fiscal con t > 0')], w: 1024, h: 900 },
   { file: 'tablet-768-oscuro.png', query: '?m=adas', actions: [click('Shock negativo de oferta')], w: 768, h: 1024 },
+  // Usage guide, exercises and observatory (official data)
+  { file: 'guia-oscuro.png', query: '', guide: true, actions: [click('Siguiente')], w: 1440, h: 900 },
+  { file: 'ejercicios-oscuro.png', query: '?m=exercises', actions: SOLVE_FISCAL, w: 1440, h: 1250 },
+  { file: 'ejercicio-datos-oscuro.png', query: '?m=exercises', actions: [click('Argentina, agosto de 2018'), click('Ver solución'), scrollTo('.ex-detail')], w: 1440, h: 1400 },
+  { file: 'observatorio-oscuro.png', query: '?m=observatory', w: 1440, h: 1500 },
+  { file: 'observatorio-episodio-oscuro.png', query: '?m=observatory', actions: [episode('2018-08-tasa-60'), scrollTo('.chart-card')], w: 1440, h: 1500 },
+  { file: 'observatorio-comparacion-claro.png', query: '?m=observatory&theme=light', actions: [scrollTo('.cmp-explain'), 'window.scrollBy(0, -620); await __wait(300);'], w: 1440, h: 1100 },
+  { file: 'historia-oscuro.png', query: '?m=observatory', actions: [click('Historia económica')], w: 1440, h: 1400 },
+  { file: 'balanza-comercial-oscuro.png', query: '?m=observatory', actions: [click('Balanza comercial')], w: 1440, h: 1500 },
+  { file: 'noticias-oscuro.png', query: '?m=observatory', actions: [click('Noticias y acontecimientos')], w: 1440, h: 1100 },
+  { file: 'fuentes-claro.png', query: '?m=observatory&theme=light', actions: [click('Fuentes y metodología')], w: 1440, h: 1300 },
+  { file: 'observatorio-movil-oscuro.png', query: '?m=observatory', w: 390, h: 1500, mobile: true, scale: 2 },
   // Secondary (English) documentation
   { file: 'en-simulator-fiscal-dark.png', query: '?m=basic&lang=en', hash: share({ G: 300 }), w: 1440, h: 1180 },
   { file: 'en-transmission-light.png', query: '?m=basic&lang=en&theme=light&tab=transmission', hash: share({ M: 800 }), w: 1440, h: 1000 },
@@ -146,7 +178,8 @@ async function load(page, s) {
   // Clean state for every capture: no stored language, theme, module or scenarios.
   await page.send('Page.navigate', { url: BASE });
   await sleep(800);
-  await run(page, 'localStorage.clear();');
+  // The usage guide opens on a first visit; only its own capture shows it.
+  await run(page, s.guide ? 'localStorage.clear();' : "localStorage.clear(); localStorage.setItem('islm.guide.seen', '1');");
   await page.send('Page.navigate', { url: 'about:blank' });
   await page.send('Page.navigate', { url: `${BASE}${s.query}${s.hash ?? ''}` });
   await sleep(2200);

@@ -28,6 +28,7 @@ import { XYChart, type Pt, type XYMarker, type XYSeries } from '../../components
 import { DeltaBars } from '../../components/charts/BarCharts';
 import { LegendLine } from '../../components/charts/common';
 import { ModuleHeader } from '../../components/ui/ModuleHeader';
+import { SidePanel } from '../../components/ui/SidePanel';
 
 type P = ADASParams & Record<string, number>;
 type F = FieldMeta<ADASParamKey>;
@@ -220,8 +221,7 @@ export function ADASModule({ sidebarOpen, onCloseSidebar, initial }: { sidebarOp
       <section>
         <p className="note">{t('adas.assumptions')}</p>
       </section>
-      <section>
-        <h2 className="section-title">{t('presets.title')}</h2>
+      <SidePanel title={t('presets.title')} defaultOpen={false}>
         <div className="presets">
           {ADAS_PRESETS.map((p) => (
             <button
@@ -240,12 +240,11 @@ export function ADASModule({ sidebarOpen, onCloseSidebar, initial }: { sidebarOp
             </button>
           ))}
         </div>
-      </section>
-      <section>
-        <h2 className="section-title">{t('panel.params')}</h2>
+      </SidePanel>
+      <SidePanel title={t('panel.params')}>
         <EditToggle editing={state.editing} onChange={(side) => dispatch({ type: 'editing', side })} />
         <ParamPanel<ADASParamKey> fields={FIELDS} values={shock ? state.shocked : state.baseline} reference={shock ? state.baseline : null} onChange={(k, v) => { set(k, v); setPreset(null); }} />
-      </section>
+      </SidePanel>
       <section style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
         <button className="btn small" onClick={() => dispatch({ type: 'reset' })}>{t('btn.resetShock')}</button>
         <button className="btn small" onClick={() => dispatch({ type: 'adopt' })}>{t('btn.adopt')}</button>

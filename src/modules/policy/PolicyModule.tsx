@@ -25,6 +25,7 @@ import { LegendLine } from '../../components/charts/common';
 import { advFields } from '../advanced/fields';
 import { IS, LM, useAdvChart } from '../advanced/useAdvChart';
 import { ModuleHeader } from '../../components/ui/ModuleHeader';
+import { SidePanel } from '../../components/ui/SidePanel';
 
 type Tab = 'fiscal' | 'monetary' | 'mix' | 'sensitivity';
 const FISCAL: PolicyKind[] = ['G', 'T0', 't', 'TR', 'GT0', 'Gacc'];
@@ -43,8 +44,7 @@ function PolicySidebar({ state, dispatch }: { state: AdvState; dispatch: Dispatc
   const specs: LMSpec[] = ['linear', 'nonlinear', 'floor'];
   return (
     <>
-      <section>
-        <h2 className="section-title">{t('adv.lm.label')}</h2>
+      <SidePanel title={t('adv.lm.label')}>
         <div className="segmented three" role="group" aria-label={t('adv.lm.label')}>
           {specs.map((s) => (
             <button key={s} aria-pressed={state.lm === s} onClick={() => dispatch({ type: 'lm', lm: s })}>
@@ -53,11 +53,10 @@ function PolicySidebar({ state, dispatch }: { state: AdvState; dispatch: Dispatc
           ))}
         </div>
         <p className="note" style={{ marginTop: 8 }}>{t('pol.baseNote')}</p>
-      </section>
-      <section>
-        <h2 className="section-title">{t('pol.base')}</h2>
+      </SidePanel>
+      <SidePanel title={t('pol.base')}>
         <ParamPanel<AdvParamKey> fields={advFields(state.lm, 'money')} values={state.baseline} reference={null} onChange={(key, value) => dispatch({ type: 'setBase', key, value })} />
-      </section>
+      </SidePanel>
       <section>
         <button className="btn small ghost" onClick={() => dispatch({ type: 'restore' })}>{t('btn.resetAll')}</button>
       </section>

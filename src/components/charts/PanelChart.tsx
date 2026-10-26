@@ -79,7 +79,7 @@ export function PanelChart({ xDomain, yDomain, xLabel, yLabel, lines, points, yF
                   strokeLinecap="round"
                 />
                 {l.label && (
-                  <text x={Math.min(right.x + 5, w + 2)} y={Math.max(9, Math.min(h - 3, right.y))} dy="0.32em" fontFamily="var(--font-serif)" fontStyle="italic" fontSize={13} fontWeight={500} fill="var(--text-primary)">
+                  <text x={Math.min(right.x + 5, w + 2)} y={Math.max(9, Math.min(h - 3, right.y))} dy="0.32em" fontFamily="var(--font-sans)" fontStyle="italic" fontSize={13} fontWeight={500} fill="var(--text-primary)">
                     {l.label}
                   </text>
                 )}
@@ -89,7 +89,7 @@ export function PanelChart({ xDomain, yDomain, xLabel, yLabel, lines, points, yF
           {points.map((p) => (
             <g key={p.id} transform={`translate(${x(p.x)},${y(p.y)})`}>
               <circle r={p.filled ? 5 : 4.5} fill={p.filled ? 'var(--eq1)' : 'var(--page)'} stroke={p.filled ? 'var(--page)' : 'var(--eq0)'} strokeWidth={p.filled ? 2 : 1.6} />
-              <text x={p.filled ? 8 : -8} y={-8} textAnchor={p.filled ? 'start' : 'end'} fontFamily="var(--font-serif)" fontStyle="italic" fontSize={13.5} fontWeight={500} fill="var(--text-primary)">
+              <text x={p.filled ? 8 : -8} y={-8} textAnchor={p.filled ? 'start' : 'end'} fontFamily="var(--font-sans)" fontStyle="italic" fontSize={13.5} fontWeight={500} fill="var(--text-primary)">
                 {p.label}
               </text>
               <circle

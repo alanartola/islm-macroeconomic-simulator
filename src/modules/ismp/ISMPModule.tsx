@@ -29,6 +29,7 @@ import { XYChart, type Pt, type XYMarker, type XYSeries } from '../../components
 import { DeltaBars } from '../../components/charts/BarCharts';
 import { LegendLine } from '../../components/charts/common';
 import { ModuleHeader } from '../../components/ui/ModuleHeader';
+import { SidePanel } from '../../components/ui/SidePanel';
 
 type P = ISMPParams & Record<string, number>;
 type F = FieldMeta<ISMPParamKey>;
@@ -183,8 +184,7 @@ export function ISMPModule({ sidebarOpen, onCloseSidebar, initial }: { sidebarOp
   const shock = state.editing === 'shocked';
   const sidebar = (
     <>
-      <section>
-        <h2 className="section-title">{t('ismp.regime.label')}</h2>
+      <SidePanel title={t('ismp.regime.label')}>
         <div className="segmented" role="group" aria-label={t('ismp.regime.label')}>
           {(['rule', 'peg'] as MPRegime[]).map((rg) => (
             <button key={rg} aria-pressed={regime === rg} onClick={() => { setRegime(rg); setPreset(null); }}>
@@ -194,9 +194,8 @@ export function ISMPModule({ sidebarOpen, onCloseSidebar, initial }: { sidebarOp
           ))}
         </div>
         <p className="note" style={{ marginTop: 8 }}>{t('ismp.assumptions')}</p>
-      </section>
-      <section>
-        <h2 className="section-title">{t('presets.title')}</h2>
+      </SidePanel>
+      <SidePanel title={t('presets.title')} defaultOpen={false}>
         <div className="presets">
           {ISMP_PRESETS.map((p) => (
             <button
@@ -216,12 +215,11 @@ export function ISMPModule({ sidebarOpen, onCloseSidebar, initial }: { sidebarOp
             </button>
           ))}
         </div>
-      </section>
-      <section>
-        <h2 className="section-title">{t('panel.params')}</h2>
+      </SidePanel>
+      <SidePanel title={t('panel.params')}>
         <EditToggle editing={state.editing} onChange={(side) => dispatch({ type: 'editing', side })} />
         <ParamPanel<ISMPParamKey> fields={fields(regime)} values={shock ? state.shocked : state.baseline} reference={shock ? state.baseline : null} onChange={(k, v) => { set(k, v); setPreset(null); }} />
-      </section>
+      </SidePanel>
       <section style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
         <button className="btn small" onClick={() => dispatch({ type: 'reset' })}>{t('btn.resetShock')}</button>
         <button className="btn small" onClick={() => dispatch({ type: 'adopt' })}>{t('btn.adopt')}</button>

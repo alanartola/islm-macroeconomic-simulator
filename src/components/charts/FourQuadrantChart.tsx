@@ -150,7 +150,7 @@ export function FourQuadrantChart({ right, up, side, labels, quadrantTitles, ser
                 <circle key={k} cx={x} cy={y} r={k === 3 ? 5 : 3.2} fill={k === 3 ? c.color : 'var(--page)'} stroke={c.color} strokeWidth={1.5} />
               ))}
               {c.label && (
-                <text x={xr(c.right) + 7} y={yu(c.up) - 7} fontFamily="var(--font-serif)" fontStyle="italic" fontSize={13} fontWeight={600} fill="var(--text-primary)">
+                <text x={xr(c.right) + 7} y={yu(c.up) - 7} fontFamily="var(--font-sans)" fontStyle="italic" fontSize={13} fontWeight={600} fill="var(--text-primary)">
                   {c.label}
                 </text>
               )}

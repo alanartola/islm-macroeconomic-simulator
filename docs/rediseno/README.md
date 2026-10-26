@@ -59,7 +59,20 @@ colores de mercado. El mapa de calor usa una rampa secuencial de un solo tono
 
 ### Tipografía
 
-| Uso | Fuente |
+> **Ajuste de octubre de 2026.** La tipografía de toda la interfaz pasó a ser
+> **Aptos**, con Calibri como segunda opción
+> (`font-family: Aptos, Calibri, "Segoe UI", Arial, sans-serif`). Ya no se usan
+> serifas en títulos, análisis ni cuerpo; las cifras siguen siendo tabulares e
+> IBM Plex Mono queda solo para los bloques de fórmulas. Las fuentes Source Serif
+> 4 e IBM Plex Sans se quitaron de las dependencias. En el mismo ajuste:
+> resultados, análisis, figuras y escenarios pasaron a paneles delimitados; el
+> panel lateral se organiza en bloques plegables (régimen, escenarios,
+> parámetros) y la lista de escenarios predefinidos se presenta como tarjetas;
+> se agregaron la guía de uso, los ejercicios y el observatorio con el mismo
+> sistema de colores. La tabla y la lista siguientes describen el rediseño
+> original y se conservan como registro.
+
+| Uso | Fuente (rediseño original) |
 |---|---|
 | Títulos, análisis, epígrafes, notas académicas, variables (*Y*, *i*, *c*) | Source Serif 4 (OFL), tamaño óptico variable |
 | Interfaz, etiquetas, controles | IBM Plex Sans (OFL) |

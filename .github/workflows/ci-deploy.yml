@@ -1,10 +1,23 @@
 name: CI & Deploy
 
+# Every publication of the site downloads the official series again:
+#  - on each push to main, and
+#  - on business days after the close of Argentine and U.S. markets (schedule).
+# The download validates every series; a source that fails or returns data that
+# do not validate keeps the last validated version (read from the published site)
+# marked as "fallback". The tests then check the refreshed data (identities,
+# units, frequencies, metadata) and only if everything passes is the site built
+# and deployed. Nothing is committed back to the repository.
+# Feature branches and pull requests are tested against the committed snapshot.
+
 on:
   push:
     branches: [main, 'feature/**']
   pull_request:
     branches: [main]
+  schedule:
+    # 22:30 UTC Monday–Friday (19:30 in Buenos Aires): after BCRA and Treasury daily publications.
+    - cron: '30 22 * * 1-5'
   workflow_dispatch:
 
 permissions:
@@ -14,20 +27,39 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  PUBLISHED_DATA: https://alanartola.github.io/islm-macroeconomic-simulator/data
+
 jobs:
   validate:
-    name: Typecheck, lint, test & build
+    name: Data refresh, typecheck, lint, test & build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          # Node 24 runs the TypeScript data scripts directly (type stripping).
+          node-version: 24
           cache: npm
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Refresh official data
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        run: node scripts/data/fetch.ts --fallback-url "$PUBLISHED_DATA" 2>&1 | tee data-refresh.log
+
+      - name: Keep the data-refresh log
+        if: always() && github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@v4
+        with:
+          name: data-refresh-log
+          path: |
+            data-refresh.log
+            public/data/manifest.json
+          if-no-files-found: ignore
+          retention-days: 30
 
       - name: Typecheck
         run: npm run typecheck
@@ -35,7 +67,7 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      - name: Unit & regression tests
+      - name: Unit, regression and data tests
         run: npm test
 
       - name: Production build

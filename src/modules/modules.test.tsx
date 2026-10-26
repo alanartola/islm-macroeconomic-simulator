@@ -19,13 +19,13 @@ const open = (query: string) => {
 };
 
 describe('module navigation', () => {
-  it('lists the modules A–H in Spanish and opens the home screen on a first visit', () => {
+  it('lists the modules A–H, exercises and observatory in Spanish and opens the home screen on a first visit', () => {
     open('');
     const nav = screen.getByRole('navigation', { name: 'Módulos del laboratorio' });
-    for (const name of ['Inicio', 'A IS-LM tradicional', 'B IS-LM avanzado', 'C Construcción de curvas', 'D Políticas económicas', 'E Mundell-Fleming', 'F Oferta y demanda agregada', 'G IS-MP y política monetaria', 'H Laboratorio de escenarios']) {
+    for (const name of ['Inicio', 'A IS-LM tradicional', 'B IS-LM avanzado', 'C Construcción de curvas', 'D Políticas económicas', 'E Mundell-Fleming', 'F Oferta y demanda agregada', 'G IS-MP y política monetaria', 'H Laboratorio de escenarios', 'Ejercicios', 'Observatorio']) {
       expect(within(nav).getByRole('button', { name })).toBeInTheDocument();
     }
-    expect(within(nav).getAllByRole('button')).toHaveLength(9);
+    expect(within(nav).getAllByRole('button')).toHaveLength(11);
     expect(screen.getByRole('heading', { level: 2, name: 'Laboratorio Avanzado de Macroeconomía' })).toBeInTheDocument();
     // Each home card opens its module.
     fireEvent.click(within(screen.getByRole('main')).getByRole('button', { name: /^G IS-MP y política monetaria/ }));

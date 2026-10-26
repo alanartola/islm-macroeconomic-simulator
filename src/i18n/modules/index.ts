@@ -6,6 +6,8 @@ import { openEn, openEs } from './open';
 import { adasEn, adasEs } from './adas';
 import { ismpEn, ismpEs } from './ismp';
 import { labEn, labEs } from './lab';
+import { obsEn, obsEs } from './observatory';
+import { exEn, exEs } from './exercises';
 
 /** Per-module dictionaries; each module file defines Spanish (primary) and English with identical keys. */
 export const MODULE_PAIRS: { name: string; es: Record<string, string>; en: Record<string, string> }[] = [
@@ -17,6 +19,8 @@ export const MODULE_PAIRS: { name: string; es: Record<string, string>; en: Recor
   { name: 'adas', es: adasEs, en: adasEn },
   { name: 'ismp', es: ismpEs, en: ismpEn },
   { name: 'lab', es: labEs, en: labEn },
+  { name: 'observatory', es: obsEs, en: obsEn },
+  { name: 'exercises', es: exEs, en: exEn },
 ];
 
 export const MODULE_DICTS = {

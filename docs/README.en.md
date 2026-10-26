@@ -35,6 +35,35 @@ computed values. Results in the scenario lab are always recomputed from the
 saved inputs, and only variables with the same definition and unit are
 compared across models.
 
+## Exercises, usage guide and observatory
+
+- **Usage guide:** an eight-step walkthrough (choose a model, exogenous and
+  endogenous variables, change a parameter, read the equilibrium, interpret
+  shifts, compare scenarios, solve exercises, look at real data). It opens on
+  the first visit, can be skipped and is reopened from “User guide” in the top bar.
+- **Exercises (20):** introductory, intermediate and advanced problems —
+  conceptual, multiple choice, numerical, graph reading, curve shifts,
+  qualitative prediction, equilibrium, policy comparison, historical analysis and
+  real data. Numerical answers are graded against the model engines; each
+  exercise has hints, the working, an economic interpretation and a button that
+  opens its scenario in the simulator. Progress is stored only in the browser.
+- **Macroeconomic observatory:** 50 official series for Argentina and the
+  United States (BCRA, INDEC, Ministry of Economy, U.S. Treasury, Federal
+  Reserve via FRED, BLS, World Bank) with full metadata; synchronised panels by
+  unit; levels, year-on-year changes, base-100 indices and percentage-point
+  differences; 21 documented Argentine episodes (2018–2026) and 5 foreign-trade
+  milestones, each in four parts (context, decision or shock, evidence,
+  interpretation) with verified sources; Argentina's trade balance (INDEC) with
+  identity checks; curated news and official notices.
+- **Updates:** GitHub Actions downloads and validates the data every business
+  day and on every change to `main`; a failing source keeps the last validated
+  version, and the site is only deployed when every test passes.
+- **Theory vs evidence:** modules A–H are simulations under assumptions; the
+  observatory shows published data. A movement after a decision does not prove
+  the decision caused it.
+
+![Observatory: Argentina, August 2018](screenshots/observatorio-episodio-oscuro.png)
+
 ## Preferences
 
 - **Language:** Spanish on every first visit; English only with `?lang=en` or an
@@ -58,11 +87,12 @@ npm run dev
 
 ## Validation
 
-374 automated tests (Vitest) check the engines against hand-derived solutions,
+456 automated tests (Vitest) check the engines against hand-derived solutions,
 residuals and finite-difference derivatives, the Brent solver, the generated
-explanations in both languages, the scenario lab (recomputation, comparability,
-CSV/JSON/link round trips, invalid imports) and the interface defaults
-(Spanish, dark mode, persistence). GitHub Actions runs every check and deploys
+explanations in both languages, the scenario lab, the exercise answers, the
+data pipeline (parsers, validation, fallback, transformations) and the published
+data (identities, units, frequencies, metadata), episodes and news, and the
+interface defaults (Spanish, dark mode, persistence). GitHub Actions runs every check and deploys
 `main` to GitHub Pages only when all of them pass.
 
 ## Bibliography
