@@ -179,8 +179,20 @@ un resultado:
   inicial, expansión y contracción monetaria y fiscal, suba y baja de impuestos,
   cambios de la inversión autónoma, mayor sensibilidad de la inversión (b) y de
   la demanda de dinero (h), suba y baja de la tasa objetivo, y expansión fiscal
-  con acomodación monetaria. **Parámetros del modelo** permite editar cada valor
-  inicial y final.
+  con acomodación monetaria. Un **control deslizante de magnitud** cambia el
+  tamaño de la perturbación (por ejemplo, ΔM entre +10 y +350) y los tres gráficos
+  se recalculan juntos. La pestaña **Parámetros** del panel de control permite
+  editar cada valor inicial y final sin que los gráficos salgan de la pantalla, y
+  **Mecanismo** reúne la explicación completa y los supuestos.
+- **Una sola pantalla:** el diagrama ocupa el alto disponible de la ventana
+  (descontando la barra superior y la navegación) y se redimensiona al cambiar su
+  tamaño. Verificado sin desplazamiento vertical en 1366 × 768, 1440 × 900,
+  1920 × 1080 y 2560 × 1440, y también en una ventana de 1366 × 650.
+- **Encuadre automático:** los ejes se calculan a partir de E₀, E₁ y los puntos
+  auxiliares, con un margen; mientras los puntos se mantienen dentro del encuadre
+  los ejes no cambian (no hay saltos al mover el control), y se recalculan cuando
+  un punto se acerca al borde. **+**, **−** y **Ajustar encuadre** acercan, alejan y
+  restablecen la escala.
 - **Régimen monetario:** con oferta exógena, la tasa es endógena (para moverla
   hay que cambiar M, G u otro parámetro); con **tasa objetivo**, el banco
   central fija ī y la cantidad de dinero se ajusta. No se pueden fijar las dos a
@@ -195,6 +207,13 @@ un resultado:
   mercado a tamaño completo, y «Diagrama completo» conserva la disposición.
 
 ![Expansión fiscal, paso 5: efecto desplazamiento](docs/screenshots/transmision-fiscal-paso-oscuro.png)
+
+**Encuadre en los demás módulos:** todos los gráficos de modelos (A–H) amplían
+automáticamente sus ejes para que E₀, E₁ y los puntos auxiliares queden siempre
+dentro del área de trazado, sin modificar curvas ni resultados, y ofrecen
+**+**, **−** y **Ajustar encuadre**. En IS-LM avanzado y Políticas, los indicadores
+principales y los controles se ubican junto al gráfico (los secundarios en «Más
+indicadores»), de modo que el gráfico queda en la primera pantalla.
 
 En el Observatorio, cada indicador se muestra **solo, en un gráfico grande** con
 el eje vertical identificado por variable y unidad (por ejemplo, «Tipo de cambio
@@ -481,6 +500,7 @@ npm run dev
 | `npm run validate` | typecheck + lint + pruebas + build |
 | `node scripts/data/fetch.ts` | descarga y valida los datos oficiales en `public/data` |
 | `node scripts/screenshots.mjs http://localhost:5173/` | regenera las capturas desde el servidor de desarrollo |
+| `node scripts/verify-layout.mjs http://localhost:5173/` | verificación visual en Chromium a 1366 × 768, 1440 × 900, 1920 × 1080 y 2560 × 1440: desplazamiento de página, gráficos dentro de la pantalla y equilibrios dentro de cada gráfico (capturas en `docs/screenshots/ajuste`) |
 
 `fetch.ts` acepta `--only id,id` (algunas series), `--no-news` y
 `--fallback-url URL` (versión publicada a conservar si una fuente falla).
@@ -519,7 +539,7 @@ public/data/             series validadas (JSON), manifest.json y noticias
 
 ## 19. Pruebas
 
-497 pruebas automáticas (Vitest), que se ejecutan en cada cambio y antes de cada
+504 pruebas automáticas (Vitest), que se ejecutan en cada cambio y antes de cada
 publicación:
 
 - **Modelos:** soluciones calculadas a mano, identidades contables, derivadas

@@ -59,7 +59,7 @@ compared across models.
   IS-LM equilibrium (i–Y, bottom right) and the money market (i–M/P, bottom
   left) in one synchronised three-quadrant diagram computed with the Module A
   engine, with 14 policies and shocks, both monetary regimes and a step-by-step
-  explanation of each transmission mechanism.
+  explanation of each transmission mechanism. The diagram is sized to the window, so the three markets stay in view while a magnitude slider changes the shock; axes frame both equilibria automatically, with zoom controls.
 - **One indicator at a time:** the Argentina chart of the observatory shows a
   single indicator chosen from a menu, with both axes named (variable and unit;
   date), events hidden, shown as ticks or studied one at a time, and an optional
@@ -96,7 +96,7 @@ npm run dev
 
 ## Validation
 
-497 automated tests (Vitest) check the engines against hand-derived solutions,
+504 automated tests (Vitest) check the engines against hand-derived solutions,
 residuals and finite-difference derivatives, the Brent solver, the generated
 explanations in both languages, the scenario lab, the exercise answers, the
 data pipeline (parsers, validation, fallback, transformations) and the published

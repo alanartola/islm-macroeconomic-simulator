@@ -59,16 +59,6 @@ export function AdvancedView({ sim }: { sim: AdvSimOk }) {
 
   return (
     <>
-      <div className="kpis">
-        {kpi(t('var.Y'), q1.Y, q0.Y, 'bn', 'sbn')}
-        {kpi(t('var.i'), q1.i, q0.i, 'rate', 'spp')}
-        {kpi(t('var.C'), q1.C, q0.C, 'bn', 'sbn')}
-        {kpi(t('var.I'), q1.I, q0.I, 'bn', 'sbn')}
-        {kpi(t('adv.var.T'), q1.T, q0.T, 'bn', 'sbn')}
-        {kpi(t('adv.var.Sg'), q1.Sg, q0.Sg, 'bn', 'sbn')}
-        {kpi(t('var.realMoney'), q1.realMoney, q0.realMoney, 'bn', 'sbn')}
-        <Kpi label={t('adv.kpi.zone')} value={t(`adv.zoneTitle.${s1.zone}`)} sub={`E₀: ${t(`adv.zoneTitle.${s0.zone}`)}`} />
-      </div>
       <div className="sim-grid">
         <div className="col">
           <ChartCard
@@ -145,7 +135,22 @@ export function AdvancedView({ sim }: { sim: AdvSimOk }) {
             rows={rows}
           />
         </div>
-        <div className="col">
+        <div className="col col-side">
+          <div className="kpis kpis-main">
+            {kpi(t('var.Y'), q1.Y, q0.Y, 'bn', 'sbn')}
+            {kpi(t('var.i'), q1.i, q0.i, 'rate', 'spp')}
+            {kpi(t('var.I'), q1.I, q0.I, 'bn', 'sbn')}
+            <Kpi label={t('adv.kpi.zone')} value={t(`adv.zoneTitle.${s1.zone}`)} sub={`E₀: ${t(`adv.zoneTitle.${s0.zone}`)}`} />
+          </div>
+          <details className="kpi-more">
+            <summary>{t('kpi.more')}</summary>
+            <div className="kpis">
+              {kpi(t('var.C'), q1.C, q0.C, 'bn', 'sbn')}
+              {kpi(t('adv.var.T'), q1.T, q0.T, 'bn', 'sbn')}
+              {kpi(t('adv.var.Sg'), q1.Sg, q0.Sg, 'bn', 'sbn')}
+              {kpi(t('var.realMoney'), q1.realMoney, q0.realMoney, 'bn', 'sbn')}
+            </div>
+          </details>
           <Explanation report={sim.report} />
           <div className="card">
             <div className="card-head">

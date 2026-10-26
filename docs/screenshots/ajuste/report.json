@@ -1,0 +1,812 @@
+[
+ {
+  "case": "transmision-1920x1080",
+  "vw": 1920,
+  "vh": 1080,
+  "pageOverflowY": 0,
+  "pageOverflowX": 0,
+  "charts": [
+   {
+    "name": "Mercado de bienes y servicios",
+    "top": 158,
+    "bottom": 613,
+    "left": 960,
+    "right": 1776,
+    "inViewport": true,
+    "markers": 2,
+    "markersOutsidePlot": 0
+   },
+   {
+    "name": "Mercado monetario",
+    "top": 613,
+    "bottom": 1068,
+    "left": 144,
+    "right": 960,
+    "inViewport": true,
+    "markers": 2,
+    "markersOutsidePlot": 0
+   },
+   {
+    "name": "Equilibrio macroeconómico IS-LM",
+    "top": 613,
+    "bottom": 1068,
+    "left": 960,
+    "right": 1776,
+    "inViewport": true,
+    "markers": 2,
+    "markersOutsidePlot": 0
+   }
+  ]
+ },
+ {
+  "case": "transmision-1366x768",
+  "vw": 1366,
+  "vh": 768,
+  "pageOverflowY": 0,
+  "pageOverflowX": 0,
+  "charts": [
+   {
+    "name": "Mercado de bienes y servicios",
+    "top": 158,
+    "bottom": 457,
+    "left": 683,
+    "right": 1342,
+    "inViewport": true,
+    "markers": 2,
+    "markersOutsidePlot": 0
+   },
+   {
+    "name": "Mercado monetario",
+    "top": 457,
+    "bottom": 756,
+    "left": 24,
+    "right": 683,
+    "inViewport": true,
+    "markers": 2,
+    "markersOutsidePlot": 0
+   },
+   {
+    "name": "Equilibrio macroeconómico IS-LM",
+    "top": 457,
+    "bottom": 756,
+    "left": 683,
+    "right": 1342,
+    "inViewport": true,
+    "markers": 2,
+    "markersOutsidePlot": 0
+   }
+  ]
+ },
+ {
+  "case": "transmision-1440x900",
+  "vw": 1440,
+  "vh": 900,
+  "pageOverflowY": 0,
+  "pageOverflowX": 0,
+  "charts": [
+   {
+    "name": "Mercado de bienes y servicios",
+    "top": 158,
+    "bottom": 523,
+    "left": 720,
+    "right": 1416,
+    "inViewport": true,
+    "markers": 2,
+    "markersOutsidePlot": 0
+   },
+   {
+    "name": "Mercado monetario",
+    "top": 523,
+    "bottom": 888,
+    "left": 24,
+    "right": 720,
+    "inViewport": true,
+    "markers": 2,
+    "markersOutsidePlot": 0
+   },
+   {
+    "name": "Equilibrio macroeconómico IS-LM",
+    "top": 523,
+    "bottom": 888,
+    "left": 720,
+    "right": 1416,
+    "inViewport": true,
+    "markers": 2,
+    "markersOutsidePlot": 0
+   }
+  ]
+ },
+ {
+  "case": "transmision-2560x1440",
+  "vw": 2560,
+  "vh": 1440,
+  "pageOverflowY": 0,
+  "pageOverflowX": 0,
+  "charts": [
+   {
+    "name": "Mercado de bienes y servicios",
+    "top": 158,
+    "bottom": 793,
+    "left": 1280,
+    "right": 2096,
+    "inViewport": true,
+    "markers": 2,
+    "markersOutsidePlot": 0
+   },
+   {
+    "name": "Mercado monetario",
+    "top": 793,
+    "bottom": 1428,
+    "left": 464,
+    "right": 1280,
+    "inViewport": true,
+    "markers": 2,
+    "markersOutsidePlot": 0
+   },
+   {
+    "name": "Equilibrio macroeconómico IS-LM",
+    "top": 793,
+    "bottom": 1428,
+    "left": 1280,
+    "right": 2096,
+    "inViewport": true,
+    "markers": 2,
+    "markersOutsidePlot": 0
+   }
+  ]
+ },
+ {
+  "case": "transmision-1366x650-ventana",
+  "vw": 1366,
+  "vh": 650,
+  "pageOverflowY": 0,
+  "pageOverflowX": 0,
+  "charts": [
+   {
+    "name": "Mercado de bienes y servicios",
+    "top": 158,
+    "bottom": 398,
+    "left": 683,
+    "right": 1342,
+    "inViewport": true,
+    "markers": 2,
+    "markersOutsidePlot": 0
+   },
+   {
+    "name": "Mercado monetario",
+    "top": 398,
+    "bottom": 638,
+    "left": 24,
+    "right": 683,
+    "inViewport": true,
+    "markers": 2,
+    "markersOutsidePlot": 0
+   },
+   {
+    "name": "Equilibrio macroeconómico IS-LM",
+    "top": 398,
+    "bottom": 638,
+    "left": 683,
+    "right": 1342,
+    "inViewport": true,
+    "markers": 2,
+    "markersOutsidePlot": 0
+   }
+  ]
+ },
+ {
+  "case": "transmision-monetaria-max-1366x768",
+  "vw": 1366,
+  "vh": 768,
+  "pageOverflowY": 0,
+  "pageOverflowX": 0,
+  "charts": [
+   {
+    "name": "Mercado de bienes y servicios",
+    "top": 158,
+    "bottom": 457,
+    "left": 683,
+    "right": 1342,
+    "inViewport": true,
+    "markers": 2,
+    "markersOutsidePlot": 0
+   },
+   {
+    "name": "Mercado monetario",
+    "top": 457,
+    "bottom": 756,
+    "left": 24,
+    "right": 683,
+    "inViewport": true,
+    "markers": 2,
+    "markersOutsidePlot": 0
+   },
+   {
+    "name": "Equilibrio macroeconómico IS-LM",
+    "top": 457,
+    "bottom": 756,
+    "left": 683,
+    "right": 1342,
+    "inViewport": true,
+    "markers": 2,
+    "markersOutsidePlot": 0
+   }
+  ]
+ },
+ {
+  "case": "transmision-monetaria-slider",
+  "vw": 1366,
+  "vh": 768,
+  "pageOverflowY": 0,
+  "pageOverflowX": 0,
+  "charts": [
+   {
+    "name": "Mercado de bienes y servicios",
+    "top": 158,
+    "bottom": 457,
+    "left": 683,
+    "right": 1342,
+    "inViewport": true,
+    "markers": 2,
+    "markersOutsidePlot": 0
+   },
+   {
+    "name": "Mercado monetario",
+    "top": 457,
+    "bottom": 756,
+    "left": 24,
+    "right": 683,
+    "inViewport": true,
+    "markers": 2,
+    "markersOutsidePlot": 0
+   },
+   {
+    "name": "Equilibrio macroeconómico IS-LM",
+    "top": 457,
+    "bottom": 756,
+    "left": 683,
+    "right": 1342,
+    "inViewport": true,
+    "markers": 2,
+    "markersOutsidePlot": 0
+   }
+  ]
+ },
+ {
+  "case": "transmision-fiscal-1366x768",
+  "vw": 1366,
+  "vh": 768,
+  "pageOverflowY": 0,
+  "pageOverflowX": 0,
+  "charts": [
+   {
+    "name": "Mercado de bienes y servicios",
+    "top": 158,
+    "bottom": 457,
+    "left": 683,
+    "right": 1342,
+    "inViewport": true,
+    "markers": 2,
+    "markersOutsidePlot": 0
+   },
+   {
+    "name": "Mercado monetario",
+    "top": 457,
+    "bottom": 756,
+    "left": 24,
+    "right": 683,
+    "inViewport": true,
+    "markers": 2,
+    "markersOutsidePlot": 0
+   },
+   {
+    "name": "Equilibrio macroeconómico IS-LM",
+    "top": 457,
+    "bottom": 756,
+    "left": 683,
+    "right": 1342,
+    "inViewport": true,
+    "markers": 2,
+    "markersOutsidePlot": 0
+   }
+  ]
+ },
+ {
+  "case": "transmision-fiscal-pasos-1366x768",
+  "vw": 1366,
+  "vh": 768,
+  "pageOverflowY": 0,
+  "pageOverflowX": 0,
+  "charts": [
+   {
+    "name": "Mercado de bienes y servicios",
+    "top": 158,
+    "bottom": 457,
+    "left": 683,
+    "right": 1342,
+    "inViewport": true,
+    "markers": 2,
+    "markersOutsidePlot": 0
+   },
+   {
+    "name": "Mercado monetario",
+    "top": 457,
+    "bottom": 756,
+    "left": 24,
+    "right": 683,
+    "inViewport": true,
+    "markers": 2,
+    "markersOutsidePlot": 0
+   },
+   {
+    "name": "Equilibrio macroeconómico IS-LM",
+    "top": 457,
+    "bottom": 756,
+    "left": 683,
+    "right": 1342,
+    "inViewport": true,
+    "markers": 2,
+    "markersOutsidePlot": 0
+   }
+  ]
+ },
+ {
+  "case": "transmision-extremos-1366x768",
+  "vw": 1366,
+  "vh": 768,
+  "pageOverflowY": 0,
+  "pageOverflowX": 0,
+  "charts": [
+   {
+    "name": "Mercado de bienes y servicios",
+    "top": 158,
+    "bottom": 457,
+    "left": 683,
+    "right": 1342,
+    "inViewport": true,
+    "markers": 2,
+    "markersOutsidePlot": 0
+   },
+   {
+    "name": "Mercado monetario",
+    "top": 457,
+    "bottom": 756,
+    "left": 24,
+    "right": 683,
+    "inViewport": true,
+    "markers": 2,
+    "markersOutsidePlot": 0
+   },
+   {
+    "name": "Equilibrio macroeconómico IS-LM",
+    "top": 457,
+    "bottom": 756,
+    "left": 683,
+    "right": 1342,
+    "inViewport": true,
+    "markers": 2,
+    "markersOutsidePlot": 0
+   }
+  ]
+ },
+ {
+  "case": "transmision-tasa-1366x768",
+  "vw": 1366,
+  "vh": 768,
+  "pageOverflowY": 0,
+  "pageOverflowX": 0,
+  "charts": [
+   {
+    "name": "Mercado de bienes y servicios",
+    "top": 158,
+    "bottom": 457,
+    "left": 683,
+    "right": 1342,
+    "inViewport": true,
+    "markers": 2,
+    "markersOutsidePlot": 0
+   },
+   {
+    "name": "Mercado monetario",
+    "top": 457,
+    "bottom": 756,
+    "left": 24,
+    "right": 683,
+    "inViewport": true,
+    "markers": 2,
+    "markersOutsidePlot": 0
+   },
+   {
+    "name": "Equilibrio macroeconómico IS-LM",
+    "top": 457,
+    "bottom": 756,
+    "left": 683,
+    "right": 1342,
+    "inViewport": true,
+    "markers": 2,
+    "markersOutsidePlot": 0
+   }
+  ]
+ },
+ {
+  "case": "avanzado-1366x768",
+  "vw": 1366,
+  "vh": 768,
+  "pageOverflowY": 909,
+  "pageOverflowX": 0,
+  "charts": [
+   {
+    "name": "Gráfico IS-LM. Equilibrio inicial E₀ en ",
+    "top": 434,
+    "bottom": 751,
+    "left": 377,
+    "right": 927,
+    "inViewport": true,
+    "markers": 1,
+    "markersOutsidePlot": 0
+   }
+  ]
+ },
+ {
+  "case": "politicas-1366x768",
+  "vw": 1366,
+  "vh": 768,
+  "pageOverflowY": 1627,
+  "pageOverflowX": 0,
+  "charts": [
+   {
+    "name": "Equilibrio IS-LM avanzado",
+    "top": 418,
+    "bottom": 751,
+    "left": 377,
+    "right": 927,
+    "inViewport": true,
+    "markers": 3,
+    "markersOutsidePlot": 0
+   }
+  ]
+ },
+ {
+  "case": "politicas-1920x1080",
+  "vw": 1920,
+  "vh": 1080,
+  "pageOverflowY": 840,
+  "pageOverflowX": 0,
+  "charts": [
+   {
+    "name": "Equilibrio IS-LM avanzado",
+    "top": 418,
+    "bottom": 939,
+    "left": 377,
+    "right": 1279,
+    "inViewport": true,
+    "markers": 3,
+    "markersOutsidePlot": 0
+   }
+  ]
+ },
+ {
+  "case": "islm-tradicional-1366x768",
+  "vw": 1366,
+  "vh": 768,
+  "pageOverflowY": 1056,
+  "pageOverflowX": 0,
+  "charts": [
+   {
+    "name": "Gráfico IS-LM. Equilibrio inicial E₀ en ",
+    "top": 721,
+    "bottom": 1051,
+    "left": 377,
+    "right": 927,
+    "inViewport": false,
+    "markers": 1,
+    "markersOutsidePlot": 0
+   }
+  ]
+ },
+ {
+  "case": "construccion-1366x768",
+  "vw": 1366,
+  "vh": 768,
+  "pageOverflowY": 2270,
+  "pageOverflowX": 0,
+  "charts": [
+   {
+    "name": "Cruz keynesiana",
+    "top": 473,
+    "bottom": 751,
+    "left": 377,
+    "right": 800,
+    "inViewport": true,
+    "markers": 2,
+    "markersOutsidePlot": 0
+   },
+   {
+    "name": "Cruz keynesiana con dos tasas de interés",
+    "top": 449,
+    "bottom": 669,
+    "left": 882,
+    "right": 1305,
+    "inViewport": true,
+    "markers": 2,
+    "markersOutsidePlot": 0
+   },
+   {
+    "name": "Puntos obtenidos en el espacio (Y, i)",
+    "top": 671,
+    "bottom": 891,
+    "left": 882,
+    "right": 1305,
+    "inViewport": false,
+    "markers": 2,
+    "markersOutsidePlot": 0
+   },
+   {
+    "name": "IS en cuatro cuadrantes",
+    "top": 1382,
+    "bottom": 1763,
+    "left": 377,
+    "right": 800,
+    "inViewport": false,
+    "markers": 12,
+    "markersOutsidePlot": null
+   },
+   {
+    "name": "Mercado monetario",
+    "top": 1430,
+    "bottom": 1726,
+    "left": 882,
+    "right": 1305,
+    "inViewport": false,
+    "markers": 2,
+    "markersOutsidePlot": 0
+   },
+   {
+    "name": "Mercado monetario con dos niveles de pro",
+    "top": 1950,
+    "bottom": 2158,
+    "left": 377,
+    "right": 585,
+    "inViewport": false,
+    "markers": 2,
+    "markersOutsidePlot": 0
+   },
+   {
+    "name": "Puntos obtenidos en el espacio (Y, i)",
+    "top": 1950,
+    "bottom": 2158,
+    "left": 593,
+    "right": 800,
+    "inViewport": false,
+    "markers": 2,
+    "markersOutsidePlot": 0
+   },
+   {
+    "name": "LM en cuatro cuadrantes",
+    "top": 1950,
+    "bottom": 2331,
+    "left": 882,
+    "right": 1305,
+    "inViewport": false,
+    "markers": 12,
+    "markersOutsidePlot": null
+   },
+   {
+    "name": "Gráfico IS-LM. Equilibrio inicial E₀ en ",
+    "top": 2611,
+    "bottom": 2873,
+    "left": 377,
+    "right": 800,
+    "inViewport": false,
+    "markers": 1,
+    "markersOutsidePlot": 0
+   }
+  ]
+ },
+ {
+  "case": "mundell-fleming-1366x768",
+  "vw": 1366,
+  "vh": 768,
+  "pageOverflowY": 2053,
+  "pageOverflowX": 0,
+  "charts": [
+   {
+    "name": "IS*-LM* en el espacio (Y, q)",
+    "top": 638,
+    "bottom": 979,
+    "left": 377,
+    "right": 927,
+    "inViewport": false,
+    "markers": 1,
+    "markersOutsidePlot": 0
+   },
+   {
+    "name": "IS-LM-BP en el espacio (Y, i)",
+    "top": 1229,
+    "bottom": 1570,
+    "left": 377,
+    "right": 927,
+    "inViewport": false,
+    "markers": 2,
+    "markersOutsidePlot": 0
+   },
+   {
+    "name": "Comercio exterior",
+    "top": 1739,
+    "bottom": 1989,
+    "left": 377,
+    "right": 927,
+    "inViewport": false,
+    "markers": 0,
+    "markersOutsidePlot": null
+   },
+   {
+    "name": "Multiplicador de economía abierta y prop",
+    "top": 1366,
+    "bottom": 1626,
+    "left": 1009,
+    "right": 1305,
+    "inViewport": false,
+    "markers": 0,
+    "markersOutsidePlot": 0
+   }
+  ]
+ },
+ {
+  "case": "oa-da-1366x768",
+  "vw": 1366,
+  "vh": 768,
+  "pageOverflowY": 1571,
+  "pageOverflowX": 0,
+  "charts": [
+   {
+    "name": "Equilibrio de oferta y demanda agregada",
+    "top": 662,
+    "bottom": 1003,
+    "left": 377,
+    "right": 927,
+    "inViewport": false,
+    "markers": 1,
+    "markersOutsidePlot": 0
+   },
+   {
+    "name": "IS y LM a tres niveles de precios",
+    "top": 1253,
+    "bottom": 1501,
+    "left": 377,
+    "right": 927,
+    "inViewport": false,
+    "markers": 3,
+    "markersOutsidePlot": 0
+   },
+   {
+    "name": "Puntos de la demanda agregada",
+    "top": 1503,
+    "bottom": 1751,
+    "left": 377,
+    "right": 927,
+    "inViewport": false,
+    "markers": 3,
+    "markersOutsidePlot": 0
+   },
+   {
+    "name": "Ajuste de precios hacia el mediano plazo",
+    "top": 1954,
+    "bottom": 2174,
+    "left": 377,
+    "right": 648,
+    "inViewport": false,
+    "markers": 0,
+    "markersOutsidePlot": 0
+   },
+   {
+    "name": "Brecha del producto a lo largo del ajust",
+    "top": 1954,
+    "bottom": 2174,
+    "left": 656,
+    "right": 927,
+    "inViewport": false,
+    "markers": 0,
+    "markersOutsidePlot": 0
+   },
+   {
+    "name": "Descomposición del cambio del producto",
+    "top": 920,
+    "bottom": 1010,
+    "left": 1009,
+    "right": 1305,
+    "inViewport": false,
+    "markers": 0,
+    "markersOutsidePlot": null
+   }
+  ]
+ },
+ {
+  "case": "is-mp-1366x768",
+  "vw": 1366,
+  "vh": 768,
+  "pageOverflowY": 1290,
+  "pageOverflowX": 0,
+  "charts": [
+   {
+    "name": "IS-MP en el espacio (brecha, tasa real)",
+    "top": 656,
+    "bottom": 997,
+    "left": 377,
+    "right": 927,
+    "inViewport": false,
+    "markers": 1,
+    "markersOutsidePlot": 0
+   },
+   {
+    "name": "Curva de Phillips",
+    "top": 1200,
+    "bottom": 1434,
+    "left": 377,
+    "right": 611,
+    "inViewport": false,
+    "markers": 1,
+    "markersOutsidePlot": 0
+   },
+   {
+    "name": "Regla de Taylor",
+    "top": 1219,
+    "bottom": 1453,
+    "left": 693,
+    "right": 927,
+    "inViewport": false,
+    "markers": 1,
+    "markersOutsidePlot": 0
+   },
+   {
+    "name": "Respuesta a la inflación φπ",
+    "top": 1680,
+    "bottom": 1940,
+    "left": 377,
+    "right": 648,
+    "inViewport": false,
+    "markers": 0,
+    "markersOutsidePlot": 0
+   },
+   {
+    "name": "Respuesta a la brecha φy",
+    "top": 1680,
+    "bottom": 1940,
+    "left": 656,
+    "right": 927,
+    "inViewport": false,
+    "markers": 0,
+    "markersOutsidePlot": 0
+   },
+   {
+    "name": "Comparación de resultados",
+    "top": 941,
+    "bottom": 1057,
+    "left": 1009,
+    "right": 1305,
+    "inViewport": false,
+    "markers": 0,
+    "markersOutsidePlot": null
+   }
+  ]
+ },
+ {
+  "case": "avanzado-trampa-1366x768",
+  "vw": 1366,
+  "vh": 768,
+  "pageOverflowY": 2080,
+  "pageOverflowX": 0,
+  "charts": [
+   {
+    "name": "Gráfico IS-LM. Equilibrio inicial E₀ en ",
+    "top": 434,
+    "bottom": 751,
+    "left": 377,
+    "right": 927,
+    "inViewport": true,
+    "markers": 3,
+    "markersOutsidePlot": 0
+   }
+  ]
+ }
+]

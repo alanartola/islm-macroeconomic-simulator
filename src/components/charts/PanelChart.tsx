@@ -3,6 +3,7 @@ import { scaleLinear } from 'd3-scale';
 import { useI18n } from '../../i18n';
 import { AxisBottom, AxisLeft, Tooltip } from './common';
 import { clipSegment, useWidth, type Margin } from './utils';
+import { frameXY } from './XYChart';
 
 export interface PanelLine {
   id: string;
@@ -49,8 +50,10 @@ export function PanelChart({ xDomain, yDomain, xLabel, yLabel, lines, points, yF
   const height = Math.round(Math.max(240, Math.min(360, width * aspect)));
   const w = width - MARGIN.left - MARGIN.right;
   const h = height - MARGIN.top - MARGIN.bottom;
-  const x = scaleLinear().domain(xDomain).range([0, w]).nice(6);
-  const y = scaleLinear().domain(yDomain).range([h, 0]).nice(6);
+  // Every point stays inside the frame, whatever window the caller proposes.
+  const frame = frameXY(xDomain, yDomain, points);
+  const x = scaleLinear().domain(frame.x).range([0, w]).nice(6);
+  const y = scaleLinear().domain(frame.y).range([h, 0]).nice(6);
   const [hover, setHover] = useState<PanelPoint | null>(null);
 
   return (
