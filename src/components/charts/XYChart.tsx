@@ -1,4 +1,4 @@
-import { useId, useMemo, useState } from 'react';
+import { useId, useLayoutEffect, useMemo, useState } from 'react';
 import { scaleLinear } from 'd3-scale';
 import { line } from 'd3-shape';
 import { useI18n } from '../../i18n';
@@ -70,9 +70,38 @@ export interface XYChartProps {
   /** Formats the hover read-out values. */
   valueFormat?: (v: number) => string;
   nice?: boolean;
+  /** Shows the zoom controls (default: whenever there are markers). */
+  zoomable?: boolean;
 }
 
 const MARGIN: Margin = { top: 14, right: 58, bottom: 44, left: 56 };
+
+const ZOOMS = [0.4, 0.55, 0.75, 1];
+
+/**
+ * Frame actually drawn: the domain proposed by the module, optionally zoomed
+ * around the markers, and always enlarged so that every marker (E₀, E₁,
+ * auxiliary points) stays inside with a small margin. Curves and results are
+ * never changed; only the window moves.
+ */
+export function frameXY(xDomain: [number, number], yDomain: [number, number], markers: { x: number; y: number }[], zoom = 1): { x: [number, number]; y: [number, number] } {
+  const pts = markers.filter((m) => Number.isFinite(m.x) && Number.isFinite(m.y));
+  const fit = (d: [number, number], vals: number[]): [number, number] => {
+    if (!vals.length) return d;
+    const lo = Math.min(...vals);
+    const hi = Math.max(...vals);
+    let [a, b] = d;
+    if (zoom < 1) {
+      const c = (lo + hi) / 2;
+      const half = Math.max(((b - a) / 2) * zoom, ((hi - lo) / 2) * 1.15);
+      a = c - half;
+      b = c + half;
+    }
+    const pad = (b - a) * 0.06;
+    return [Math.min(a, lo - pad), Math.max(b, hi + pad)];
+  };
+  return { x: fit(xDomain, pts.map((m) => m.x)), y: fit(yDomain, pts.map((m) => m.y)) };
+}
 
 /** Linear interpolation of a polyline at x (null when x is outside every segment). */
 function valueAt(points: Pt[], x: number): number | null {
@@ -93,10 +122,25 @@ function valueAt(points: Pt[], x: number): number | null {
  * guide segments and a crosshair read-out of every curve at the hovered x.
  */
 export function XYChart(props: XYChartProps) {
-  const { f } = useI18n();
-  const { xDomain, yDomain, series, markers = [], bands = [], segments = [], aspect = 0.62, minHeight = 260, maxHeight = 520 } = props;
+  const { t, f } = useI18n();
+  const { series, markers = [], bands = [], segments = [], aspect = 0.62, minHeight = 260, maxHeight = 520 } = props;
+  const [zoom, setZoom] = useState(1);
+  const frame = frameXY(props.xDomain, props.yDomain, markers, zoom);
+  const xDomain = frame.x;
+  const yDomain = frame.y;
+  const zoomable = (props.zoomable ?? markers.length > 0) && markers.length > 0;
   const [ref, width] = useWidth<HTMLDivElement>(560);
-  const height = Math.round(Math.max(minHeight, Math.min(maxHeight, width * aspect)));
+  // A chart that starts on the first screen is kept within the viewport (never below its minimum height).
+  const [docTop, setDocTop] = useState<number | null>(null);
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (el) setDocTop(el.getBoundingClientRect().top + window.scrollY);
+  }, [ref, width]);
+  let height = Math.round(Math.max(minHeight, Math.min(maxHeight, width * aspect)));
+  if (docTop !== null && docTop < window.innerHeight) {
+    const avail = Math.floor(window.innerHeight - docTop - 16);
+    if (avail >= minHeight) height = Math.min(height, avail);
+  }
   const w = width - MARGIN.left - MARGIN.right;
   const h = height - MARGIN.top - MARGIN.bottom;
   const clipId = useId().replace(/:/g, '');
@@ -110,7 +154,7 @@ export function XYChart(props: XYChartProps) {
       ys.nice(6);
     }
     return { x: xs, y: ys };
-  }, [xDomain, yDomain, w, h, props.nice]);
+  }, [xDomain[0], xDomain[1], yDomain[0], yDomain[1], w, h, props.nice]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const fmt = props.valueFormat ?? ((v: number) => f(v, 'n2'));
   const path = line<Pt>()
@@ -189,6 +233,19 @@ export function XYChart(props: XYChartProps) {
 
   return (
     <div className="chart-wrap" ref={ref}>
+      {zoomable && (
+        <div className="chart-zoom" role="group" aria-label={t('tq.zoom')}>
+          <button className="btn small" onClick={() => setZoom((z) => ZOOMS[Math.max(0, ZOOMS.indexOf(z) - 1)] ?? z)} disabled={zoom === ZOOMS[0]} title={t('tq.zoom.in')} aria-label={t('tq.zoom.in')}>
+            +
+          </button>
+          <button className="btn small" onClick={() => setZoom((z) => ZOOMS[Math.min(ZOOMS.length - 1, ZOOMS.indexOf(z) + 1)] ?? z)} disabled={zoom === 1} title={t('tq.zoom.out')} aria-label={t('tq.zoom.out')}>
+            −
+          </button>
+          <button className="btn small" onClick={() => setZoom(1)} disabled={zoom === 1} title={t('tq.zoom.fit.d')}>
+            {t('tq.zoom.fit')}
+          </button>
+        </div>
+      )}
       <svg viewBox={`0 0 ${width} ${height}`} width={width} height={height} role="img" aria-label={props.ariaLabel} xmlns="http://www.w3.org/2000/svg">
         <defs>
           <clipPath id={clipId}>
@@ -199,6 +256,7 @@ export function XYChart(props: XYChartProps) {
           </marker>
         </defs>
         <g transform={`translate(${MARGIN.left},${MARGIN.top})`}>
+          <rect className="plot-area" x={0} y={0} width={w} height={h} fill="none" pointerEvents="none" />
           <g clipPath={`url(#${clipId})`}>
             {bands.map((b) => {
               const bx0 = x(b.x0 ?? xd0);

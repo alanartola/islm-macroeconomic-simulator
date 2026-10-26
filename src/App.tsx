@@ -252,12 +252,14 @@ export default function App() {
           <ConstructionModule state={adv} dispatch={advDispatch} sim={advSim} sidebarOpen={sidebarOpen} onCloseSidebar={() => setSidebarOpen(false)} />
         )}
 
+        {module !== 'transmission' && (
         <footer className="footer">
           <span>{t('app.disclaimer')}</span>
           <a href={REPO_URL} target="_blank" rel="noreferrer">
             {t('app.source')}
           </a>
         </footer>
+        )}
       </div>
       </LabProvider>
       </ModeProvider>

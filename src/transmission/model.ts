@@ -204,38 +204,56 @@ export function visibleAt(steps: Step[], k: number | null): Set<Element> {
 
 // ── Scenarios of the policy / shock menu ────────────────────────────────────
 
+/** Size of the perturbation: a change Δ applied to one parameter (or to the target rate). */
+export interface Knob {
+  key: keyof ModelParams | 'target';
+  /** Default Δ and the range offered by the magnitude slider. */
+  delta: number;
+  min: number;
+  max: number;
+  step: number;
+}
+
 export interface Scenario {
   id: string;
   regime: PolicyRegime;
-  /** Changes applied to the final economy. */
-  shock: Partial<ModelParams>;
-  target0?: number;
-  target1?: number;
+  knob: Knob | null;
 }
 
+const k = (key: Knob['key'], delta: number, min: number, max: number, step: number): Knob => ({ key, delta, min, max, step });
+
 export const SCENARIOS: Scenario[] = [
-  { id: 'initial', regime: 'money-supply', shock: {} },
-  { id: 'monetaryExpansion', regime: 'money-supply', shock: { M: 770 } },
-  { id: 'monetaryContraction', regime: 'money-supply', shock: { M: 630 } },
-  { id: 'fiscalExpansion', regime: 'money-supply', shock: { G: 300 } },
-  { id: 'fiscalContraction', regime: 'money-supply', shock: { G: 200 } },
-  { id: 'taxIncrease', regime: 'money-supply', shock: { T: 250 } },
-  { id: 'taxCut', regime: 'money-supply', shock: { T: 150 } },
-  { id: 'investmentUp', regime: 'money-supply', shock: { I0: 350 } },
-  { id: 'investmentDown', regime: 'money-supply', shock: { I0: 250 } },
-  { id: 'investmentSensitivity', regime: 'money-supply', shock: { b: 40 } },
-  { id: 'moneyDemandSensitivity', regime: 'money-supply', shock: { h: 80 } },
-  { id: 'rateCut', regime: 'interest-target', shock: {}, target0: 5, target1: 4 },
-  { id: 'rateHike', regime: 'interest-target', shock: {}, target0: 5, target1: 6 },
-  { id: 'fiscalAccommodated', regime: 'interest-target', shock: { G: 300 }, target0: 5, target1: 5 },
+  { id: 'initial', regime: 'money-supply', knob: null },
+  { id: 'monetaryExpansion', regime: 'money-supply', knob: k('M', 70, 10, 350, 10) },
+  { id: 'monetaryContraction', regime: 'money-supply', knob: k('M', -70, -350, -10, 10) },
+  { id: 'fiscalExpansion', regime: 'money-supply', knob: k('G', 50, 10, 250, 10) },
+  { id: 'fiscalContraction', regime: 'money-supply', knob: k('G', -50, -200, -10, 10) },
+  { id: 'taxIncrease', regime: 'money-supply', knob: k('T', 50, 10, 250, 10) },
+  { id: 'taxCut', regime: 'money-supply', knob: k('T', -50, -200, -10, 10) },
+  { id: 'investmentUp', regime: 'money-supply', knob: k('I0', 50, 10, 250, 10) },
+  { id: 'investmentDown', regime: 'money-supply', knob: k('I0', -50, -150, -10, 10) },
+  { id: 'investmentSensitivity', regime: 'money-supply', knob: k('b', 15, 5, 75, 5) },
+  { id: 'moneyDemandSensitivity', regime: 'money-supply', knob: k('h', 30, 10, 200, 10) },
+  { id: 'rateCut', regime: 'interest-target', knob: k('target', -1, -4.5, -0.25, 0.25) },
+  { id: 'rateHike', regime: 'interest-target', knob: k('target', 1, 0.25, 5, 0.25) },
+  { id: 'fiscalAccommodated', regime: 'interest-target', knob: k('G', 50, 10, 250, 10) },
 ];
 
-export function scenarioInput(sc: Scenario): TransmissionInput {
-  return {
-    baseline: { ...DEFAULT_PARAMS },
-    shocked: { ...DEFAULT_PARAMS, ...sc.shock },
-    regime: sc.regime,
-    target0: sc.target0 ?? 5,
-    target1: sc.target1 ?? 5,
-  };
+/** Economy of a scenario with a perturbation of size Δ (default: the scenario's own). */
+export function scenarioInput(sc: Scenario, delta?: number): TransmissionInput {
+  const base = { ...DEFAULT_PARAMS };
+  const shocked = { ...DEFAULT_PARAMS };
+  let target1 = 5;
+  if (sc.knob) {
+    const d = delta ?? sc.knob.delta;
+    if (sc.knob.key === 'target') target1 = 5 + d;
+    else shocked[sc.knob.key] = base[sc.knob.key] + d;
+  }
+  return { baseline: base, shocked, regime: sc.regime, target0: 5, target1 };
+}
+
+/** Current Δ of a scenario's parameter in an economy (null when the scenario has no knob). */
+export function deltaOf(sc: Scenario, x: TransmissionInput): number | null {
+  if (!sc.knob) return null;
+  return sc.knob.key === 'target' ? x.target1 - x.target0 : x.shocked[sc.knob.key] - x.baseline[sc.knob.key];
 }

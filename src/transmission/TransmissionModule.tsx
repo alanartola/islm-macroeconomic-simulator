@@ -1,26 +1,55 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useI18n } from '../i18n';
 import type { ModelParams } from '../engine';
 import { runSimulation, type SimulationOk } from '../state/simulation';
 import { IssuesPanel } from '../components/Results';
-import { useWidth } from '../components/charts/utils';
 import type { LabConfig } from '../lab/scenario';
-import { SCENARIOS, geometry, scenarioInput, stepsOf, visibleAt, type Element, type Market, type Step, type TransmissionGeometry, type TransmissionInput } from './model';
-import { QuadrantChart, domainsOf, scalesOf } from './QuadrantCharts';
+import { SCENARIOS, deltaOf, geometry, scenarioInput, stepsOf, visibleAt, type Element, type Market, type Scenario, type Step, type TransmissionGeometry, type TransmissionInput } from './model';
+import { QuadrantChart, frameDomains, neededOf, scalesOf, type Domains } from './QuadrantCharts';
 
 const PARAMS: (keyof ModelParams)[] = ['C0', 'c', 'T', 'I0', 'b', 'G', 'M', 'P', 'k', 'h'];
 const STEP_PARAM: Record<keyof ModelParams, number> = { C0: 10, c: 0.01, T: 10, I0: 10, b: 1, G: 10, M: 10, P: 0.05, k: 0.05, h: 1 };
 type Tab = 'summary' | 'goods' | 'islm' | 'money' | 'all';
+type Pane = 'sim' | 'params' | 'mechanism';
+/** Below this width the four quadrants become tabs. */
 const DESKTOP = 860;
+/** Below this height the diagram cannot stay legible inside the viewport: the page scrolls instead (compact fallback). */
+const MIN_GRID_H = 440;
 /** Fixed placement: summary | goods (DA–Y) on top, money (i–M/P) | IS-LM (i–Y) below. */
 const QUADRANTS = '"summary goods" "money islm"';
+const ZOOMS = [0.5, 0.65, 0.8, 1];
+
+/** Width of an element and the height left from its top to the bottom of the viewport, tracked on resize. */
+function useFitHeight<T extends HTMLElement>(): [React.RefObject<T | null>, number | null, number] {
+  const ref = useRef<T | null>(null);
+  const [state, setState] = useState<{ h: number | null; w: number }>({ h: null, w: 1200 });
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const update = () => {
+      const rect = el.getBoundingClientRect();
+      const top = rect.top + window.scrollY;
+      const h = Math.floor(window.innerHeight - top - 12);
+      setState((s) => (s.h === (h > 0 ? h : null) && s.w === Math.round(rect.width) ? s : { h: h > 0 ? h : null, w: Math.round(rect.width) }));
+    };
+    update();
+    window.addEventListener('resize', update);
+    const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(update) : null;
+    ro?.observe(el);
+    return () => {
+      window.removeEventListener('resize', update);
+      ro?.disconnect();
+    };
+  }, []);
+  return [ref, state.h, state.w];
+}
 
 /**
  * Three coordinated markets of the traditional IS-LM (Module A engine):
  * goods market (DA–Y) top right, IS-LM (i–Y) bottom right, money market
- * (i–M/P) bottom left, and a summary in the top-left quadrant. The three
- * charts share the parameters, the two equilibria and the scales of the
- * variables they have in common.
+ * (i–M/P) bottom left, controls and results in the top-left quadrant. The
+ * diagram is sized to the viewport so the three markets stay in view while
+ * the perturbation changes.
  */
 export function TransmissionModule({ onOpenConfig }: { onOpenConfig: (cfg: LabConfig) => void }) {
   const { t } = useI18n();
@@ -29,11 +58,23 @@ export function TransmissionModule({ onOpenConfig }: { onOpenConfig: (cfg: LabCo
   const [step, setStep] = useState<number | null>(null);
   const [playing, setPlaying] = useState(false);
   const [tab, setTab] = useState<Tab>('summary');
-  const [ref, width] = useWidth<HTMLDivElement>(1100);
+  const [zoom, setZoom] = useState(1);
+  const [stageRef, fitH, width] = useFitHeight<HTMLDivElement>();
 
   const sim = useMemo(() => runSimulation(input), [input]);
   const g = sim.ok ? geometry(input, sim.e0, sim.e1) : null;
   const steps = useMemo(() => (g ? stepsOf(g.family) : []), [g?.family]); // eslint-disable-line react-hooks/exhaustive-deps
+  const scenario = SCENARIOS.find((s) => s.id === scenarioId) ?? null;
+
+  // Shared frames that only move when the equilibria approach an edge (no jumps while dragging).
+  const frameRef = useRef<{ d: Domains; zoom: number } | null>(null);
+  const domains = useMemo(() => {
+    if (!g) return null;
+    const prev = frameRef.current && frameRef.current.zoom === zoom ? frameRef.current.d : null;
+    const d = frameDomains(neededOf(g), { Y0: g.e0.Y, m0: g.e0.m }, zoom, prev);
+    frameRef.current = { d, zoom };
+    return d;
+  }, [g?.e0.Y, g?.e1.Y, g?.e0.i, g?.e1.i, g?.e0.m, g?.e1.m, g?.keynes?.Y, g?.liquidity?.i, zoom]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!playing) return;
@@ -47,12 +88,18 @@ export function TransmissionModule({ onOpenConfig }: { onOpenConfig: (cfg: LabCo
     return () => window.clearInterval(id);
   }, [playing, steps.length]);
 
-  const choose = (id: string) => {
+  const reframe = () => {
+    frameRef.current = null;
+    setZoom(1);
+  };
+  const choose = (id: string, delta?: number) => {
     setScenarioId(id);
     setStep(null);
     setPlaying(false);
     const sc = SCENARIOS.find((s) => s.id === id);
-    if (sc) setInput(scenarioInput(sc));
+    if (sc) setInput(scenarioInput(sc, delta));
+    // A new scenario gets a fresh frame; moving the magnitude keeps the current one while it fits.
+    if (delta === undefined) frameRef.current = null;
   };
   const edit = (next: TransmissionInput) => {
     setScenarioId('custom');
@@ -62,25 +109,42 @@ export function TransmissionModule({ onOpenConfig }: { onOpenConfig: (cfg: LabCo
   };
 
   const desktop = width >= DESKTOP;
+  // Desktop: the grid fills the space down to the bottom of the viewport (compact fallback below MIN_GRID_H).
+  const gridH = desktop && fitH !== null ? Math.max(MIN_GRID_H, fitH) : null;
   const cellW = desktop ? Math.floor(width / 2) : width;
-  const cellH = Math.round(Math.max(300, Math.min(desktop ? 500 : 400, cellW * (desktop ? 0.8 : 0.86))));
-  const scales = g ? scalesOf(domainsOf(g), cellW, cellH) : null;
+  const cellH = gridH !== null ? Math.floor(gridH / 2) : Math.round(Math.max(300, Math.min(420, cellW * 0.86)));
+  const scales = g && domains ? scalesOf(domains, cellW, cellH, [g.e0.DA, g.e1.DA]) : null;
   const current: Step | null = step === null ? null : steps[step] ?? null;
   const visible = visibleAt(steps, step === null ? null : step);
   const fresh = new Set<Element>(current?.show ?? []);
-  const chart = (kind: 'goods' | 'islm' | 'money') =>
+  const chart = (kind: 'goods' | 'islm' | 'money', standalone: boolean) =>
     g && scales ? (
-      <QuadrantChart standalone={!desktop} kind={kind} g={g} s={scales} visible={visible} fresh={fresh} dim={!!current && current.market !== 'all' && current.market !== kind} focus={!!current && (current.market === kind || current.market === 'all')} />
+      <QuadrantChart
+        standalone={standalone}
+        kind={kind}
+        g={g}
+        s={scales}
+        visible={visible}
+        fresh={fresh}
+        dim={!!current && current.market !== 'all' && current.market !== kind}
+        focus={!!current && (current.market === kind || current.market === 'all')}
+      />
     ) : null;
 
-  const summary = (
-    <SummaryPanel
+  const controls = (
+    <ControlPanel
+      scenario={scenario}
       scenarioId={scenarioId}
-      onScenario={choose}
+      onScenario={(id) => choose(id)}
+      onDelta={(d) => scenario && choose(scenario.id, d)}
+      onReset={() => {
+        choose(scenario?.id ?? 'monetaryExpansion');
+        reframe();
+      }}
       input={input}
       onInput={edit}
-      sim={sim.ok ? sim : null}
       g={g}
+      sim={sim.ok ? sim : null}
       steps={steps}
       step={step}
       onStep={(k) => {
@@ -92,89 +156,89 @@ export function TransmissionModule({ onOpenConfig }: { onOpenConfig: (cfg: LabCo
         if (step === null || step >= steps.length - 1) setStep(0);
         setPlaying((p) => !p);
       }}
+      onOpenA={() => onOpenConfig({ model: 'basic', ...input })}
     />
   );
 
+  const zoomBar = (
+    <div className="tq-zoom" role="group" aria-label={t('tq.zoom')}>
+      <button className="btn small" onClick={() => setZoom((z) => ZOOMS[Math.max(0, ZOOMS.indexOf(z) - 1)] ?? z)} disabled={zoom === ZOOMS[0]} title={t('tq.zoom.in')} aria-label={t('tq.zoom.in')}>
+        +
+      </button>
+      <button className="btn small" onClick={() => setZoom((z) => ZOOMS[Math.min(ZOOMS.length - 1, ZOOMS.indexOf(z) + 1)] ?? z)} disabled={zoom === 1} title={t('tq.zoom.out')} aria-label={t('tq.zoom.out')}>
+        −
+      </button>
+      <button className="btn small" onClick={reframe} title={t('tq.zoom.fit.d')}>
+        {t('tq.zoom.fit')}
+      </button>
+    </div>
+  );
+
   return (
-    <main className="main tq-main">
-      <div className="module-intro">
+    <main className={`main tq-main${desktop && gridH !== null && gridH === fitH ? ' tq-fit' : ''}`}>
+      <header className="tq-head">
         <div>
           <span className="kicker">{t('tq.kicker')}</span>
-          <h2>{t('tq.title')}</h2>
-          <p>{t('tq.desc')}</p>
+          <h2 title={t('tq.desc')}>{t('tq.title')}</h2>
         </div>
-      </div>
+        {zoomBar}
+      </header>
 
-      <section className="tq-wrap" ref={ref} aria-label={t('tq.title')}>
-        {!desktop && (
-          <nav className="tabs tq-tabs" role="tablist" aria-label={t('tq.tabs')}>
-            {(['summary', 'goods', 'islm', 'money', 'all'] as Tab[]).map((k) => (
-              <button key={k} role="tab" aria-selected={tab === k} onClick={() => setTab(k)}>
-                {t(`tq.tab.${k}`)}
-              </button>
-            ))}
-          </nav>
-        )}
-        {desktop || tab === 'all' ? (
-          <div className={`tq-grid${desktop ? '' : ' tq-grid-scroll'}`} style={{ gridTemplateAreas: QUADRANTS, gridTemplateColumns: `${desktop ? cellW : 340}px ${desktop ? cellW : 340}px` }}>
-            <div className="tq-cell tq-summary" style={{ gridArea: 'summary', height: desktop ? cellH : undefined }} data-quadrant="summary">
-              {desktop ? summary : <p className="note">{t('tq.mobile.summaryHint')}</p>}
+      {!desktop && (
+        <nav className="tabs tq-tabs" role="tablist" aria-label={t('tq.tabs')}>
+          {(['summary', 'goods', 'islm', 'money', 'all'] as Tab[]).map((k) => (
+            <button key={k} role="tab" aria-selected={tab === k} onClick={() => setTab(k)}>
+              {t(`tq.tab.${k}`)}
+            </button>
+          ))}
+        </nav>
+      )}
+
+      <div className="tq-stage" ref={stageRef}>
+        {desktop ? (
+          <div className="tq-grid" style={{ gridTemplateAreas: QUADRANTS, gridTemplateColumns: `${cellW}px ${cellW}px`, gridTemplateRows: `${cellH}px ${cellH}px` }}>
+            <div className="tq-cell tq-summary" style={{ gridArea: 'summary' }} data-quadrant="summary">
+              {controls}
             </div>
             <div className="tq-cell" style={{ gridArea: 'goods' }}>
-              {desktop ? chart('goods') : g && <QuadrantChart kind="goods" g={g} s={scalesOf(domainsOf(g), 340, 300)} visible={visible} fresh={fresh} />}
+              {chart('goods', false)}
             </div>
             <div className="tq-cell" style={{ gridArea: 'money' }}>
-              {desktop ? chart('money') : g && <QuadrantChart kind="money" g={g} s={scalesOf(domainsOf(g), 340, 300)} visible={visible} fresh={fresh} />}
+              {chart('money', false)}
             </div>
             <div className="tq-cell" style={{ gridArea: 'islm' }}>
-              {desktop ? chart('islm') : g && <QuadrantChart kind="islm" g={g} s={scalesOf(domainsOf(g), 340, 300)} visible={visible} fresh={fresh} />}
+              {chart('islm', false)}
             </div>
           </div>
         ) : tab === 'summary' ? (
-          <div className="tq-cell tq-summary">{summary}</div>
+          <div className="tq-cell tq-summary tq-summary-mobile">{controls}</div>
+        ) : tab === 'all' ? (
+          <div className="tq-grid tq-grid-scroll" style={{ gridTemplateAreas: QUADRANTS, gridTemplateColumns: '340px 340px', gridTemplateRows: '300px 300px' }}>
+            <div className="tq-cell tq-summary" style={{ gridArea: 'summary' }} data-quadrant="summary">
+              <p className="note">{t('tq.mobile.summaryHint')}</p>
+            </div>
+            {(['goods', 'money', 'islm'] as const).map((k) => (
+              <div className="tq-cell" style={{ gridArea: k }} key={k}>
+                {g && domains && <QuadrantChart kind={k} g={g} s={scalesOf(domains, 340, 300, [g.e0.DA, g.e1.DA])} visible={visible} fresh={fresh} />}
+              </div>
+            ))}
+          </div>
         ) : (
-          <div className="tq-single">{chart(tab)}</div>
+          <div className="tq-single">{chart(tab, true)}</div>
         )}
         {!desktop && tab !== 'summary' && current && <StepText g={g} step={current} index={step ?? 0} total={steps.length} />}
         {!sim.ok && <IssuesPanel sim={sim} />}
-      </section>
-
-      <ParamsPanel input={input} onInput={edit} />
-
-      <details className="card tq-details">
-        <summary>{t('tq.mechanism.title')}</summary>
-        {g && steps.length > 0 ? (
-          <ol className="steps-list">
-            {steps.map((s, k) => (
-              <li key={s.id}>
-                <StepSentence g={g} step={s} index={k} />
-              </li>
-            ))}
-          </ol>
-        ) : (
-          <p>{t('tq.mechanism.none')}</p>
-        )}
-      </details>
-      <details className="card tq-details">
-        <summary>{t('tq.assumptions.title')}</summary>
-        <ul>
-          {['1', '2', '3', '4', '5'].map((k) => (
-            <li key={k}>{t(`tq.assumptions.${k}`)}</li>
-          ))}
-        </ul>
-      </details>
-      <div className="tq-actions">
-        <button className="btn" onClick={() => onOpenConfig({ model: 'basic', ...input })}>
-          {t('tq.openA')}
-        </button>
       </div>
     </main>
   );
 }
 
-function SummaryPanel(props: {
+function ControlPanel(props: {
+  scenario: Scenario | null;
   scenarioId: string;
   onScenario: (id: string) => void;
+  onDelta: (d: number) => void;
+  onReset: () => void;
   input: TransmissionInput;
   onInput: (x: TransmissionInput) => void;
   sim: SimulationOk | null;
@@ -184,9 +248,14 @@ function SummaryPanel(props: {
   onStep: (k: number | null) => void;
   playing: boolean;
   onPlay: () => void;
+  onOpenA: () => void;
 }) {
   const { t, f } = useI18n();
-  const { g, steps, step, input } = props;
+  const [pane, setPane] = useState<Pane>('sim');
+  const { g, steps, step, input, scenario } = props;
+  const knob = scenario?.knob ?? null;
+  const delta = scenario ? deltaOf(scenario, input) : null;
+  const knobFmt = (d: number) => (knob?.key === 'target' ? f(d, 'spp') : knob && (knob.key === 'b' || knob.key === 'h') ? f(d, 'sn0') : f(d, 'sbn'));
   const rows: { key: string; v0: number; v1: number; fmt: string; dfmt: string }[] = g
     ? [
         { key: 'Y', v0: g.e0.Y, v1: g.e1.Y, fmt: 'n1', dfmt: 'sn1' },
@@ -198,73 +267,131 @@ function SummaryPanel(props: {
     : [];
   return (
     <div className="tq-summary-inner">
-      <label className="field">
-        <span className="kicker">{t('tq.pick')}</span>
-        <select className="select" value={props.scenarioId} onChange={(e) => props.onScenario(e.target.value)} aria-label={t('tq.pick')}>
-          {props.scenarioId === 'custom' && <option value="custom">{t('tq.sc.custom')}</option>}
-          {SCENARIOS.map((s) => (
-            <option key={s.id} value={s.id}>
-              {t(`tq.sc.${s.id}`)}
-            </option>
-          ))}
-        </select>
-      </label>
-      <div className="segmented compact" role="group" aria-label={t('tq.regime')}>
-        {(['money-supply', 'interest-target'] as const).map((r) => (
-          <button key={r} aria-pressed={input.regime === r} onClick={() => props.onInput({ ...input, regime: r })}>
-            {t(`tq.regime.${r}`)}
+      <div className="tq-panes" role="tablist" aria-label={t('tq.panes')}>
+        {(['sim', 'params', 'mechanism'] as Pane[]).map((k) => (
+          <button key={k} role="tab" aria-selected={pane === k} onClick={() => setPane(k)}>
+            {t(`tq.pane.${k}`)}
           </button>
         ))}
       </div>
-      {step === null && <p className="muted small">{t(`tq.regime.${input.regime}.d`)}</p>}
-      {g && (
-        <table className="data compact tq-values">
-          <thead>
-            <tr>
-              <th />
-              <th>E₀</th>
-              <th>E₁</th>
-              <th>Δ</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((r) => (
-              <tr key={r.key}>
-                <td title={t(`tq.var.${r.key}.d`)}>{t(`tq.var.${r.key}`)}</td>
-                <td className="num">{f(r.v0, r.fmt)}</td>
-                <td className="num">{f(r.v1, r.fmt)}</td>
-                <td className="num">{f(r.v1 - r.v0, r.dfmt)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
-      {g && step === null && <p className="tq-oneline">{t(`tq.summary.${g.family}`)}</p>}
-      {steps.length > 0 && (
-        <div className="tq-steps">
-          {step === null ? (
-            <button className="btn primary" onClick={() => props.onStep(0)}>
-              {t('tq.explain')}
-            </button>
-          ) : (
-            <>
-              {g && <StepText g={g} step={steps[step]!} index={step} total={steps.length} />}
-              <div className="tq-step-actions">
-                <button className="btn small" disabled={step <= 0} onClick={() => props.onStep(step - 1)}>
-                  {t('guide.prev')}
-                </button>
-                <button className="btn small" disabled={step >= steps.length - 1} onClick={() => props.onStep(step + 1)}>
-                  {t('guide.next')}
-                </button>
-                <button className="btn small" onClick={props.onPlay}>
-                  {props.playing ? t('tq.pause') : t('tq.play')}
-                </button>
-                <button className="btn link small" onClick={() => props.onStep(null)}>
-                  {t('tq.exit')}
-                </button>
-              </div>
-            </>
+
+      {pane === 'sim' && (
+        <div className="tq-pane tq-scroll">
+          <label className="field">
+            <span className="sr-only">{t('tq.pick')}</span>
+            <select className="select" title={t('tq.pick')} value={props.scenarioId} onChange={(e) => props.onScenario(e.target.value)} aria-label={t('tq.pick')}>
+              {props.scenarioId === 'custom' && <option value="custom">{t('tq.sc.custom')}</option>}
+              {SCENARIOS.map((s) => (
+                <option key={s.id} value={s.id}>
+                  {t(`tq.sc.${s.id}`)}
+                </option>
+              ))}
+            </select>
+          </label>
+          {knob && delta !== null && (
+            <label className="tq-knob">
+              <span className="tq-knob-label">
+                {t('tq.magnitude')}{' '}
+                <b className="num">
+                  {knob.key === 'target' ? 'Δī' : `Δ${t(`param.${knob.key}.sym`)}`} = {knobFmt(delta)}
+                </b>
+              </span>
+              <input type="range" min={knob.min} max={knob.max} step={knob.step} value={delta} onChange={(e) => props.onDelta(Number(e.target.value))} aria-label={t('tq.magnitude')} />
+            </label>
           )}
+          <div className="tq-regime">
+            <div className="segmented compact" role="group" aria-label={t('tq.regime')}>
+              {(['money-supply', 'interest-target'] as const).map((r) => (
+                <button key={r} aria-pressed={input.regime === r} onClick={() => props.onInput({ ...input, regime: r })} title={t(`tq.regime.${r}.d`)}>
+                  {t(`tq.regime.${r}`)}
+                </button>
+              ))}
+            </div>
+            <span className="tq-regime-actions">
+              {steps.length > 0 && step === null && (
+                <button className="btn primary small" onClick={() => props.onStep(0)}>
+                  {t('tq.explain')}
+                </button>
+              )}
+              <button className="btn link small" onClick={props.onReset} title={t('tq.reset.d')}>
+                {t('tq.reset')}
+              </button>
+            </span>
+          </div>
+          {g && step === null && (
+            <table className="data compact tq-values">
+              <thead>
+                <tr>
+                  <th />
+                  <th>E₀</th>
+                  <th>E₁</th>
+                  <th>Δ</th>
+                </tr>
+              </thead>
+              <tbody>
+                {rows.map((r) => (
+                  <tr key={r.key}>
+                    <td title={t(`tq.var.${r.key}.d`)}>{t(`tq.var.${r.key}`)}</td>
+                    <td className="num">{f(r.v0, r.fmt)}</td>
+                    <td className="num">{f(r.v1, r.fmt)}</td>
+                    <td className="num">{f(r.v1 - r.v0, r.dfmt)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+          {g && step !== null && (
+            <p className="tq-mini muted small">
+              Y {f(g.e0.Y, 'n1')} → {f(g.e1.Y, 'n1')} · i {f(g.e0.i, 'rate')} → {f(g.e1.i, 'rate')} · I {f(g.e0.I, 'n1')} → {f(g.e1.I, 'n1')}
+            </p>
+          )}
+          {steps.length > 0 && step !== null && (
+              <div className="tq-steps">
+                {g && <StepText g={g} step={steps[step]!} index={step} total={steps.length} />}
+                <div className="tq-step-actions">
+                  <button className="btn small" disabled={step <= 0} onClick={() => props.onStep(step - 1)}>
+                    {t('guide.prev')}
+                  </button>
+                  <button className="btn small" disabled={step >= steps.length - 1} onClick={() => props.onStep(step + 1)}>
+                    {t('guide.next')}
+                  </button>
+                  <button className="btn small" onClick={props.onPlay}>
+                    {props.playing ? t('tq.pause') : t('tq.play')}
+                  </button>
+                  <button className="btn link small" onClick={() => props.onStep(null)}>
+                    {t('tq.exit')}
+                  </button>
+                </div>
+              </div>
+            )}
+        </div>
+      )}
+
+      {pane === 'params' && <ParamsTable input={input} onInput={props.onInput} />}
+
+      {pane === 'mechanism' && (
+        <div className="tq-pane tq-scroll">
+          <p className="muted small">{g ? t(`tq.summary.${g.family}`) : ''}</p>
+          {g && steps.length > 0 ? (
+            <ol className="steps-list">
+              {steps.map((s) => (
+                <li key={s.id}>
+                  <StepSentence g={g} step={s} />
+                </li>
+              ))}
+            </ol>
+          ) : (
+            <p>{t('tq.mechanism.none')}</p>
+          )}
+          <h4>{t('tq.assumptions.title')}</h4>
+          <ul className="tq-assumptions">
+            {['1', '2', '3', '4', '5'].map((k) => (
+              <li key={k}>{t(`tq.assumptions.${k}`)}</li>
+            ))}
+          </ul>
+          <button className="btn small" onClick={props.onOpenA}>
+            {t('tq.openA')}
+          </button>
         </div>
       )}
     </div>
@@ -280,14 +407,14 @@ function StepText({ g, step, index, total }: { g: TransmissionGeometry | null; s
         {t('tq.stepOf', { n: index + 1, total })} · {t(`tq.market.${step.market as Market}`)}
       </span>
       <p>
-        <StepSentence g={g} step={step} index={index} />
+        <StepSentence g={g} step={step} />
       </p>
     </div>
   );
 }
 
 /** Sentence of one step, filled with values of the two solved equilibria. */
-function StepSentence({ g, step }: { g: TransmissionGeometry; step: Step; index: number }) {
+function StepSentence({ g, step }: { g: TransmissionGeometry; step: Step }) {
   const { t, f } = useI18n();
   const dY = g.e1.Y - g.e0.Y;
   const di = g.e1.i - g.e0.i;
@@ -331,7 +458,7 @@ function StepSentence({ g, step }: { g: TransmissionGeometry; step: Step; index:
   return <>{t(`tq.step.${step.key}`, vars)}</>;
 }
 
-function ParamsPanel({ input, onInput }: { input: TransmissionInput; onInput: (x: TransmissionInput) => void }) {
+function ParamsTable({ input, onInput }: { input: TransmissionInput; onInput: (x: TransmissionInput) => void }) {
   const { t } = useI18n();
   const target = input.regime === 'interest-target';
   const set = (side: 'baseline' | 'shocked', k: keyof ModelParams, v: number) => {
@@ -339,64 +466,61 @@ function ParamsPanel({ input, onInput }: { input: TransmissionInput; onInput: (x
     onInput({ ...input, [side]: { ...input[side], [k]: v } });
   };
   return (
-    <details className="card tq-details tq-params">
-      <summary>{t('tq.params')}</summary>
+    <div className="tq-pane tq-scroll tq-params">
       <p className="muted small">{t('tq.params.note')}</p>
-      <div className="table-wrap">
-        <table className="data compact">
-          <thead>
-            <tr>
-              <th>{t('tq.params.param')}</th>
-              <th>{t('tq.params.initial')}</th>
-              <th>{t('tq.params.final')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {PARAMS.map((k) => (
-              <tr key={k}>
-                <td>
-                  <b>{t(`param.${k}.sym`)}</b> <span className="muted small">{t(`param.${k}.name`)}</span>
-                </td>
-                {(['baseline', 'shocked'] as const).map((side) => (
-                  <td key={side}>
-                    {k === 'M' && target ? (
-                      <span className="muted small">{t('tq.params.endogenous')}</span>
-                    ) : (
-                      <input
-                        className="text-input num tq-input"
-                        type="number"
-                        step={STEP_PARAM[k]}
-                        value={input[side][k]}
-                        onChange={(e) => set(side, k, Number(e.target.value))}
-                        aria-label={`${t(`param.${k}.sym`)} ${t(side === 'baseline' ? 'tq.params.initial' : 'tq.params.final')}`}
-                      />
-                    )}
-                  </td>
-                ))}
-              </tr>
-            ))}
-            {target && (
-              <tr>
-                <td>
-                  <b>ī</b> <span className="muted small">{t('tq.params.target')}</span>
-                </td>
-                {(['target0', 'target1'] as const).map((k) => (
-                  <td key={k}>
+      <table className="data compact">
+        <thead>
+          <tr>
+            <th>{t('tq.params.param')}</th>
+            <th>{t('tq.params.initial')}</th>
+            <th>{t('tq.params.final')}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {PARAMS.map((k) => (
+            <tr key={k}>
+              <td title={t(`param.${k}.name`)}>
+                <b>{t(`param.${k}.sym`)}</b> <span className="muted small">{t(`param.${k}.name`)}</span>
+              </td>
+              {(['baseline', 'shocked'] as const).map((side) => (
+                <td key={side}>
+                  {k === 'M' && target ? (
+                    <span className="muted small">{t('tq.params.endogenous')}</span>
+                  ) : (
                     <input
                       className="text-input num tq-input"
                       type="number"
-                      step={0.25}
-                      value={input[k]}
-                      onChange={(e) => Number.isFinite(Number(e.target.value)) && onInput({ ...input, [k]: Number(e.target.value) })}
-                      aria-label={`ī ${t(k === 'target0' ? 'tq.params.initial' : 'tq.params.final')}`}
+                      step={STEP_PARAM[k]}
+                      value={input[side][k]}
+                      onChange={(e) => set(side, k, Number(e.target.value))}
+                      aria-label={`${t(`param.${k}.sym`)} ${t(side === 'baseline' ? 'tq.params.initial' : 'tq.params.final')}`}
                     />
-                  </td>
-                ))}
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-    </details>
+                  )}
+                </td>
+              ))}
+            </tr>
+          ))}
+          {target && (
+            <tr>
+              <td>
+                <b>ī</b> <span className="muted small">{t('tq.params.target')}</span>
+              </td>
+              {(['target0', 'target1'] as const).map((k) => (
+                <td key={k}>
+                  <input
+                    className="text-input num tq-input"
+                    type="number"
+                    step={0.25}
+                    value={input[k]}
+                    onChange={(e) => Number.isFinite(Number(e.target.value)) && onInput({ ...input, [k]: Number(e.target.value) })}
+                    aria-label={`ī ${t(k === 'target0' ? 'tq.params.initial' : 'tq.params.final')}`}
+                  />
+                </td>
+              ))}
+            </tr>
+          )}
+        </tbody>
+      </table>
+    </div>
   );
 }

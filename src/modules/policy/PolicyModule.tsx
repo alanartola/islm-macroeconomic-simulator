@@ -78,19 +78,17 @@ function PolicyExperiment({ base, kinds }: { base: ReturnType<typeof specOf>; ki
   const meta = sizeMeta(kind);
   const res = useMemo(() => runPolicy(base, { kind, size }), [base, kind, size]);
   const liqKey = kind === 'liq' || kind === 'sens' ? liquidityParam(base, kind) : null;
-
-  return (
-    <>
-      <div className="card">
+  const controls = (
+      <div className="card policy-controls">
         <div className="card-body" style={{ paddingTop: 14 }}>
-          <div className="policy-picker" role="radiogroup" aria-label={t('pol.instrument')}>
+          <div className="policy-chips" role="radiogroup" aria-label={t('pol.instrument')}>
             {kinds.map((k) => (
-              <button key={k} role="radio" aria-checked={kind === k} className="preset" aria-pressed={kind === k} onClick={() => setKind(k)}>
-                <span className="p-title">{t(`pol.k.${k}`)}</span>
-                <span className="p-desc">{t(`pol.k.${k}.desc`)}</span>
+              <button key={k} role="radio" aria-checked={kind === k} className="chip-option" onClick={() => setKind(k)} title={t(`pol.k.${k}.desc`)}>
+                {t(`pol.k.${k}`)}
               </button>
             ))}
           </div>
+          <p className="muted small policy-desc">{t(`pol.k.${kind}.desc`)}</p>
           <div className="inline-fields">
             <label className="inline-field">
               <span>{t('pol.size')}</span>
@@ -116,17 +114,24 @@ function PolicyExperiment({ base, kinds }: { base: ReturnType<typeof specOf>; ki
           </div>
         </div>
       </div>
+  );
+
+  return (
+    <>
       {!res.ok ? (
-        <IssueList groups={[{ side: 'shocked', issues: res.issues }]} prefix="adv.issue." />
+        <>
+          {controls}
+          <IssueList groups={[{ side: 'shocked', issues: res.issues }]} prefix="adv.issue." />
+        </>
       ) : (
-        <PolicyResultView res={res} />
+        <PolicyResultView res={res} controls={controls} />
       )}
       {res.ok && <p className="chart-note">{t(res.s1.diagnostics.method === 'brent' ? 'pol.solvedBrent' : 'pol.solvedClosed', { it: String(res.s1.diagnostics.iterations) })}</p>}
     </>
   );
 }
 
-function PolicyResultView({ res }: { res: PolicyResult }) {
+function PolicyResultView({ res, controls }: { res: PolicyResult; controls: React.ReactNode }) {
   const { t, f } = useI18n();
   const sim: AdvSimOk = useMemo(
     () => ({ ok: true, s0: res.s0, s1: res.s1, cmp: res.cmp, report: buildAdvancedInsights(res.s0, res.s1, res.cmp), tangent: null }),
@@ -149,16 +154,6 @@ function PolicyResultView({ res }: { res: PolicyResult }) {
   ];
   return (
     <>
-      <div className="kpis">
-        <Kpi label="ΔY" value={f(ch.Y.abs, 'sbn')} delta={ch.Y.pct === null ? undefined : f(ch.Y.pct, 'spct')} deltaClass={deltaCls(ch.Y.abs)} />
-        <Kpi label="Δi" value={f(ch.i.abs, 'spp')} />
-        <Kpi label="ΔI" value={f(ch.I.abs, 'sbn')} />
-        <Kpi label="ΔC" value={f(ch.C.abs, 'sbn')} />
-        <Kpi label="ΔS" value={f(ch.S.abs, 'sbn')} />
-        <Kpi label={t('pol.kpi.budget')} value={f(res.dBudget, 'sbn')} />
-        <Kpi label={t('pol.kpi.eff')} value={res.effectiveMultiplier === null ? '—' : f(res.effectiveMultiplier, 'n3')} sub={t('pol.kpi.effSub')} />
-        <Kpi label={t('pol.kpi.crowding')} value={f(res.crowding, 'sbn')} sub={share === null ? undefined : t('pol.kpi.crowdingSub', { share })} />
-      </div>
       <div className="sim-grid">
         <div className="col">
           <ChartCard
@@ -177,7 +172,23 @@ function PolicyResultView({ res }: { res: PolicyResult }) {
           </ChartCard>
           <CompareTable title={t('table.title')} rows={rows} />
         </div>
-        <div className="col">
+        <div className="col col-side">
+          {controls}
+          <div className="kpis kpis-main">
+            <Kpi label="ΔY" value={f(ch.Y.abs, 'sbn')} delta={ch.Y.pct === null ? undefined : f(ch.Y.pct, 'spct')} deltaClass={deltaCls(ch.Y.abs)} />
+            <Kpi label="Δi" value={f(ch.i.abs, 'spp')} />
+            <Kpi label={t('pol.kpi.eff')} value={res.effectiveMultiplier === null ? '—' : f(res.effectiveMultiplier, 'n3')} sub={t('pol.kpi.effSub')} />
+            <Kpi label={t('pol.kpi.crowding')} value={f(res.crowding, 'sbn')} sub={share === null ? undefined : t('pol.kpi.crowdingSub', { share })} />
+          </div>
+          <details className="kpi-more">
+            <summary>{t('kpi.more')}</summary>
+            <div className="kpis">
+              <Kpi label="ΔI" value={f(ch.I.abs, 'sbn')} />
+              <Kpi label="ΔC" value={f(ch.C.abs, 'sbn')} />
+              <Kpi label="ΔS" value={f(ch.S.abs, 'sbn')} />
+              <Kpi label={t('pol.kpi.budget')} value={f(res.dBudget, 'sbn')} />
+            </div>
+          </details>
           <Explanation report={sim.report} />
         </div>
       </div>

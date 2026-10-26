@@ -181,6 +181,7 @@ export function ISLMChart({ e0, e1, showInitial, showShifted, showGuides, saved 
           </clipPath>
         </defs>
         <g transform={`translate(${MARGIN.left},${MARGIN.top})`}>
+          <rect className="plot-area" x={0} y={0} width={w} height={h} fill="none" pointerEvents="none" />
           <g transform={`translate(0,${h})`}>
             <AxisBottom scale={x} gridLength={h} ticks={Math.max(3, Math.floor(w / 90))} label={t('chart.x')} />
           </g>

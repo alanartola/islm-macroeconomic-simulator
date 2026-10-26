@@ -3,7 +3,9 @@ import App from '../App';
 import { isOutputAt, keynesianMultiplier, lmOutputAt, moneyDemand, solve } from '../engine';
 import { runSimulation } from '../state/simulation';
 import { SCENARIOS, demandAt, familyOf, geometry, plannedDemand, scenarioInput, stepsOf, visibleAt, type TransmissionInput } from './model';
-import { domainsOf, scalesOf } from './QuadrantCharts';
+import { scaleLinear } from 'd3-scale';
+import { domainsOf, frameAxis, scalesOf } from './QuadrantCharts';
+import { frameXY } from '../components/charts/XYChart';
 
 const solved = (x: TransmissionInput) => {
   const sim = runSimulation(x);
@@ -194,12 +196,16 @@ describe('the rendered diagram', () => {
   it('pixels correspond to the engine values (monetary expansion, then fiscal expansion)', () => {
     open();
     const check = (id: string) => {
-      const { sim, g } = byId(id);
-      const s = scalesOf(domainsOf(g), 600, Math.round(Math.max(300, Math.min(500, 600 * 0.8))));
+      const { sim } = byId(id);
+      // Rebuild the scales from the frame each chart reports, then compare with the engine values.
+      const fr = JSON.parse(document.querySelector('[data-quadrant="islm"]')!.getAttribute('data-frame')!);
+      const s = scalesOf({ Y: fr.Y, i: fr.i, m: fr.m }, fr.w, fr.h);
+      const da = scaleLinear().domain(fr.DA).range([s.ph, 0]);
       expect(point('e1-islm').x).toBeCloseTo(s.Y(sim.e1.equilibrium.Y), 2);
       expect(point('e1-islm').y).toBeCloseTo(s.i(sim.e1.equilibrium.i), 2);
       expect(point('e1-money').x).toBeCloseTo(s.m(sim.e1.equilibrium.realMoney), 2);
-      expect(point('e1-goods').y).toBeCloseTo(s.DA(sim.e1.equilibrium.Y), 2);
+      expect(point('e1-goods').y).toBeCloseTo(da(sim.e1.equilibrium.Y), 2);
+      for (const k of ['goods', 'money']) expect(JSON.parse(document.querySelector(`[data-quadrant="${k}"]`)!.getAttribute('data-frame')!)).toEqual(fr);
     };
     check('monetaryExpansion');
     fireEvent.change(screen.getByRole('combobox', { name: 'Seleccionar política o perturbación' }), { target: { value: 'fiscalExpansion' } });
@@ -229,13 +235,18 @@ describe('the rendered diagram', () => {
   it('the rate-target regime makes M endogenous in the parameters panel', () => {
     open();
     fireEvent.change(screen.getByRole('combobox', { name: 'Seleccionar política o perturbación' }), { target: { value: 'rateCut' } });
+    fireEvent.click(screen.getByRole('tab', { name: 'Parámetros' }));
     expect(screen.getAllByText('endógena')).toHaveLength(2);
     expect(screen.getByRole('spinbutton', { name: 'ī Final' })).toHaveValue(4);
   });
 
   it('manual parameters recompute the three charts together', () => {
     open();
+    fireEvent.click(screen.getByRole('tab', { name: 'Parámetros' }));
     fireEvent.change(screen.getByRole('spinbutton', { name: 'G Final' }), { target: { value: '320' } });
+    // The three charts stay on screen while parameters are edited.
+    expect(document.querySelectorAll('[data-quadrant="goods"], [data-quadrant="islm"], [data-quadrant="money"]')).toHaveLength(3);
+    fireEvent.click(screen.getByRole('tab', { name: 'Simulación' }));
     const x = { ...scenarioInput(SCENARIOS.find((s) => s.id === 'monetaryExpansion')!) };
     x.shocked = { ...x.shocked, G: 320 };
     const { sim } = solved(x);
@@ -243,5 +254,103 @@ describe('the rendered diagram', () => {
     expect(point('e1-goods').x).toBe(point('e1-islm').x);
     const table = document.querySelector('.tq-values') as HTMLElement;
     expect(table.textContent).toContain(sim.e1.equilibrium.Y.toLocaleString('es-AR', { minimumFractionDigits: 1, maximumFractionDigits: 1 }));
+  });
+});
+
+describe('framing keeps both equilibria in view without jumping', () => {
+  it('a frame always contains the values, with a margin', () => {
+    for (const id of SCENARIOS.map((x) => x.id)) {
+      const { g } = byId(id);
+      const d = domainsOf(g);
+      for (const Y of [g.e0.Y, g.e1.Y]) expect(Y > d.Y[0] && Y < d.Y[1], id).toBe(true);
+      for (const i of [g.e0.i, g.e1.i]) expect(i > d.i[0] && i < d.i[1], id).toBe(true);
+      for (const m of [g.e0.m, g.e1.m]) expect(m > d.m[0] && m < d.m[1], id).toBe(true);
+    }
+  });
+
+  it('keeps the previous frame while the values stay inside, and reframes when they leave', () => {
+    const first = frameAxis([1900, 1970], 285, 1, null, true);
+    expect(frameAxis([1900, 1990], 285, 1, first, true)).toBe(first);
+    const moved = frameAxis([1900, 4000], 285, 1, first, true);
+    expect(moved).not.toBe(first);
+    expect(moved[1]).toBeGreaterThan(4000);
+    // A frame much wider than needed is tightened.
+    const wide: [number, number] = [0, 20000];
+    expect(frameAxis([1900, 1970], 285, 1, wide, true)[1]).toBeLessThan(5000);
+  });
+
+  it('zooming in never hides an equilibrium', () => {
+    const z = frameAxis([1900, 2300], 285, 0.5, null, true);
+    expect(z[0]).toBeLessThan(1900);
+    expect(z[1]).toBeGreaterThan(2300);
+    expect(z[1] - z[0]).toBeLessThan(frameAxis([1900, 2300], 285, 1, null, true)[1] - frameAxis([1900, 2300], 285, 1, null, true)[0]);
+  });
+
+  it('the goods-market axis is enlarged rather than cutting a point when the cell is wide and short', () => {
+    const { g } = byId('fiscalExpansion');
+    const s = scalesOf(domainsOf(g), 900, 260, [g.e0.DA, g.e1.DA]);
+    for (const v of [g.e0.DA, g.e1.DA]) {
+      expect(s.DA(v)).toBeGreaterThan(0);
+      expect(s.DA(v)).toBeLessThan(s.ph);
+    }
+  });
+
+  it('model charts of the other modules always include every marker', () => {
+    const f = frameXY([1000, 2000], [0, 8], [
+      { x: 2600, y: 9.5 },
+      { x: 1500, y: 5 },
+    ]);
+    expect(f.x[1]).toBeGreaterThan(2600);
+    expect(f.y[1]).toBeGreaterThan(9.5);
+    // Zoom narrows around the markers but keeps them inside.
+    const z = frameXY([0, 4000], [0, 20], [{ x: 1900, y: 5 }, { x: 2000, y: 6 }], 0.4);
+    expect(z.x[0]).toBeLessThan(1900);
+    expect(z.x[1]).toBeGreaterThan(2000);
+    expect(z.x[1] - z.x[0]).toBeLessThan(4000);
+  });
+});
+
+describe('magnitude of the perturbation', () => {
+  beforeAll(() => {
+    Object.defineProperty(window, 'matchMedia', {
+      writable: true,
+      value: (q: string) => ({ matches: false, media: q, addEventListener: () => {}, removeEventListener: () => {} }),
+    });
+  });
+  beforeEach(() => {
+    localStorage.clear();
+    vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue({ width: 1200, height: 800, top: 0, left: 0, right: 1200, bottom: 800, x: 0, y: 0, toJSON: () => ({}) } as DOMRect);
+  });
+  afterEach(() => vi.restoreAllMocks());
+
+  it('the slider recomputes the three markets together and the axes do not jump for small changes', () => {
+    window.history.replaceState(null, '', '/?m=transmission&guide=0');
+    render(<App />);
+    const slider = screen.getByRole('slider', { name: 'Magnitud' });
+    const frame = () => document.querySelector('[data-quadrant="islm"]')!.getAttribute('data-frame');
+    const before = frame();
+    fireEvent.change(slider, { target: { value: '80' } });
+    expect(frame()).toBe(before);
+    fireEvent.change(slider, { target: { value: '350' } });
+    const x = scenarioInput(SCENARIOS.find((s) => s.id === 'monetaryExpansion')!, 350);
+    const { sim } = solved(x);
+    const table = document.querySelector('.tq-values') as HTMLElement;
+    expect(table.textContent!.replace(/\u00a0/g, ' ')).toContain(sim.e1.equilibrium.Y.toLocaleString('es-AR', { minimumFractionDigits: 1, maximumFractionDigits: 1 }));
+    // Every equilibrium point is still inside its plot.
+    for (const id of ['e0-goods', 'e1-goods', 'e0-islm', 'e1-islm', 'e0-money', 'e1-money']) {
+      const el = document.querySelector(`[data-testid="${id}"]`) as SVGGElement;
+      const fr = JSON.parse(el.closest('[data-quadrant]')!.getAttribute('data-frame')!);
+      const s = scalesOf({ Y: fr.Y, i: fr.i, m: fr.m }, fr.w, fr.h);
+      expect(Number(el.dataset.px), id).toBeGreaterThanOrEqual(0);
+      expect(Number(el.dataset.px), id).toBeLessThanOrEqual(s.pw);
+      expect(Number(el.dataset.py), id).toBeGreaterThanOrEqual(0);
+      expect(Number(el.dataset.py), id).toBeLessThanOrEqual(s.ph);
+    }
+  });
+
+  it('scenario magnitudes reproduce the default shocks', () => {
+    expect(scenarioInput(SCENARIOS.find((s) => s.id === 'monetaryExpansion')!).shocked.M).toBe(770);
+    expect(scenarioInput(SCENARIOS.find((s) => s.id === 'fiscalExpansion')!, 120).shocked.G).toBe(370);
+    expect(scenarioInput(SCENARIOS.find((s) => s.id === 'rateCut')!).target1).toBe(4);
   });
 });
